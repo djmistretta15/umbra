@@ -104,7 +104,7 @@ a{color:inherit}
 #ov-leg .stf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}
 #ov-leg .mx{display:grid;gap:6px;margin:6px 0}#ov-leg .mxr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;font-size:12px}#ov-leg .mxn{font-weight:600}#ov-leg .mxr label{grid-column:1/-1;display:flex;gap:6px;align-items:center;font-size:11px;opacity:.8}#ov-leg .mxr input{flex:1;accent-color:#ffb547}
 #ov-leg .mxd{font:inherit;font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#ffb547;cursor:pointer}
-#ov-leg .mxp{display:grid;gap:4px;margin-top:4px}#ov-leg .mxp button{text-align:left;font-size:11px}
+#ov-leg .mxp{display:grid;gap:4px;margin-top:4px}#ov-leg .sunc{margin-top:8px}#ov-leg .sunc label{display:inline-flex;gap:6px;align-items:center;font-size:11px}#ov-leg .sunc input{accent-color:#ffb547}#ov-leg .mxp button{text-align:left;font-size:11px}
 #ov-pole .pz{display:block;margin:0 auto 6px;font:600 11px ui-monospace,Consolas,monospace;padding:4px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.25);background:rgba(6,10,22,.85);color:#fff;cursor:pointer;letter-spacing:.05em}
 #ov-pole.big,#ov.hcv #ov-pole.big{position:fixed;inset:0;margin:auto;width:fit-content;height:fit-content;display:flex;flex-direction:column;align-items:center;z-index:20;padding:16px 20px;border-radius:20px;background:rgba(4,6,13,.95);box-shadow:0 0 0 100vmax rgba(0,0,0,.6)}#ov-pole.big #ov-pc{width:min(76vh,80vw);height:min(76vh,80vw)}#ov-pole.big p{max-width:min(76vh,80vw)}
 #ov-leg .hcl{margin-top:8px;padding-top:7px;border-top:1px solid var(--line)}#ov-leg .hcl b{color:#5fe3ff}
@@ -531,6 +531,8 @@ const SCI={moon:[
  {k:'th',t:'th',n:'Thorium',u:'Th, parts per million (KREEP, heat-producing rock)',lo:'low',hi:'high',ramp:'lpblue',src:'Lunar Prospector Gamma Ray Spectrometer thorium, NASA Moon Trek'},
  {k:'h',t:'h',n:'Hydrogen',u:'hydrogen in the top meter (a water and solar-wind signal)',lo:'low',hi:'high (polar cold traps)',ramp:'lpblue',src:'Lunar Prospector Neutron Spectrometer hydrogen, NASA Moon Trek'},
  {k:'slope',t:'slope',n:'Slope',u:'ground slope (landing and driving)',lo:'flat',hi:'steep',ramp:'rainbow',src:'LRO LOLA color slope, NASA Moon Trek'},
+ {k:'radio',fn:1,bg:'relief',n:'Earth radio link',u:'share of the time Earth is above the horizon (direct radio). The Moon keeps one face to Earth, so the near side always has a link and the far side never does',lo:'never (far side, needs a relay)',hi:'always (near side)',ramp:'viridis',src:'Umbra calculation: one face locked to Earth, plus the libration wobble (up to 7.9° east-west, 6.7° north-south) that makes the edge band come and go. Smooth Moon, so crater walls and hills are ignored here; the south pole close-up uses LOLA heights'},
+ {k:'sunnow',fn:1,bg:'relief',n:'Sun and heat now',u:'surface temperature at this moment of the 29.5-day lunar day: half the Moon is in sunlight at any time',lo:'about 100 K (night)',hi:'about 390 K (noon)',ramp:'inferno',src:'Umbra calculation: sun position from the date (29.53-day lunar month), day temperature 390 K × cos(sun angle)^¼, night about 100 K, in line with LRO Diviner measurements'},
  {k:'sun',pole:1,bg:'relief',n:'Pole: sunlight',u:'share of the year in sunlight',lo:'0%',hi:'90%',ramp:'sun',src:'LRO LOLA average visibility (AVGVISIB), 60 m'},
  {k:'shadow',pole:1,bg:'h',n:'Pole: never lit',cat:[['#2878ff','Permanent shadow'],['#080a14','Sunlit some of the year']],src:'LRO LOLA permanent shadow map (LPSR), 60 m'},
  {k:'cold',pole:1,bg:'h',n:'Pole: hottest it gets',u:'maximum surface temperature, K',lo:'25 K',hi:'330 K',ramp:'inferno',src:'LRO Diviner Polar Resource Product'},
@@ -613,26 +615,44 @@ function stkCanvas(body){const R=stkRun(body),M=stkMasks(body),c=document.create
  x.putImageData(im,0,0);return c}
 function stkColor(k,act){return k===act?STKTOP:STKC[Math.min(3,Math.floor((k-1)/Math.max(1,act-1)*4))]}
 function stkToggle(f){const b=bigBody;stkOn[b][f]=stkOn[b][f]?0:1;delete stkR[b];for(const L of SCI[b])if(L.stack){delete sciCache[b+L.k];delete capImg[L.k]}setPins();bigSkin()}
+// computed layers: Earth link from the tidal lock, sun and heat from the date
+const SYN=29.530588,AGE0=(((Date.now()-Date.UTC(2000,0,6,18,14))/864e5)%SYN+SYN)%SYN;let sunDay=null;
+const sunAge=()=>sunDay==null?AGE0:sunDay,subLon=()=>{const l=180-sunAge()/SYN*360;return((l+540)%360)-180};
+function fnVal(b,k,lat,lon){const r=Math.PI/180,la=lat*r,lo=lon*r;
+ if(k==='radio'){const d=Math.acos(Math.max(-1,Math.min(1,Math.cos(la)*Math.cos(lo))))/r,az=Math.atan2(Math.sin(lo)*Math.cos(la),Math.sin(la)),L=1/Math.hypot(Math.sin(az)/7.9,Math.cos(az)/6.7);return Math.max(0,Math.min(1,(90+L-d)/(2*L)))}
+ if(k==='sunnow'){const c=Math.cos(la)*Math.cos(lo-subLon()*r);return c>0?Math.max(100,390*Math.pow(c,.25)):100}return NaN}
+function rampCol(rp,t){const C=RAMP[rp],x=Math.max(0,Math.min(1,t))*(C.length-1),i=Math.min(C.length-2,Math.floor(x)),f=x-i,h=c=>[1,3,5].map(j=>parseInt(c.substr(j,2),16)),a=h(C[i]),z=h(C[i+1]);return a.map((v,j)=>Math.round(v+(z[j]-v)*f))}
+const fnCache={};
+function fnTex(b,k){const L=SCI[b].find(x=>x.k===k),key=b+k+(k==='sunnow'?sunAge():'');if(fnCache[key])return fnCache[key];
+ const span=k==='sunnow'?[100,390]:[0,1];
+ return fnCache[key]=trek(b,L.bg,3).then(imgOf).then(bi=>{const W=bi.width,H=bi.height,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(bi,0,0);
+  x.fillStyle='rgba(4,6,13,.15)';x.fillRect(0,0,W,H);const w=720,h=360,o=document.createElement('canvas');o.width=w;o.height=h;const ox=o.getContext('2d'),im=ox.createImageData(w,h),d=im.data;
+  for(let y=0;y<h;y++)for(let q=0;q<w;q++){const v=fnVal(b,k,90-(y+.5)/2,-180+(q+.5)/2),c3=rampCol(L.ramp,(v-span[0])/(span[1]-span[0])),j=(y*w+q)*4;d[j]=c3[0];d[j+1]=c3[1];d[j+2]=c3[2];d[j+3]=255}
+  ox.putImageData(im,0,0);x.globalAlpha=.7;x.drawImage(o,0,0,W,H);x.globalAlpha=1;return c.toDataURL('image/jpeg',.9)})}
+function sunCtl(){const d=document.createElement('div');d.className='sunc';const a=sunAge(),sl=subLon();
+ d.innerHTML='<div class="u">'+(sunDay==null?'Now: ':'Picked: ')+'day '+a.toFixed(1)+' of 29.5 since new Moon. The Sun is overhead at '+Math.abs(sl).toFixed(0)+'°'+(sl<0?'W':'E')+(Math.abs(sl)<90?', so the near side is in daylight':', so the far side is in daylight')+'.</div><label>Lunar day <input type="range" min="0" max="29.5" step="0.5" value="'+a.toFixed(1)+'" aria-label="Day of the lunar month"></label> <button class="mxd">Now</button>';
+ const i=d.querySelector('input');i.onchange=()=>{sunDay=+i.value;bigSkin()};d.querySelector('button').onclick=()=>{sunDay=null;bigSkin()};legEl.append(d)}
 // combine: stack any global layers; each keeps its best share of the globe, cells count how many they pass, all-pass patches become points of interest
 let mixOn=false,mixBase='relief';const mixR={},MXW=720,MXH=360,mixF={};
-const mix={moon:{feo:{d:1,p:30},tio2:{d:1,p:30},h:{d:1,p:30},slope:{d:-1,p:30}},mars:{pressure:{d:1,p:30},ground:{d:1,p:30},dust:{d:-1,p:40},water:{d:1,p:30}}};
+const mix={moon:{feo:{d:1,p:30},tio2:{d:1,p:30},h:null,slope:{d:-1,p:30},radio:{d:1,p:50},sunnow:{d:1,p:50}},mars:{pressure:{d:1,p:30},ground:{d:1,p:30},dust:{d:-1,p:40},water:{d:1,p:30}}};
 const mixable=L=>!L.pole&&!L.stack&&!L.cat;
 function hueOf(r,g,b){const M=Math.max(r,g,b),m=Math.min(r,g,b),c=M-m;if(!c)return[0,0];let h=M===r?((g-b)/c+6)%6:M===g?(b-r)/c+2:(r-g)/c+4;return[h*60,c/M]}
 function decPx(ramp,r,g,b,a){if(a<128)return NaN;
  if(ramp==='gray')return(r+g+b)/765;
  if(ramp==='lpblue'){const M=Math.max(r,g,b);return M?(M-Math.min(r,g,b))/M:NaN}
  const [h,sat]=hueOf(r,g,b);if(sat<.3)return NaN;const top=ramp==='tes'?270:240;if(h<=top)return(top-h)/top;return h>310?1:0}
-function mixField(b,L){const key=b+L.k;if(mixF[key])return mixF[key];const N=MXW*MXH,f=new Float32Array(N);
+function mixField(b,L){const key=b+L.k+(L.k==='sunnow'?sunAge():'');if(mixF[key])return mixF[key];const N=MXW*MXH,f=new Float32Array(N);
+ if(L.fn){for(let y=0;y<MXH;y++)for(let x=0;x<MXW;x++)f[y*MXW+x]=fnVal(b,L.k,90-(y+.5)/2,-180+(x+.5)/2);return mixF[key]=Promise.resolve(f)}
  if(L.t)return mixF[key]=trekCv(b,L.t,2).then(cv=>{const W=cv.width,H=cv.height,d=cv.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
   for(let y=0;y<MXH;y++){const py=Math.floor((y+.5)/MXH*H);for(let x=0;x<MXW;x++){const px=Math.floor((x+.5)/MXW*W),j=(py*W+px)*4;f[y*MXW+x]=decPx(L.ramp,d[j],d[j+1],d[j+2],d[j+3])}}return f});
  return mixF[key]=loadTex().then(T=>{const g=T&&T[b].vals[L.k];for(let y=0;y<MXH;y++)for(let x=0;x<MXW;x++)f[y*MXW+x]=g?v1(g,90-(y+.5)/2,-180+(x+.5)/2):NaN;return f})}
-function mixSig(b){return Object.entries(mix[b]).filter(e=>e[1]).map(([k,v])=>k+v.d+v.p).join()}
+function mixSig(b){return Object.entries(mix[b]).filter(e=>e[1]).map(([k,v])=>k+v.d+v.p).join()+(mix[b].sunnow?'@'+sunAge():'')}
 function mixRun(b){const sig=mixSig(b);if(mixR[b]&&mixR[b].sig===sig)return Promise.resolve(mixR[b]);
  const A=SCI[b].filter(L=>mixable(L)&&mix[b][L.k]);
  return Promise.all(A.map(L=>mixField(b,L))).then(F=>{if(mixSig(b)!==sig)return mixRun(b);const N=MXW*MXH,cnt=new Uint8Array(N),has=new Uint8Array(N),pass=[];
   A.forEach((L,n)=>{const f=F[n],o=mix[b][L.k],v=[];for(let i=0;i<N;i++)if(ok(f[i])){v.push(f[i]);has[i]=1}v.sort((p,q)=>p-q);
-   const cut=v.length?(o.d>0?v[Math.floor(v.length*(1-o.p/100))]:v[Math.min(v.length-1,Math.floor(v.length*o.p/100))]):0,P=new Uint8Array(N);
-   for(let i=0;i<N;i++)if(ok(f[i])&&(o.d>0?f[i]>=cut:f[i]<=cut)){P[i]=1;cnt[i]++}pass.push(P)});
+   const cut=v.length?(o.d>0?v[Math.floor(v.length*(1-o.p/100))]:v[Math.min(v.length-1,Math.floor(v.length*o.p/100))]):0,P=new Uint8Array(N),st=v.length&&(o.d>0?cut<=v[0]:cut>=v[v.length-1]);
+   for(let i=0;i<N;i++)if(ok(f[i])&&(o.d>0?(st?f[i]>cut:f[i]>=cut):(st?f[i]<cut:f[i]<=cut))){P[i]=1;cnt[i]++}pass.push(P)});
   const act=A.length,kmc=(b==='moon'?1737.4:3389.5)*Math.PI/360,km2=y=>kmc*kmc*Math.cos((90-(y+.5)/2)*Math.PI/180);
   const all=i=>act>0&&cnt[i]===act;let area=0,tot=0;const seen=new Uint8Array(N),cl=[];
   for(let i=0;i<N;i++){if(!has[i])continue;const x=i%MXW,y=(i-x)/MXW;tot+=km2(y);if(!all(i))continue;area+=km2(y);if(seen[i])continue;
@@ -655,7 +675,7 @@ function mixAt(b,lat,lon){const R=mixR[b];if(!R||!R.act||R.sig!==mixSig(b))retur
 function mixSkin(b){legend();mixRun(b).then(R=>{if(!(big&&mixOn&&bigBody===b&&R.sig===mixSig(b)))return;legend();setPins();return mixTex(b,R).then(u=>{if(big&&mixOn&&bigBody===b&&R.sig===mixSig(b))big.globeImageUrl(u)})}).catch(e=>console.warn(e))}
 function bigSkin(){if(!big)return;const b=bigBody,k=ovLayer,L=SCI[b].find(x=>x.k===k);
  if(mixOn){mixSkin(b);big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();poleView();return}
- (L?(L.t?trek(b,L.t,3):TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
+ (L?(L.t?trek(b,L.t,3):L.fn?fnTex(b,k):TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
  big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();legend();poleView()}
 // buttons
 const lyrEl=document.getElementById('ov-lyr'),optEl=document.getElementById('ov-opt'),legEl=document.getElementById('ov-leg');
@@ -670,8 +690,8 @@ function drawLyr(){const b=bigBody;lyrEl.innerHTML='';lyrEl.append(lab('Mode'));
  for(const k of ['color','relief'])lyrEl.append(btn(BASE_SRC[b][k][0],mixOn?mixBase===k:ovLayer===k,()=>{if(mixOn){mixBase=k;bigSkin()}else setLayer(k)}));
  lyrEl.append(document.createElement('br'),lab(mixOn?'Stack (tap to add or remove)':'NASA science'));
  for(const L of SCI[b]){if(mixOn&&!mixable(L))continue;
-  lyrEl.append(mixOn?btn((mix[b][L.k]?'✓ ':'+ ')+L.n,!!mix[b][L.k],()=>{const D={moon:{slope:-1},mars:{dust:-1}};mix[b][L.k]=mix[b][L.k]?null:{d:D[b][L.k]||1,p:30};bigSkin()},!TEX&&!L.t,L.u||L.n)
-   :btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX&&!L.t,TEX||L.t?L.u||L.n:'Loading the science layers'))}
+  lyrEl.append(mixOn?btn((mix[b][L.k]?'✓ ':'+ ')+L.n,!!mix[b][L.k],()=>{const D={moon:{slope:-1},mars:{dust:-1}};mix[b][L.k]=mix[b][L.k]?null:{d:D[b][L.k]||1,p:30};bigSkin()},!TEX&&!L.t&&!L.fn,L.u||L.n)
+   :btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX&&!L.t&&!L.fn,TEX||L.t||L.fn?L.u||L.n:'Loading the science layers'))}
  if(mixOn&&b==='moon')lyrEl.append(btn('South pole overlap →',false,()=>{mixOn=false;setPins();setLayer('pstack')},!TEX,'Sunlight, ice, Earth in view and flat ground, mapped at 1 km near the pole'));
  optEl.innerHTML='';
  optEl.append(btn('3D relief',ovRelief,()=>{ovRelief=!ovRelief;bigSkin()},!TEX,(b==='moon'?'LRO LOLA':'MGS MOLA')+' heights as a bump map'));
@@ -687,7 +707,7 @@ function mixLeg(b){const R=mixR[b],A=SCI[b].filter(L=>mixable(L)&&mix[b][L.k]);
  else{for(let k=R.act;k>=1;k--)h+='<div class="cat"><i style="background:'+stkColor(k,R.act)+'"></i>'+(k===R.act?(R.act>1?'All '+R.act+' at once':'Passes'):k+' of '+R.act)+'</div>';
   h+='<div class="u" style="margin-top:6px">All at once: '+f0(R.area)+' km², '+(R.area/Math.max(1,R.tot)*100).toFixed(1)+'% of the mapped globe, in '+f0(R.n)+' patches.</div>';
   if(R.poi.length)h+='<div class="u">Points of interest (largest patches):</div><div class="layers mxp">'+R.poi.map(p=>'<button data-i="'+(p.r-1)+'">P'+p.r+' · '+llTxt(p.lat,p.lon)+' · '+f0(p.a)+' km²</button>').join('')+'</div>'}
- h+='<div class="src">Source: '+A.map(L=>L.n+': '+L.src).join('; ')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false;
+ h+='<div class="src">Source: '+A.map(L=>L.n+': '+L.src).join('; ')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false;if(mix[b].sunnow)sunCtl();
  legEl.querySelectorAll('.mxr').forEach(r=>{const o=mix[b][r.dataset.k],inp=r.querySelector('input'),out=r.querySelector('output');
   r.querySelector('.mxd').onclick=()=>{o.d=-o.d;bigSkin()};inp.oninput=()=>{out.textContent=inp.value+'%'};inp.onchange=()=>{o.p=+inp.value;bigSkin()}});
  legEl.querySelectorAll('.mxp button').forEach(x=>x.onclick=()=>{const p=R.poi[+x.dataset.i];bigFly([p.lat,p.lon,'Point of interest P'+p.r,'P'+p.r],'All '+R.act+' layers pass over '+f0(p.a)+' km² here')})}
@@ -706,7 +726,7 @@ function legend(){const b=bigBody,L=SCI[b].find(x=>x.k===ovLayer);
  if(L.cat)h+=L.cat.map(c=>'<div class="cat"><i style="background:'+c[0]+'"></i>'+c[1]+'</div>').join('');
  else h+='<div class="u">'+L.u+'</div><div class="bar" style="background:'+grad(L.ramp)+'"></div><div class="ends"><span>'+L.lo+'</span><span>'+L.hi+'</span></div>'+(L.none?'<div class="cat"><i style="background:#080a14"></i>'+L.none+'</div>':'');
  const BGN={relief:'shaded elevation',h:'Lunar Prospector hydrogen',slope:'LOLA slope'};
- h+='<div class="src">Source: '+L.src+(L.pole?'. Shown in the close-up above; the globe cap is coarser':'')+(L.bg&&!L.t?'. Wrapped over the NASA Trek '+BGN[L.bg]+' globe':'')+(L.t?'. Full-globe NASA imagery':'')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false}
+ h+='<div class="src">Source: '+L.src+(L.pole?'. Shown in the close-up above; the globe cap is coarser':'')+(L.bg&&!L.t?'. Wrapped over the NASA Trek '+BGN[L.bg]+' globe':'')+(L.t?'. Full-globe NASA imagery':'')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false;if(L.k==='sunnow')sunCtl()}
 // south pole close-up (polar stereographic, 85S to the pole, Earth-facing side up)
 const LF=[[-89.264,246.88,"Henson",44,215,2.9,0],[-89.379,153.92,"Shackleton",39,187,1.7,1],[-89.378,227.06,"Henson",40,187,0.8,0],[-89.508,217.15,"Shackleton",39,185,0.2,1],[-89.551,184.55,"Shackleton",26,184,2.6,1],[-87.898,236.52,"Henson",35,145,2.2,0],[-88.01,259.81,"Lacus Tenebrarum",43,145,3.4,0],[-87.976,248.8,"Henson",27,142,1.1,0],[-87.824,230.61,"Henson",32,137,2,0],[-88.465,292.27,"de Gerlache",50,127,1.1,1],[-89.036,109.92,"Shackleton",32,124,1.4,1],[-87.196,294.07,"Lacus Tenebrarum",25,121,0.8,0]];
 const CRATERS=[["Shackleton",-89.67,129.8],["de Gerlache",-88.5,-87.1],["Haworth",-87.45,-5],["Shoemaker",-88.1,44.9],["Faustini",-87.2,84.3],["Sverdrup",-88.3,-152],["Cabeus",-85.3,-42.1],["Nobile",-85.2,53.5]];
@@ -770,6 +790,7 @@ function readout(body,lat,lon,name,extra){
   mean=(bz?'Inside the Umbra base zone: water in the ground, thicker air for landing and firm footing. ':'')+(ok(p)?'Air at '+f0(p)+' Pa, under 1% of Earth\'s. No Earth ground is that thin, so Umbra uses the highest dry plateaus.':'')}
  const SL=SCI[body].find(x=>x.k===ovLayer);if(!mixOn&&SL&&SL.stack&&(body==='mars'||lat<=-85)){const M=stkMasks(body),[sx,sy]=stkXY(body,lat,lon),i=sy*M.W+sx;
   if(sx>=0&&sy>=0&&sx<M.W&&sy<M.H&&M.has[i]){const F=STK[body].filter(f=>stkOn[body][f.k]);add('Lines up',F.filter(f=>M[f.k][i]).length+' of '+F.length+': '+F.map(f=>(M[f.k][i]?'✓ ':'✗ ')+f.n).join(', '),'')}}
+ if(body==='moon'){const e=fnVal('moon','radio',lat,lon),t=fnVal('moon','sunnow',lat,lon);add('Earth radio link',e>=.999?'always (near side)':e<=.001?'never (far side, needs a relay)':Math.round(e*100)+'% of the time','smooth-Moon estimate');add('Sun now',t>100.5?'day, about '+f0(t)+' K':'night, about 100 K','lunar day '+sunAge().toFixed(1)+' of 29.5')}
  if(mixOn){const m=mixAt(body,lat,lon);if(m)add('Combined',m.filter(x=>x[1]).length+' of '+m.length+': '+m.map(x=>(x[1]?'✓ ':'✗ ')+x[0].n).join(', '),'')}
  const T=[...new Set(ids)].filter(id=>TITLE[id]&&A.tests[id]).slice(0,6);
  let best=null,bn=0;for(const s of sites){const n=T.filter(id=>s.tests.includes(TITLE[id])).length;if(n>bn){bn=n;best=s}}
