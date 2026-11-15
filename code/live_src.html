@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Umbra Live</title>
+<title>Umbra Data</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
@@ -53,20 +53,58 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
 .st{display:inline-block;font:600 11px var(--mono);padding:2px 7px;border-radius:99px}
 .st.s{background:#163a28;color:var(--green)} .st.p{background:#3a3012;color:var(--amber)} .st.w{background:#2a1c1c;color:var(--red)}
 #tour{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:560px;width:calc(100% - 28px);background:var(--panel);border:1px solid var(--amber);border-radius:14px;padding:14px 16px;display:none;gap:10px;z-index:8;box-shadow:0 10px 40px #000a}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+@media(max-width:640px){.viewbar{flex-wrap:wrap}.viewbar button{flex:1 1 30%;padding:8px 6px;font-size:13px}}
+.viewbar{display:flex;gap:4px;padding:4px;background:var(--deep);border:1px solid var(--line);border-radius:12px;overflow-x:auto;scrollbar-width:thin}
+.viewbar button{flex:1 0 auto;white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--muted);padding:9px 14px;border-radius:9px}
+.viewbar button:hover{color:var(--text);border-color:var(--line)}
+.viewbar button.on{background:var(--panel);color:var(--amber);border-color:var(--amber)}
+#drop .eyebrow{margin-bottom:4px;color:var(--amber)}
+[hidden]{display:none!important}
+.wrap>*,.grid>*,.card>*{min-width:0} select{max-width:100%}
+@media(min-width:1151px){#detail,.grid>aside:first-child{position:sticky;top:72px;max-height:calc(100vh - 88px);overflow-y:auto;overflow-x:hidden}#layers{max-height:none}}
 #tour.on{display:grid} #tour p{margin:0} .hl{outline:3px solid var(--amber);outline-offset:4px;border-radius:14px}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-<p class="eyebrow">Umbra · Team Forced Futures · NASA Space Apps 2026</p>
-<h1>Umbra Live: bring your own data</h1>
-<div class="btns" style="margin:8px 0 2px"><button class="primary" id="tour-go">Take the 30-second tour</button></div>
-<p class="sub">The engine's tests run here in your browser. Drop in a new data layer and it becomes a new test or a filter on every test; drop in a list of sites and the engine scores them. Every map and list re-ranks on the spot.</p>
+<header class="top">
+<div>
+<p class="eyebrow">Umbra Data · Team Forced Futures · NASA Space Apps 2026</p>
+<h1>Explore the data, or add your own</h1>
+<p class="sub">Every Umbra test runs here in your browser on a 0.5° grid of Earth's land. Pick a view, pick a test, click any spot on the map. Drop in your own data layer or site list and every map and ranking updates on the spot.</p>
+</div>
+<div class="btns"><button class="primary" id="tour-go">Take the 30-second tour</button><button id="go-add" onclick="document.getElementById('drop').scrollIntoView({behavior:'smooth',block:'center'})">Add your own data ↓</button></div>
 </header>
+
+<div class="tabs viewbar" role="tablist" aria-label="Views"><button id="v-one" class="on" role="tab">One test</button><button id="v-exp" role="tab">Expedition overlap</button><button id="v-fp" role="tab">Find look-alikes</button><button id="v-under" role="tab">Underpriced</button><button id="v-sys" role="tab">Systems</button></div>
+<div class="grid">
+<aside class="card">
+<h2>Tests</h2>
+<p class="small">Click a name to map it. Ticked layers count in the expedition view and in look-alike searches. Orbiter-view layers start unticked.</p>
+<ul id="layers"></ul>
+<div class="btns"><button id="all">Tick all</button><button id="none">Clear</button></div>
+</aside>
+
+<main class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2 id="maptitle">Loading the engine…</h2>
+
+</div>
+<canvas id="map" width="1440" height="720" aria-label="World map of the selected score"></canvas>
+<div class="legend"><span id="lg-lo">low</span><div class="bar" id="lgbar"></div><span id="lg-hi">most extreme</span></div>
+<div class="btns" id="fpbar"><select id="fp-preset" aria-label="Moon or Mars fingerprint"><option value="">Pick a Moon or Mars fingerprint…</option></select><button id="fp-here" disabled>Find places like the spot I clicked</button><button id="card-here" disabled>Report card for the spot I clicked</button></div>
+<p id="cellinfo">Click the map to see every test score at that spot.</p>
+<h3>What changed</h3>
+<ul id="log"></ul>
+</main>
+
+<aside class="card" id="detail"></aside>
+</div>
 
 <section id="drop" aria-label="Drop a file">
 <div>
+<p class="eyebrow">Add your own data</p>
 <h2>Drop a file anywhere on this box</h2>
 <p><b>Data layer:</b> GeoTIFF in latitude/longitude, CSV with lat, lon and a value column, GeoJSON points, or ESRI ASCII grid (.asc).</p>
 <p><b>Site list:</b> CSV with name, lat, lon. Each site gets a percentile on every test.</p>
@@ -79,30 +117,6 @@ footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padd
 <input type="file" id="file" accept=".tif,.tiff,.csv,.txt,.json,.geojson,.asc" hidden>
 </div>
 </section>
-
-<div class="grid">
-<aside class="card">
-<h2>Tests</h2>
-<p class="small">Click a name to map it. Ticked layers count in the expedition view and in look-alike searches. Orbiter-view layers start unticked.</p>
-<ul id="layers"></ul>
-<div class="btns"><button id="all">Tick all</button><button id="none">Clear</button></div>
-</aside>
-
-<main class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-<h2 id="maptitle">Loading the engine…</h2>
-<div class="tabs" role="tablist"><button id="v-one" class="on" role="tab">One test</button><button id="v-exp" role="tab">Expedition overlap</button><button id="v-fp" role="tab">Find look-alikes</button><button id="v-under" role="tab">Underpriced</button><button id="v-sys" role="tab">Systems</button></div>
-</div>
-<canvas id="map" width="1440" height="720" aria-label="World map of the selected score"></canvas>
-<div class="legend"><span id="lg-lo">low</span><div class="bar" id="lgbar"></div><span id="lg-hi">most extreme</span></div>
-<div class="btns" id="fpbar"><select id="fp-preset" aria-label="Moon or Mars fingerprint"><option value="">Pick a Moon or Mars fingerprint…</option></select><button id="fp-here" disabled>Find places like the spot I clicked</button><button id="card-here" disabled>Report card for the spot I clicked</button></div>
-<p id="cellinfo">Click the map to see every test score at that spot.</p>
-<h3>What changed</h3>
-<ul id="log"></ul>
-</main>
-
-<aside class="card" id="detail"></aside>
-</div>
 
 <section class="card" id="sitesec" hidden>
 <h2>Your sites, scored on every test</h2>
@@ -294,7 +308,7 @@ function cardMarkdown(c) {
     ...c.rows.map(r => `| ${r.d} | ${lab[r.st]} | ${r.best ? r.best.l.title : "none"} | ${r.best ? r.best.pc.toFixed(0) : "-"} | ${r.best && r.st !== "w" ? (r.best.l.info.gap || "") : ""} |`), "",
     "Jobs: " + c.jobs.map(l => l.title).join("; "), "",
     "What no place on Earth gives: " + M.cant.map(x => `${x.title} (use ${x.instead})`).join("; "), "",
-    "Generated by Umbra Live (Team Forced Futures, NASA Space Apps 2026). Percentiles are among Earth's land cells at 0.5 degrees."].join("\n");
+    "Generated by Umbra Data (Team Forced Futures, NASA Space Apps 2026). Percentiles are among Earth's land cells at 0.5 degrees."].join("\n");
 }
 function download(name, text) { const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "text/markdown" })), download: name }); document.body.appendChild(a); a.click(); a.remove(); }
 $("card-here").onclick = () => { if (LASTP >= 0) { CARDP = LASTP; view = "card"; tabs(); refresh(); } };

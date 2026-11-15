@@ -254,7 +254,7 @@ a{color:inherit}
 <canvas id="stars" aria-hidden="true"></canvas>
 <div id="loading">Loading NASA imagery</div>
 <header class="top"><a class="brand" href="index.html">UMBRA</a>
-<div class="tools" role="group" aria-label="Atlas tools"><button id="cmp-btn">Known vs found</button><button id="site-btn">Where to build</button><button id="hc-btn">Hidden value</button><button id="tour-btn">Guided tour</button></div><nav aria-label="Pages"><a href="globe.html" aria-current="page">Atlas</a><a href="live.html">Live</a><a href="constraint-map.html">Constraint map</a><button id="set-btn" class="gear" aria-expanded="false" aria-controls="settings" aria-label="Settings" title="Settings">⚙</button></nav></header>
+<div class="tools" role="group" aria-label="Atlas tools"><button id="cmp-btn">Known vs found</button><button id="site-btn">Where to build</button><button id="hc-btn">Hidden value</button><button id="tour-btn">Guided tour</button></div><nav aria-label="Pages"><a href="globe.html" aria-current="page">Atlas</a><a href="live.html">Data</a><a href="constraint-map.html">Constraint map</a><button id="set-btn" class="gear" aria-expanded="false" aria-controls="settings" aria-label="Settings" title="Settings">⚙</button></nav></header>
 <div id="settings" class="card" hidden role="group" aria-label="Settings"><h2>Settings</h2>
 <label class="sw"><input type="checkbox" id="pref-intro"><span>Solar system entrance<small>Play the "Come take a look" opening when the page loads.</small></span></label>
 <label class="sw"><input type="checkbox" id="pref-story"><span>Guided questions<small>Walk through the tool one question at a time.</small></span></label>
@@ -315,7 +315,7 @@ a{color:inherit}
 <div class="cmp-venn" id="cmp-venn"></div>
 <div class="cmp-tools"><span id="cmp-note"></span><span><button id="cmp-all" aria-pressed="false">Show all 36 tests</button> <button id="cmp-map">Show both on the globe</button></span></div>
 <div class="crow-h"><span>Test (click to open)</span><span id="cmp-lh">Known site</span><span id="cmp-rh">Umbra trip</span></div><div id="cmp-rows"></div>
-<p class="hint" style="margin-top:12px">Both sides are scored the same way: the best score within a 2° area (about 200 km) on the 0.5° Umbra Live grid, as a share of the best score anywhere on Earth. Strong means 50 or more. <span class="key" style="font:700 10px ui-monospace,Consolas,monospace;color:#04060d;background:var(--amber);border-radius:99px;padding:1px 6px">KEY</span> marks a test one side passes strongly and the other does not.</p><p class="src" id="cmp-src"></p>
+<p class="hint" style="margin-top:12px">Both sides are scored the same way: the best score within a 2° area (about 200 km) on the 0.5° Umbra grid, as a share of the best score anywhere on Earth. Strong means 50 or more. <span class="key" style="font:700 10px ui-monospace,Consolas,monospace;color:#04060d;background:var(--amber);border-radius:99px;padding:1px 6px">KEY</span> marks a test one side passes strongly and the other does not.</p><p class="src" id="cmp-src"></p>
 </div></div>
 <div id="ov" role="dialog" aria-modal="true" aria-labelledby="ov-t"><div id="ov-g"></div>
 <div class="head"><p class="eyebrow" id="ov-e"></p><h2 id="ov-t"></h2><p id="ov-s"></p></div>
@@ -941,7 +941,7 @@ const HC=[
  {n:'Heat tail',s:'dark',d:'A thermometer hiding in the long-wavelength noise.'},
  {n:'Daily water cycle',s:'dark',d:'The band changes with time of day and latitude, matching LAMP.'},
  {n:'Space weathering and swirls',s:'site',P:[FT.rg],d:'Swirls stay fresh because local magnetic fields deflect the solar wind: a natural shelter clue.'}],
- e:{t:'NASA EMIT on the ISS is the same kind of instrument and maps minerals in Earth\'s deserts. An EMIT mineral map can drop straight into Umbra Live.',p:[[19,19,'Northern Chad']],trip:'Chad'}},
+ e:{t:'NASA EMIT on the ISS is the same kind of instrument and maps minerals in Earth\'s deserts. An EMIT mineral map can drop straight into Umbra Data.',p:[[19,19,'Northern Chad']],trip:'Chad'}},
 {n:'SOFIA',p:'molecular water on the sunlit Moon',y:'NASA/DLR airborne telescope, retired 2022',c:[
  {n:'Water at Clavius',s:'site',P:[FT.cla],d:'The headline use: roughly 100 to 400 parts per million.'},
  {n:'H2O vs OH',s:'site',P:[FT.cla],d:'The 6-micron band tells real water from OH, which 3 microns cannot.'},
@@ -1212,8 +1212,8 @@ const STEPS=[
   a:'Vacuum, low gravity and space radiation. Every test says where Earth falls short, so a team knows what still needs a lab or a chamber.',
   go(){tearth();if(cur!==ata)select(ata);setTimeout(()=>{const g=det.querySelector('.test[aria-expanded=true] .x p:last-child');if(g){g.classList.remove('flash');void g.offsetWidth;g.classList.add('flash');g.scrollIntoView({block:'nearest',behavior:'smooth'})}},350)}},
  {q:'Your turn. Where would you send the first crew?',
-  a:'Spin the globe, pick a trip, open a test. Or bring your own data to Umbra Live and see where it lands.',
-  acts:[['Explore freely',()=>endStory()],['Open Umbra Live',()=>{location.href='live.html'}]],
+  a:'Spin the globe, pick a trip, open a test. Or bring your own data to Umbra Data and see where it lands.',
+  acts:[['Explore freely',()=>endStory()],['Open Umbra Data',()=>{location.href='live.html'}]],
   go(){tearth();earth.ringsData(cur?[cur]:[])}}
 ];
 let si=-1;
