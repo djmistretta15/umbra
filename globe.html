@@ -223,6 +223,9 @@ a{color:inherit}
 .touring .hero{display:none}
 .touring .trips{max-height:calc(100vh - 430px)}
 .touring .credit{display:none}
+.tour-ov #story{z-index:30;left:50%;top:auto;bottom:44px;transform:translateX(-50%);width:min(500px,calc(100% - 760px));min-width:360px;min-height:0;padding:14px 16px 12px;background:rgba(9,14,28,.94);backdrop-filter:blur(8px)}
+.tour-ov .sq-q{font-size:21px}.tour-ov .sq-a{font-size:14px;margin-bottom:10px}.tour-ov .sq-acts{margin-bottom:10px}
+.tour-ov #ov .tip{display:none}
 .sq-n{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0 0 8px}
 .sq-q{font-size:28px;line-height:1.12;margin:0 0 10px;font-weight:700;letter-spacing:-.01em;text-wrap:balance;padding-right:18px}
 .sq-a{color:#cfd6e6;margin:0 0 14px;font-size:15.5px}
@@ -238,7 +241,7 @@ a{color:inherit}
 .pulse{animation:pulse 1.4s ease-out 2}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,181,71,.65)}100%{box-shadow:0 0 0 14px rgba(255,181,71,0)}}
 .flash{animation:flash 2.6s ease;border-radius:6px}@keyframes flash{0%,60%{background:rgba(255,181,71,.2)}100%{background:transparent}}
-@media (max-width:820px){#story{position:relative;left:auto;top:auto;width:auto;margin:70px 16px 0;min-height:0}.sq-q{font-size:24px}#settings{right:16px;left:16px;width:auto}}
+@media (max-width:820px){#story{position:relative;left:auto;top:auto;width:auto;margin:70px 16px 0;min-height:0}.sq-q{font-size:24px}#settings{right:16px;left:16px;width:auto}.tour-ov #story{position:fixed;left:16px;right:16px;bottom:10px;width:auto;min-width:0;transform:none;margin:0;max-height:44vh;overflow:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}#story.in *,#intro-go,.pulse,.flash{animation:none!important}}
 #detail .src,#cmp .src,.ovr .src,#ov-hc .src{font-size:11.5px;line-height:1.45;color:var(--dim);margin:12px 0 0}#detail .src b,#cmp .src b,.ovr .src b,#ov-hc .src b{color:var(--ink,#eef2fa);font-weight:600}
 </style></head><body>
@@ -1116,7 +1119,7 @@ function openOv(body){const I=INFO[body];ovOpen=body;lastFocus=document.activeEl
  if(hit)bigFly(hit.p);else big.pointOfView({lat:body==='moon'?-35:15,lng:body==='moon'?20:-60,altitude:2.1});
  (function oc(){if(ovOpen!==body||!big)return;const cam=big.camera().position;for(const x of ovPins){if(!x.el)continue;const q=big.getCoords(x.lat,x.lng,0);const v=(q.x*cam.x+q.y*cam.y+q.z*cam.z)>1.02e4;x.el.style.opacity=v?1:0;x.el.style.pointerEvents=v?'auto':'none'}requestAnimationFrame(oc)})();
  document.getElementById('ov-close').focus()}
-function closeOv(){hcOn=false;hcSel=null;hcPins=[];hcEl.hidden=true;ov.classList.remove('hcv');ov.classList.remove('on');ovOpen=null;setTimeout(()=>{if(!ovOpen){ov.className='';if(big){big._destructor&&big._destructor();big=null;ovG.innerHTML=''}}},450);lastFocus&&lastFocus.focus()}
+function closeOv(){document.body.classList.remove('tour-ov');hcOn=false;hcSel=null;hcPins=[];hcEl.hidden=true;ov.classList.remove('hcv');ov.classList.remove('on');ovOpen=null;setTimeout(()=>{if(!ovOpen){ov.className='';if(big){big._destructor&&big._destructor();big=null;ovG.innerHTML=''}}},450);lastFocus&&lastFocus.focus()}
 document.querySelectorAll('.xp').forEach(b=>b.onclick=()=>openOv(b.dataset.b));
 document.getElementById('g-moon').addEventListener('dblclick',()=>openOv('moon'));document.getElementById('g-mars').addEventListener('dblclick',()=>openOv('mars'));
 document.getElementById('ov-close').onclick=closeOv;
@@ -1150,40 +1153,68 @@ function pulse(x){if(!x)return;x.classList.remove('pulse');void x.offsetWidth;x.
 function clearSel(){cur=null;for(const o of sites){o.btn.setAttribute('aria-pressed','false');o.el&&o.el.classList.remove('sel')}showTest(null);det.innerHTML=EMPTY;det.classList.add('on')}
 function wide(){earth.pointOfView({lat:18,lng:40,altitude:narrow()?2.6:2.2},1400);ctl.autoRotate=true}
 const tib=byName('Western Tibet')||sites[0],ata=byName('Atacama')||sites[1];
+// tour inside the explorer: open a body in a known state; Earth steps close it again
+function tov(b,fn){if(ovOpen!==b){if(ovOpen){if(big){big._destructor&&big._destructor();big=null}closeOv()}openOv(b)}
+ if(hcOn)hcToggle(false);poleBig(false);mixOn=false;sunDay=null;fn&&fn()}
+function tearth(){if(ovOpen)closeOv()}
 const STEPS=[
  {q:'What is NASA asking for?',
   a:'Places on Earth where crews and robots can rehearse the Moon and Mars before they go. Not somewhere that looks right. Somewhere that behaves right.',
-  go(){clearSel();earth.ringsData([]);wide()}},
+  go(){tearth();clearSel();earth.ringsData([]);wide()}},
  {q:'So what actually breaks a mission?',
   a:'Not scenery. Sharp cold dust, two weeks of night, air too thin to cool a motor, ice locked in frozen ground. Umbra starts from those conditions, the way NASA orbiters measured them.',
-  go(){clearSel();earth.ringsData([]);wide();
+  go(){tearth();clearSel();earth.ringsData([]);wide();
    aim(moonG,'w-moon','where-moon',MOON.pole,'LRO: the lunar south pole, where the base will go');
    aim(marsG,'w-mars','where-mars',MARS.ice,'MGS and Odyssey: Arcadia Planitia ground ice');
    pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
  {q:'What did NASA measure up there?',
   a:'LRO mapped the Moon\'s polar cold, buried ice, slopes and sunlight. Mars Global Surveyor and Mars Odyssey mapped Mars\'s thin air, dust and water. We turned that into '+nTests+' tests.',
   acts:[['Explore the Moon',()=>openOv('moon')],['Explore Mars',()=>openOv('mars')]],
-  go(){pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
+  go(){tearth();pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
+ {q:'What does the Moon look like to NASA\'s instruments?',ov:1,
+  a:'This is the real Moon, wrapped in NASA maps. The buttons at the bottom right swap the whole globe to another measurement: iron, titanium, thorium, hydrogen, slope. Click any spot on the ground to read the values and their sources.',
+  acts:[['Iron',()=>setLayer('feo')],['Hydrogen',()=>setLayer('h')],['Slope',()=>setLayer('slope')]],
+  go(){tov('moon',()=>setLayer('feo'))}},
+ {q:'Can a crew call home, and is it day there?',ov:1,
+  a:'The Moon keeps one face to Earth, so the near side always has a direct radio link and the far side never does. Switch to Sun and heat now to see which half is in daylight today, then drag the slider through the 29.5-day lunar day.',
+  acts:[['Earth radio link',()=>setLayer('radio')],['Sun and heat now',()=>setLayer('sunnow')]],
+  go(){tov('moon',()=>setLayer('radio'))}},
+ {q:'Where do the Moon\'s conditions all line up?',ov:1,
+  a:'Combine stacks layers on top of each other. Each one keeps its best share of the Moon, and the patches where every layer passes become points of interest, P1 to P5. Tap + on any layer to add it or take it out.',
+  go(){tov('moon',()=>{mixOn=true;setPins();bigSkin()})}},
+ {q:'Why the south pole?',ov:1,
+  a:'Near the pole, LRO maps sunlight, permanent shadow, cold, buried ice, Earth in view and flat ground at fine scale. This overlap shows where all of them meet. Of 12 light-flow hubs, 5 sit nearest Shackleton or de Gerlache, both Artemis III candidate areas.',
+  acts:[['Enlarge the close-up',()=>poleBig(true)]],
+  go(){tov('moon',()=>setLayer('pstack'))}},
+ {q:'What else is hiding in NASA\'s Moon data?',ov:1,
+  a:()=>'Each of the 21 NASA Moon datasets is known for one thing, but together they carry '+hcStats().hidden+' more channels. The glow shows where those were measured. Open any dataset on the left to see its hidden channels and its Earth mirror.',
+  go(){tov('moon',()=>{hcToggle(true);setLayer('hcall')})}},
+ {q:'And Mars?',ov:1,
+  a:'The same tools work on Mars: air pressure from MGS MOLA heights, ground type and bright dust from MGS TES, buried water from Mars Odyssey. Combine finds where thin air, firm ground, low dust and water overlap.',
+  go(){tov('mars',()=>{mixOn=true;setPins();bigSkin()})}},
  {q:'Where on Earth already passes those tests?',
   a:'We scored every place on land for every test, then looked for spots that pass many at once. One trip, many systems tested. These are the best eight. Every small dot on the globe is one of the five best places for one of the 36 tests; green dots are known analog sites.',
-  go(){clearSel();earth.ringsData(sites).pointOfView({lat:20,lng:20,altitude:narrow()?2.9:2.5},1600);ctl.autoRotate=true;sites.forEach(s=>pulse(s.btn))}},
+  go(){tearth();clearSel();earth.ringsData(sites).pointOfView({lat:20,lng:20,altitude:narrow()?2.9:2.5},1600);ctl.autoRotate=true;sites.forEach(s=>pulse(s.btn))}},
  {q:'What makes western Tibet the Moon and Mars?',
   a:tib.count+' tests in one trip: cold sharp dust, huge daily temperature swings, thin dry air and strong UV. Open any test on the right to see the NASA measurement behind it.',
-  go(){select(tib)}},
+  go(){tearth();select(tib)}},
  {q:'How do we know it works?',
   a:'Nobody told it where the famous analog sites are, and it found them anyway: Atacama, the Dry Valleys, Lanzarote. In a blind check, '+hit+'% of NASA\'s catalogued meteorite finds fell in our top zones, against 25% by chance.',
-  go(){if(cur!==ata)select(ata)}},
+  go(){tearth();if(cur!==ata)select(ata)}},
   {q:'How do the known analog sites compare?',
    a:'Put any known site next to an Umbra trip and score both the same way. Haughton Crater, a long-running NASA analog, sits next to the Axel Heiberg area, and that trip passes more tests at once. The KEY rows show exactly what each side has that the other lacks.',
    acts:[['Compare side by side',()=>openCmp(CM.known.findIndex(k=>k[0]==='Haughton Crater'),sites.findIndex(s=>s.name==='Axel Heiberg area'))]],
-   go(){clearSel();const k=CM.known.find(k=>k[0]==='Haughton Crater'),s=sites.find(s=>s.name==='Axel Heiberg area');earth.ringsData([s,{lat:k[1],lon:k[2]}]).pointOfView({lat:79,lng:-80,altitude:narrow()?1.9:1.5},1600)}},
+   go(){tearth();clearSel();const k=CM.known.find(k=>k[0]==='Haughton Crater'),s=sites.find(s=>s.name==='Axel Heiberg area');earth.ringsData([s,{lat:k[1],lon:k[2]}]).pointOfView({lat:79,lng:-80,altitude:narrow()?1.9:1.5},1600)}},
+ {q:'Is any trip Moon-like right now?',
+  a:()=>{const S=sunNow(),n=sites.filter(o=>sunLike(o,S).m).length;return 'The Earth globe shades night from the real position of the sun. Trips that glow silver have polar night, a sun that never sets, or a low sun at this moment, the light a crew at the lunar south pole lives with. Right now that is '+n+' of '+sites.length+'.'},
+  go(){tearth();clearSel();if(!dnOn){dnOn=true;dnTex();dnMark()}earth.ringsData([]);earth.pointOfView({lat:Math.max(-60,Math.min(60,-sunNow().lat*2)),lng:sunNow().lon+90,altitude:narrow()?2.6:2.2},1400);ctl.autoRotate=false;pulse(dnEl)}},
  {q:'What can Earth never copy?',
   a:'Vacuum, low gravity and space radiation. Every test says where Earth falls short, so a team knows what still needs a lab or a chamber.',
-  go(){if(cur!==ata)select(ata);setTimeout(()=>{const g=det.querySelector('.test[aria-expanded=true] .x p:last-child');if(g){g.classList.remove('flash');void g.offsetWidth;g.classList.add('flash');g.scrollIntoView({block:'nearest',behavior:'smooth'})}},350)}},
+  go(){tearth();if(cur!==ata)select(ata);setTimeout(()=>{const g=det.querySelector('.test[aria-expanded=true] .x p:last-child');if(g){g.classList.remove('flash');void g.offsetWidth;g.classList.add('flash');g.scrollIntoView({block:'nearest',behavior:'smooth'})}},350)}},
  {q:'Your turn. Where would you send the first crew?',
   a:'Spin the globe, pick a trip, open a test. Or bring your own data to Umbra Live and see where it lands.',
   acts:[['Explore freely',()=>endStory()],['Open Umbra Live',()=>{location.href='live.html'}]],
-  go(){earth.ringsData(cur?[cur]:[])}}
+  go(){tearth();earth.ringsData(cur?[cur]:[])}}
 ];
 let si=-1;
 const sqN=story.querySelector('.sq-n'),sqQ=story.querySelector('.sq-q'),sqA=story.querySelector('.sq-a'),sqActs=story.querySelector('.sq-acts'),sqDots=story.querySelector('.sq-dots');
@@ -1191,18 +1222,18 @@ const sqBack=document.getElementById('sq-back'),sqNext=document.getElementById('
 sqDots.innerHTML=STEPS.map(()=>'<i></i>').join('');
 function showStep(i){si=Math.max(0,Math.min(STEPS.length-1,i));const S=STEPS[si];
  story.hidden=false;document.body.classList.add('touring');
- sqN.textContent='Question '+(si+1)+' of '+STEPS.length;sqQ.textContent=S.q;sqA.textContent=S.a;
+ sqN.textContent='Question '+(si+1)+' of '+STEPS.length;sqQ.textContent=S.q;sqA.textContent=typeof S.a==='function'?S.a():S.a;
  sqActs.innerHTML='';(S.acts||[]).forEach(([t,fn])=>{const b=document.createElement('button');b.className='chip';b.textContent=t;b.onclick=fn;sqActs.appendChild(b)});
  [...sqDots.children].forEach((d,k)=>{d.className=k===si?'on':k<si?'done':''});
  sqBack.disabled=si===0;sqNext.textContent=si===STEPS.length-1?'Start exploring':'Next question';
  story.classList.remove('in');void story.offsetWidth;story.classList.add('in');
- S.go&&S.go()}
-function endStory(){if(story.hidden)return;story.hidden=true;document.body.classList.remove('touring');si=-1;hero.style.opacity=cur&&!narrow()?.18:1}
+ S.go&&S.go();document.body.classList.toggle('tour-ov',!!S.ov)}
+function endStory(){if(story.hidden)return;story.hidden=true;document.body.classList.remove('touring','tour-ov');si=-1;hero.style.opacity=cur&&!narrow()?.18:1}
 sqNext.onclick=()=>{if(si===STEPS.length-1)endStory();else showStep(si+1)};sqBack.onclick=()=>showStep(si-1);
 document.getElementById('sq-end').onclick=()=>endStory();
 addEventListener('keydown',e=>{
  if(e.key==='Escape'&&!setP.hidden){toggleSet(false);setBtn.focus();return}
- if(story.hidden||ovOpen||!intro.hidden||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(story.hidden||(ovOpen&&!document.body.classList.contains('tour-ov'))||!intro.hidden||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
  if(e.key==='ArrowRight'){showStep(si+1)}else if(e.key==='ArrowLeft'){showStep(si-1)}});
 
 // ---------- Entrance: the solar system ----------
