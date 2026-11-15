@@ -261,7 +261,7 @@ a{color:inherit}
 <section class="trips" aria-label="Trips and tests"><div class="tabs" role="tablist"><button role="tab" id="tab-trips" aria-selected="true" aria-controls="trips">Top trips</button><button role="tab" id="tab-tests" aria-selected="false" aria-controls="alltests">All 36 tests</button></div>
 <div id="trips" role="tabpanel" style="display:grid;gap:8px"></div>
 <div id="alltests" role="tabpanel" hidden><p class="how-note">Every ~18 km cell of land gets a 0 to 100 score for each test: is the condition there, does it last, and what Earth can't copy. Open a test to see its rule and its five best places.</p>
-<div class="legend"><span style="--c:#b9c8ea">Moon</span><span style="--c:#ff7a4d">Mars</span><span style="--c:#ffb547">Both</span><span style="--c:#fff">Known analog site</span></div><button class="cmp-open" id="cmp-open2" style="margin:0 0 10px">Compare known sites with Umbra trips</button><div id="tlist"></div></div></section>
+<div class="legend"><span style="--c:#b9c8ea">Moon</span><span style="--c:#ff7a4d">Mars</span><span style="--c:#ffb547">Both</span><span style="--c:#3fd17a">Known analog site</span></div><button class="cmp-open" id="cmp-open2" style="margin:0 0 10px">Compare known sites with Umbra trips</button><div id="tlist"></div></div></section>
 
 <aside class="side">
  <div id="detail" class="card on"><div class="empty">Pick a trip on the left or a marker on the globe.<br>Then open any test to see the NASA measurement behind it.</div></div>
@@ -429,7 +429,7 @@ let curTest=null;
 function plotSpots(id){const P=[];
  for(const [k,v] of Object.entries(A.tests)){if(id&&k!==id)continue;const t=D.tests[TITLE[k]],w=worldOf(t.world);
   v.top.forEach((s,i)=>P.push({kind:'top',id:k,i,lat:s[0],lon:s[1],c:COL[w],r:id?.6:.3,a:id?.015:.008,lab:'<b>'+esc(TITLE[k])+'</b><br>#'+(i+1)+' on Earth · score '+s[2]+' · '+esc(s[3])}))}
- A.known.forEach((s,k)=>{const sc=id?' · score '+A.tests[id].known[k][0]:'';P.push({kind:'known',k,lat:s[1],lon:s[2],c:'#ffffff',r:id?.35:.3,a:.02,lab:'<b>'+esc(s[0])+'</b><br>Known analog site'+sc})});
+ A.known.forEach((s,k)=>{const sc=id?' · score '+A.tests[id].known[k][0]:'';P.push({kind:'known',k,lat:s[1],lon:s[2],c:'#3fd17a',r:id?.35:.3,a:.02,lab:'<b>'+esc(s[0])+'</b><br>Known analog site'+sc})});
  earth.pointsData(P);if(id)earth.ringsData(A.tests[id].top.map(s=>({lat:s[0],lon:s[1]})))}
 function markTests(){document.querySelectorAll('.tt').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===curTest))}
 const tlist=document.getElementById('tlist');
@@ -1022,7 +1022,7 @@ const STEPS=[
   acts:[['Explore the Moon',()=>openOv('moon')],['Explore Mars',()=>openOv('mars')]],
   go(){pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
  {q:'Where on Earth already passes those tests?',
-  a:'We scored every place on land for every test, then looked for spots that pass many at once. One trip, many systems tested. These are the best eight. Every small dot on the globe is one of the five best places for one of the 36 tests; white dots are known analog sites.',
+  a:'We scored every place on land for every test, then looked for spots that pass many at once. One trip, many systems tested. These are the best eight. Every small dot on the globe is one of the five best places for one of the 36 tests; green dots are known analog sites.',
   go(){clearSel();earth.ringsData(sites).pointOfView({lat:20,lng:20,altitude:narrow()?2.9:2.5},1600);ctl.autoRotate=true;sites.forEach(s=>pulse(s.btn))}},
  {q:'What makes western Tibet the Moon and Mars?',
   a:tib.count+' tests in one trip: cold sharp dust, huge daily temperature swings, thin dry air and strong UV. Open any test on the right to see the NASA measurement behind it.',
