@@ -102,6 +102,11 @@ a{color:inherit}
 .ppin.hc i{background:#5fe3ff;box-shadow:0 0 14px #5fe3ff,0 0 0 3px rgba(95,227,255,.25)}.ppin.hc label{color:#bff4ff}
 .ppin.epi i{width:14px;height:14px;background:transparent;border:2.5px solid #fff4c2;box-shadow:0 0 14px #ffb547}.ppin.epi label{color:#fff4c2}
 #ov-leg .stf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}
+#ov-leg .mx{display:grid;gap:6px;margin:6px 0}#ov-leg .mxr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;font-size:12px}#ov-leg .mxn{font-weight:600}#ov-leg .mxr label{grid-column:1/-1;display:flex;gap:6px;align-items:center;font-size:11px;opacity:.8}#ov-leg .mxr input{flex:1;accent-color:#ffb547}
+#ov-leg .mxd{font:inherit;font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#ffb547;cursor:pointer}
+#ov-leg .mxp{display:grid;gap:4px;margin-top:4px}#ov-leg .mxp button{text-align:left;font-size:11px}
+#ov-pole .pz{display:block;margin:0 auto 6px;font:600 11px ui-monospace,Consolas,monospace;padding:4px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.25);background:rgba(6,10,22,.85);color:#fff;cursor:pointer;letter-spacing:.05em}
+#ov-pole.big,#ov.hcv #ov-pole.big{position:fixed;inset:0;margin:auto;width:fit-content;height:fit-content;display:flex;flex-direction:column;align-items:center;z-index:20;padding:16px 20px;border-radius:20px;background:rgba(4,6,13,.95);box-shadow:0 0 0 100vmax rgba(0,0,0,.6)}#ov-pole.big #ov-pc{width:min(76vh,80vw);height:min(76vh,80vw)}#ov-pole.big p{max-width:min(76vh,80vw)}
 #ov-leg .hcl{margin-top:8px;padding-top:7px;border-top:1px solid var(--line)}#ov-leg .hcl b{color:#5fe3ff}
 @media (max-width:820px){#ov-hc{left:16px;right:16px;top:auto;bottom:56px;width:auto;max-height:46vh}}
 #ov .tip{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;color:#66728c;font-size:12px;z-index:2;margin:0}
@@ -308,7 +313,7 @@ a{color:inherit}
 <button id="ov-close" aria-label="Close">Close · Esc</button>
 <div class="places" id="ov-p"></div><div id="ov-hc" hidden aria-live="polite"></div>
 <div class="ovr" id="ov-r" hidden aria-live="polite"></div>
-<div id="ov-pole" hidden><canvas id="ov-pc" width="520" height="520" aria-label="South pole close-up. Click to read values."></canvas><p>South pole, 85°S to the pole · Earth side up · <span style="color:#5fe3ff">◆</span> light-flow hubs <span style="color:#ffb547">●</span> Umbra hubs</p></div>
+<div id="ov-pole" hidden><button id="ov-pz" class="pz" title="Make the south pole close-up bigger">Enlarge ⤢</button><canvas id="ov-pc" width="520" height="520" aria-label="South pole close-up. Click to read values."></canvas><p>South pole, 85°S to the pole · Earth side up · <span style="color:#5fe3ff">◆</span> light-flow hubs <span style="color:#ffb547">●</span> Umbra hubs</p></div>
 <div class="ovl" id="ov-l"><div id="ov-leg" hidden></div><div class="layers grp" id="ov-lyr" role="group" aria-label="Layers"></div><div class="layers grp" id="ov-opt" role="group" aria-label="Show"></div></div>
 <p class="tip">Drag to spin · scroll or pinch to zoom · click the ground to read NASA values</p></div>
 <p class="credit">Imagery: NASA GIBS Blue Marble (Earth), NASA Moon Trek LRO WAC and LOLA, NASA Mars Trek Viking MDIM 2.1 and MGS MOLA. Scores from LRO Diviner, LOLA, MGS MOLA and TES, Mars Odyssey GRS, and MODIS.</p>
@@ -352,11 +357,13 @@ const TREK={moon:{color:['Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02','jpg',9],rel
  mars:{color:['Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m','jpg',9],relief:['Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m','jpg',9],
   ti:['Mars/EQ/TES_Thermal_Inertia','png',1],alb:['Mars/EQ/Mars_MGS_TES_Albedo_mosaic_global_7410m','png',1]}};
 const texCache={};
-function trek(body,kind,z=2){const [layer,ext,zm]=TREK[body][kind];z=Math.min(z,zm);const key=body+kind+z;if(texCache[key])return texCache[key];
- const cols=2**(z+1),rows=2**z,c=document.createElement('canvas');c.width=cols*256;c.height=rows*256;const x=c.getContext('2d');
- x.fillStyle=body==='moon'?'#777':'#8a4a2e';x.fillRect(0,0,c.width,c.height);
+const rawCache={};
+function trekCv(body,kind,z=2){const [layer,ext,zm]=TREK[body][kind];z=Math.min(z,zm);const key=body+kind+z;if(rawCache[key])return rawCache[key];
+ const cols=2**(z+1),rows=2**z,c=document.createElement('canvas');c.width=cols*256;c.height=rows*256;const x=c.getContext('2d',{willReadFrequently:true});
  const jobs=[];for(let r=0;r<rows;r++)for(let q=0;q<cols;q++)jobs.push(new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{x.drawImage(im,q*256,r*256);res()};im.onerror=res;im.src=`https://trek.nasa.gov/tiles/${layer}/1.0.0/default/default028mm/${z}/${r}/${q}.${ext}`}));
- return texCache[key]=Promise.all(jobs).then(()=>c.toDataURL('image/jpeg',.9));}
+ return rawCache[key]=Promise.all(jobs).then(()=>c)}
+function trek(body,kind,z=2){const zm=TREK[body][kind][2],key=body+kind+Math.min(z,zm);if(texCache[key])return texCache[key];
+ return texCache[key]=trekCv(body,kind,z).then(r=>{const c=document.createElement('canvas');c.width=r.width;c.height=r.height;const x=c.getContext('2d');x.fillStyle=body==='moon'?'#777':'#8a4a2e';x.fillRect(0,0,c.width,c.height);x.drawImage(r,0,0);return c.toDataURL('image/jpeg',.9)})}
 
 // Earth globe
 const el=document.getElementById('earth');
@@ -606,7 +613,48 @@ function stkCanvas(body){const R=stkRun(body),M=stkMasks(body),c=document.create
  x.putImageData(im,0,0);return c}
 function stkColor(k,act){return k===act?STKTOP:STKC[Math.min(3,Math.floor((k-1)/Math.max(1,act-1)*4))]}
 function stkToggle(f){const b=bigBody;stkOn[b][f]=stkOn[b][f]?0:1;delete stkR[b];for(const L of SCI[b])if(L.stack){delete sciCache[b+L.k];delete capImg[L.k]}setPins();bigSkin()}
+// combine: stack any global layers; each keeps its best share of the globe, cells count how many they pass, all-pass patches become points of interest
+let mixOn=false,mixBase='relief';const mixR={},MXW=720,MXH=360,mixF={};
+const mix={moon:{feo:{d:1,p:30},tio2:{d:1,p:30},h:{d:1,p:30},slope:{d:-1,p:30}},mars:{pressure:{d:1,p:30},ground:{d:1,p:30},dust:{d:-1,p:40},water:{d:1,p:30}}};
+const mixable=L=>!L.pole&&!L.stack&&!L.cat;
+function hueOf(r,g,b){const M=Math.max(r,g,b),m=Math.min(r,g,b),c=M-m;if(!c)return[0,0];let h=M===r?((g-b)/c+6)%6:M===g?(b-r)/c+2:(r-g)/c+4;return[h*60,c/M]}
+function decPx(ramp,r,g,b,a){if(a<128)return NaN;
+ if(ramp==='gray')return(r+g+b)/765;
+ if(ramp==='lpblue'){const M=Math.max(r,g,b);return M?(M-Math.min(r,g,b))/M:NaN}
+ const [h,sat]=hueOf(r,g,b);if(sat<.3)return NaN;const top=ramp==='tes'?270:240;if(h<=top)return(top-h)/top;return h>310?1:0}
+function mixField(b,L){const key=b+L.k;if(mixF[key])return mixF[key];const N=MXW*MXH,f=new Float32Array(N);
+ if(L.t)return mixF[key]=trekCv(b,L.t,2).then(cv=>{const W=cv.width,H=cv.height,d=cv.getContext('2d',{willReadFrequently:true}).getImageData(0,0,W,H).data;
+  for(let y=0;y<MXH;y++){const py=Math.floor((y+.5)/MXH*H);for(let x=0;x<MXW;x++){const px=Math.floor((x+.5)/MXW*W),j=(py*W+px)*4;f[y*MXW+x]=decPx(L.ramp,d[j],d[j+1],d[j+2],d[j+3])}}return f});
+ return mixF[key]=loadTex().then(T=>{const g=T&&T[b].vals[L.k];for(let y=0;y<MXH;y++)for(let x=0;x<MXW;x++)f[y*MXW+x]=g?v1(g,90-(y+.5)/2,-180+(x+.5)/2):NaN;return f})}
+function mixSig(b){return Object.entries(mix[b]).filter(e=>e[1]).map(([k,v])=>k+v.d+v.p).join()}
+function mixRun(b){const sig=mixSig(b);if(mixR[b]&&mixR[b].sig===sig)return Promise.resolve(mixR[b]);
+ const A=SCI[b].filter(L=>mixable(L)&&mix[b][L.k]);
+ return Promise.all(A.map(L=>mixField(b,L))).then(F=>{if(mixSig(b)!==sig)return mixRun(b);const N=MXW*MXH,cnt=new Uint8Array(N),has=new Uint8Array(N),pass=[];
+  A.forEach((L,n)=>{const f=F[n],o=mix[b][L.k],v=[];for(let i=0;i<N;i++)if(ok(f[i])){v.push(f[i]);has[i]=1}v.sort((p,q)=>p-q);
+   const cut=v.length?(o.d>0?v[Math.floor(v.length*(1-o.p/100))]:v[Math.min(v.length-1,Math.floor(v.length*o.p/100))]):0,P=new Uint8Array(N);
+   for(let i=0;i<N;i++)if(ok(f[i])&&(o.d>0?f[i]>=cut:f[i]<=cut)){P[i]=1;cnt[i]++}pass.push(P)});
+  const act=A.length,kmc=(b==='moon'?1737.4:3389.5)*Math.PI/360,km2=y=>kmc*kmc*Math.cos((90-(y+.5)/2)*Math.PI/180);
+  const all=i=>act>0&&cnt[i]===act;let area=0,tot=0;const seen=new Uint8Array(N),cl=[];
+  for(let i=0;i<N;i++){if(!has[i])continue;const x=i%MXW,y=(i-x)/MXW;tot+=km2(y);if(!all(i))continue;area+=km2(y);if(seen[i])continue;
+   const st=[i],mem=[];seen[i]=1;let a=0;
+   while(st.length){const j=st.pop(),jx=j%MXW,jy=(j-jx)/MXW;mem.push(j);a+=km2(jy);
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const X=(jx+dx+MXW)%MXW,Y=jy+dy;if(Y<0||Y>=MXH)continue;const q=Y*MXW+X;if(!seen[q]&&all(q)){seen[q]=1;st.push(q)}}}
+   cl.push({a,mem})}
+  cl.sort((p,q)=>q.a-p.a);
+  const poi=cl.slice(0,5).map((c,r)=>{let sx=0,sy=0,cx=0;for(const j of c.mem){const x=j%MXW;sx+=Math.sin(x/MXW*2*Math.PI);cx+=Math.cos(x/MXW*2*Math.PI);sy+=(j-x)/MXW}
+   const mx=(Math.atan2(sx,cx)/(2*Math.PI)*MXW+MXW)%MXW,my=sy/c.mem.length;let bj=c.mem[0],bd=1e9;for(const j of c.mem){const x=j%MXW,dx=Math.min(Math.abs(x-mx),MXW-Math.abs(x-mx)),d=dx*dx+((j-x)/MXW-my)**2;if(d<bd){bd=d;bj=j}}
+   const x=bj%MXW;return{lat:90-((bj-x)/MXW+.5)/2,lon:-180+(x+.5)/2,a:c.a,r:r+1}});
+  return mixR[b]={sig,A,pass,cnt,has,act,area,tot,poi,n:cl.length}})}
+function mixTex(b,R){return trek(b,mixBase,3).then(imgOf).then(bi=>{const W=bi.width,H=bi.height,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(bi,0,0);
+ x.fillStyle='rgba(4,6,13,.45)';x.fillRect(0,0,W,H);const o=document.createElement('canvas');o.width=MXW;o.height=MXH;const ox=o.getContext('2d'),im=ox.createImageData(MXW,MXH),d=im.data;
+ const hex=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),pal=STKC.map(hex),top=hex(STKTOP);
+ for(let i=0;i<MXW*MXH;i++){const k=R.cnt[i];if(!k)continue;const j=i*4,col=k===R.act?top:pal[Math.min(3,Math.floor((k-1)/Math.max(1,R.act-1)*4))];d[j]=col[0];d[j+1]=col[1];d[j+2]=col[2];d[j+3]=k===R.act?255:Math.round(70+120*k/R.act)}
+ ox.putImageData(im,0,0);x.imageSmoothingEnabled=false;x.drawImage(o,0,0,W,H);return c.toDataURL('image/jpeg',.9)})}
+function mixAt(b,lat,lon){const R=mixR[b];if(!R||!R.act||R.sig!==mixSig(b))return null;const x=Math.min(MXW-1,Math.floor((((lon+180)%360)+360)%360*2)),y=Math.min(MXH-1,Math.max(0,Math.floor((90-lat)*2))),i=y*MXW+x;
+ if(!R.has[i])return null;return R.A.map((L,n)=>[L,R.pass[n][i]])}
+function mixSkin(b){legend();mixRun(b).then(R=>{if(!(big&&mixOn&&bigBody===b&&R.sig===mixSig(b)))return;legend();setPins();return mixTex(b,R).then(u=>{if(big&&mixOn&&bigBody===b&&R.sig===mixSig(b))big.globeImageUrl(u)})}).catch(e=>console.warn(e))}
 function bigSkin(){if(!big)return;const b=bigBody,k=ovLayer,L=SCI[b].find(x=>x.k===k);
+ if(mixOn){mixSkin(b);big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();poleView();return}
  (L?(L.t?trek(b,L.t,3):TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
  big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();legend();poleView()}
 // buttons
@@ -615,16 +663,36 @@ function btn(txt,on,fn,dis,title){const b=document.createElement('button');b.tex
 function lab(t){const s=document.createElement('span');s.className='grp-l';s.textContent=t;return s}
 function setLayer(k){const was=SCI[bigBody].find(x=>x.k===ovLayer);ovLayer=k;const L=SCI[bigBody].find(x=>x.k===k);
  if(L&&L.pole&&!(was&&was.pole)&&big)big.pointOfView({lat:-78,lng:0,altitude:1.1},1400);if((L&&L.stack)||(was&&was.stack))setPins();bigSkin()}
-function drawLyr(){const b=bigBody;lyrEl.innerHTML='';lyrEl.append(lab('Imagery'));
- for(const k of ['color','relief'])lyrEl.append(btn(BASE_SRC[b][k][0],ovLayer===k,()=>setLayer(k)));
- lyrEl.append(document.createElement('br'),lab('NASA science'));
- for(const L of SCI[b])lyrEl.append(btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX&&!L.t,TEX||L.t?L.u||L.n:'Loading the science layers'));
+function setMix(on){mixOn=on;setPins();bigSkin()}
+function drawLyr(){const b=bigBody;lyrEl.innerHTML='';lyrEl.append(lab('Mode'));
+ lyrEl.append(btn('One layer',!mixOn,()=>setMix(false),false,'Show one NASA layer at a time'),btn('Combine layers',mixOn,()=>setMix(true),false,'Stack several layers and find where they all line up'));
+ lyrEl.append(document.createElement('br'),lab(mixOn?'Under it':'Imagery'));
+ for(const k of ['color','relief'])lyrEl.append(btn(BASE_SRC[b][k][0],mixOn?mixBase===k:ovLayer===k,()=>{if(mixOn){mixBase=k;bigSkin()}else setLayer(k)}));
+ lyrEl.append(document.createElement('br'),lab(mixOn?'Stack (tap to add or remove)':'NASA science'));
+ for(const L of SCI[b]){if(mixOn&&!mixable(L))continue;
+  lyrEl.append(mixOn?btn((mix[b][L.k]?'✓ ':'+ ')+L.n,!!mix[b][L.k],()=>{const D={moon:{slope:-1},mars:{dust:-1}};mix[b][L.k]=mix[b][L.k]?null:{d:D[b][L.k]||1,p:30};bigSkin()},!TEX&&!L.t,L.u||L.n)
+   :btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX&&!L.t,TEX||L.t?L.u||L.n:'Loading the science layers'))}
+ if(mixOn&&b==='moon')lyrEl.append(btn('South pole overlap →',false,()=>{mixOn=false;setPins();setLayer('pstack')},!TEX,'Sunlight, ice, Earth in view and flat ground, mapped at 1 km near the pole'));
  optEl.innerHTML='';
  optEl.append(btn('3D relief',ovRelief,()=>{ovRelief=!ovRelief;bigSkin()},!TEX,(b==='moon'?'LRO LOLA':'MGS MOLA')+' heights as a bump map'));
  optEl.append(btn('Landing sites',ovShow.land,()=>{ovShow.land=!ovShow.land;setPins();drawLyr()}));
  optEl.append(btn('Umbra hubs',ovShow.hub,()=>{ovShow.hub=!ovShow.hub;setPins();drawLyr()}));if(b==='moon')optEl.append(btn('Hidden channels',hcOn,()=>hcToggle(!hcOn),false,'What else 21 NASA Moon datasets measure'))}
 function grad(r){return 'linear-gradient(90deg,'+RAMP[r].join(',')+')'}
+function mixLeg(b){const R=mixR[b],A=SCI[b].filter(L=>mixable(L)&&mix[b][L.k]);
+ let h='<b>Combined: '+A.length+' layer'+(A.length===1?'':'s')+'</b><div class="u">Each layer keeps its best share of the globe. Brighter ground passes more of them; the brightest passes all.</div>';
+ if(!A.length){legEl.innerHTML=h+'<div class="u">Add layers from the Stack buttons below.</div>';legEl.hidden=false;return}
+ h+='<div class="mx">'+A.map(L=>{const o=mix[b][L.k];return '<div class="mxr" data-k="'+L.k+'"><span class="mxn">'+L.n+'</span><button class="mxd" title="Flip which end counts as good">want '+esc(o.d>0?L.hi:L.lo)+'</button><label>best <input type="range" min="5" max="60" step="5" value="'+o.p+'" aria-label="Share of the globe kept for '+L.n+'"><output>'+o.p+'%</output></label></div>'}).join('')+'</div>';
+ const ready=R&&R.sig===mixSig(b);
+ if(!ready)h+='<div class="u">Combining the NASA layers…</div>';
+ else{for(let k=R.act;k>=1;k--)h+='<div class="cat"><i style="background:'+stkColor(k,R.act)+'"></i>'+(k===R.act?(R.act>1?'All '+R.act+' at once':'Passes'):k+' of '+R.act)+'</div>';
+  h+='<div class="u" style="margin-top:6px">All at once: '+f0(R.area)+' km², '+(R.area/Math.max(1,R.tot)*100).toFixed(1)+'% of the mapped globe, in '+f0(R.n)+' patches.</div>';
+  if(R.poi.length)h+='<div class="u">Points of interest (largest patches):</div><div class="layers mxp">'+R.poi.map(p=>'<button data-i="'+(p.r-1)+'">P'+p.r+' · '+llTxt(p.lat,p.lon)+' · '+f0(p.a)+' km²</button>').join('')+'</div>'}
+ h+='<div class="src">Source: '+A.map(L=>L.n+': '+L.src).join('; ')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false;
+ legEl.querySelectorAll('.mxr').forEach(r=>{const o=mix[b][r.dataset.k],inp=r.querySelector('input'),out=r.querySelector('output');
+  r.querySelector('.mxd').onclick=()=>{o.d=-o.d;bigSkin()};inp.oninput=()=>{out.textContent=inp.value+'%'};inp.onchange=()=>{o.p=+inp.value;bigSkin()}});
+ legEl.querySelectorAll('.mxp button').forEach(x=>x.onclick=()=>{const p=R.poi[+x.dataset.i];bigFly([p.lat,p.lon,'Point of interest P'+p.r,'P'+p.r],'All '+R.act+' layers pass over '+f0(p.a)+' km² here')})}
 function legend(){const b=bigBody,L=SCI[b].find(x=>x.k===ovLayer);
+ if(mixOn){mixLeg(b);return}
  if(!L){legEl.innerHTML='<b>'+BASE_SRC[b][ovLayer][0]+'</b><div class="src">Source: '+BASE_SRC[b][ovLayer][1]+'. Click the ground to read the NASA science values there.</div>'+hcLeg();legEl.hidden=false;return}
  let h='<b>'+L.n+'</b>';
  if(L.stack){const R=stkRun(b),F=STK[b],moon=b==='moon';
@@ -644,10 +712,11 @@ const LF=[[-89.264,246.88,"Henson",44,215,2.9,0],[-89.379,153.92,"Shackleton",39
 const CRATERS=[["Shackleton",-89.67,129.8],["de Gerlache",-88.5,-87.1],["Haworth",-87.45,-5],["Shoemaker",-88.1,44.9],["Faustini",-87.2,84.3],["Sverdrup",-88.3,-152],["Cabeus",-85.3,-42.1],["Nobile",-85.2,53.5]];
 const poleEl=document.getElementById('ov-pole'),pc=document.getElementById('ov-pc'),px2=pc.getContext('2d');let poleMarks=[];
 const CAPR=2*R_MOON*Math.tan(2.5*Math.PI/180),SPAN=5058*60;
-function capXY(lat,lon){const S=pc.width,r=2*R_MOON*Math.tan((Math.PI/2+lat*Math.PI/180)/2)/SPAN*S,a=lon*Math.PI/180;return[S/2+r*Math.sin(a),S/2-r*Math.cos(a)]}
-function capLL(x,y){const S=pc.width,X=(x-S/2)/S*SPAN,Y=-(y-S/2)/S*SPAN,r=Math.hypot(X,Y);return[(2*Math.atan(r/(2*R_MOON))-Math.PI/2)*180/Math.PI,Math.atan2(X,Y)*180/Math.PI]}
-function poleView(){const L=SCI[bigBody].find(x=>x.k===ovLayer);const on=bigBody==='moon'&&L&&L.pole&&TEX;poleEl.hidden=!on;ov.classList.toggle('polev',!!on);if(!on)return;
- const draw=o=>{const S=pc.width;px2.clearRect(0,0,S,S);px2.fillStyle='#05070f';px2.beginPath();px2.arc(S/2,S/2,CAPR/SPAN*S,0,7);px2.fill();px2.drawImage(o,0,0,S,S);poleMarks=[];
+const PS=520;
+function capXY(lat,lon){const S=PS,r=2*R_MOON*Math.tan((Math.PI/2+lat*Math.PI/180)/2)/SPAN*S,a=lon*Math.PI/180;return[S/2+r*Math.sin(a),S/2-r*Math.cos(a)]}
+function capLL(x,y){const S=PS,X=(x-S/2)/S*SPAN,Y=-(y-S/2)/S*SPAN,r=Math.hypot(X,Y);return[(2*Math.atan(r/(2*R_MOON))-Math.PI/2)*180/Math.PI,Math.atan2(X,Y)*180/Math.PI]}
+function poleView(){const L=SCI[bigBody].find(x=>x.k===ovLayer);const on=!mixOn&&bigBody==='moon'&&L&&L.pole&&TEX;if(!on&&poleEl.classList.contains('big'))poleBig(false);poleEl.hidden=!on;ov.classList.toggle('polev',!!on);if(!on)return;
+ const draw=o=>{const S=PS;px2.setTransform(1,0,0,1,0,0);px2.clearRect(0,0,pc.width,pc.height);px2.setTransform(pc.width/PS,0,0,pc.width/PS,0,0);px2.fillStyle='#05070f';px2.beginPath();px2.arc(S/2,S/2,CAPR/SPAN*S,0,7);px2.fill();px2.drawImage(o,0,0,S,S);poleMarks=[];
   px2.font='600 17px system-ui,sans-serif';px2.textAlign='center';
   if(L.stack){const R=stkRun('moon');for(const e of R.epi){const [x,y]=capXY(e.lat,e.lon);px2.strokeStyle='#04060d';px2.lineWidth=6;px2.beginPath();px2.arc(x,y,17,0,7);px2.stroke();px2.strokeStyle=STKTOP;px2.lineWidth=2.5;px2.beginPath();px2.arc(x,y,17,0,7);px2.stroke();
    px2.fillStyle=STKTOP;px2.strokeStyle='#04060d';px2.lineWidth=4;px2.strokeText(e.r,x+22,y-14);px2.fillText(e.r,x+22,y-14);
@@ -659,7 +728,10 @@ function poleView(){const L=SCI[bigBody].find(x=>x.k===ovLayer);const on=bigBody
    poleMarks.push({x,y,lat:h.lat,lon:h.lon,name:h.n,extra:'Umbra hub: '+h.h.join(', ')})}
   px2.fillStyle='#8f9bb3';px2.font='600 15px ui-monospace,Consolas,monospace';px2.fillText('0° · Earth side',S/2,22)};
  const k=ovLayer;if(capImg[k])draw(capImg[k]);else(L.stack?Promise.resolve(capImg[k]=stkCanvas('moon')):imgOf(TEX.pole.layers[k])).then(o=>{capImg[k]=o;if(ovLayer===k)draw(o)})}
-pc.addEventListener('click',e=>{const r=pc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*pc.width,y=(e.clientY-r.top)/r.height*pc.height;
+function poleBig(on){if(poleEl.classList.contains('big')===on)return;poleEl.classList.toggle('big',on);pc.width=pc.height=on?1040:520;document.getElementById('ov-pz').textContent=on?'Shrink ✕':'Enlarge ⤢';if(!poleEl.hidden)poleView()}
+document.getElementById('ov-pz').onclick=()=>poleBig(!poleEl.classList.contains('big'));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&poleEl.classList.contains('big')&&!poleEl.hidden){e.stopImmediatePropagation();poleBig(false)}},true);
+pc.addEventListener('click',e=>{const r=pc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*PS,y=(e.clientY-r.top)/r.height*PS;
  const hit=poleMarks.find(m=>Math.hypot(m.x-x,m.y-y)<14);if(hit){readout('moon',hit.lat,hit.lon,hit.name,hit.extra);return}
  const [la,lo]=capLL(x,y);if(la<=-85)readout('moon',la,lo)});
 // values under the cursor
@@ -696,8 +768,9 @@ function readout(body,lat,lon,name,extra){
   ids.push('thin_air');if(cl==='deep dust'||cl==='dusty')ids.push('dust_mantle','dust_devils','dust_storm');else if(cl==='sand and crust')ids.push('soft_sand','sand_ratio','dust_devils');else if(cl)ids.push('pad_rock','featureless');
   if(ok(w)&&w>5)ids.push('dry_permafrost','ice_ratio');else ids.push('mars_hyperarid','oxidant_soil');ids.push('radiation');
   mean=(bz?'Inside the Umbra base zone: water in the ground, thicker air for landing and firm footing. ':'')+(ok(p)?'Air at '+f0(p)+' Pa, under 1% of Earth\'s. No Earth ground is that thin, so Umbra uses the highest dry plateaus.':'')}
- const SL=SCI[body].find(x=>x.k===ovLayer);if(SL&&SL.stack&&(body==='mars'||lat<=-85)){const M=stkMasks(body),[sx,sy]=stkXY(body,lat,lon),i=sy*M.W+sx;
+ const SL=SCI[body].find(x=>x.k===ovLayer);if(!mixOn&&SL&&SL.stack&&(body==='mars'||lat<=-85)){const M=stkMasks(body),[sx,sy]=stkXY(body,lat,lon),i=sy*M.W+sx;
   if(sx>=0&&sy>=0&&sx<M.W&&sy<M.H&&M.has[i]){const F=STK[body].filter(f=>stkOn[body][f.k]);add('Lines up',F.filter(f=>M[f.k][i]).length+' of '+F.length+': '+F.map(f=>(M[f.k][i]?'✓ ':'✗ ')+f.n).join(', '),'')}}
+ if(mixOn){const m=mixAt(body,lat,lon);if(m)add('Combined',m.filter(x=>x[1]).length+' of '+m.length+': '+m.map(x=>(x[1]?'✓ ':'✗ ')+x[0].n).join(', '),'')}
  const T=[...new Set(ids)].filter(id=>TITLE[id]&&A.tests[id]).slice(0,6);
  let best=null,bn=0;for(const s of sites){const n=T.filter(id=>s.tests.includes(TITLE[id])).length;if(n>bn){bn=n;best=s}}
  let x='<button class="rx" aria-label="Close the readout">×</button><p class="eyebrow">'+esc(name||'You clicked')+'</p><h3>'+llTxt(lat,lon)+'</h3>'+(extra?'<p class="ex">'+esc(extra)+'</p>':'')+'<dl>'+rows.join('')+'</dl>'+(mean?'<p class="mean">'+mean+'</p>':'');
@@ -955,7 +1028,8 @@ function setPins(){if(!big)return;const b=bigBody,I=INFO[b];
  const land=ovShow.land?LAND[b].map(v=>({kind:'land',p:[v[1],v[2],v[0],'L'+v[0]],lat:v[1],lng:v[2],name:v[0],extra:'Landing site'})):[];
  const hubs=ovShow.hub?(b==='moon'?SI.moon.concat(SI.pole):SI.mars).map(h=>{const lo=h.lon>180?h.lon-360:h.lon;return{kind:'hub',p:[h.lat,lo,h.n,'H'+h.n],lat:h.lat,lng:lo,name:h.n,extra:'Umbra hub: '+h.h.join(', ')}}):[];
  const SL=SCI[b].find(x=>x.k===ovLayer),epi=SL&&SL.stack&&TEX?stkRun(b).epi.map(e=>({kind:'epi',p:[e.lat,e.lon,'Epicenter '+e.r,'E'+e.r],lat:e.lat,lng:e.lon,name:'Epicenter '+e.r,extra:'All '+stkRun(b).act+' filters line up over '+f0(e.a)+' km² here'})):[];
- ovPins=ex.concat(land,hubs,hcPinObjs(b),epi);big.htmlElementsData(ovPins)}
+ const mr=mixOn&&mixR[b]&&mixR[b].sig===mixSig(b)?mixR[b]:null,poi=mr?mr.poi.map(e=>({kind:'epi',p:[e.lat,e.lon,'Point of interest P'+e.r,'P'+e.r],lat:e.lat,lng:e.lon,name:'P'+e.r,extra:'All '+mr.act+' layers pass over '+f0(e.a)+' km² here'})):[];
+ ovPins=ex.concat(land,hubs,hcPinObjs(b),mixOn?poi:epi);big.htmlElementsData(ovPins)}
 function bigFly(p,extra){big.ringsData([p]).pointOfView({lat:p[0]<-80?-70:p[0],lng:p[1],altitude:p[0]<-80?.9:1.3},1400);big.controls().autoRotate=false;
  ovPins.forEach(x=>x.el&&x.el.classList.toggle('sel',x.p[3]===p[3]));ov.querySelectorAll('.places button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===p[3]));
  readout(bigBody,p[0],p[1],p[2],extra)}
