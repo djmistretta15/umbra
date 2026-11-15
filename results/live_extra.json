@@ -1,0 +1,204 @@
+{
+ "measures": [
+  {
+   "key": "brightness",
+   "title": "Orbiter view: brightness (albedo)",
+   "source": "NASA POWER ALLSKY_SRF_ALB",
+   "q": [
+    0.019999999552965164,
+    0.10999999195337296,
+    0.14000000059604645,
+    0.20000000298023224,
+    0.3100000023841858,
+    0.4099999964237213,
+    0.800000011920929
+   ]
+  },
+  {
+   "key": "swing",
+   "title": "Orbiter view: day-night swing",
+   "source": "NASA MODIS Terra LST",
+   "q": [
+    -3.0,
+    3.7956659078598025,
+    5.853330731391907,
+    8.535554885864258,
+    14.815276384353638,
+    19.3366641998291,
+    36.81888961791992
+   ]
+  },
+  {
+   "key": "ati",
+   "title": "Orbiter view: thermal inertia (apparent)",
+   "source": "NASA POWER albedo + MODIS LST",
+   "q": [
+    0.02098877727985382,
+    0.03759719207882881,
+    0.05468945764005184,
+    0.09271515905857086,
+    0.13483362272381783,
+    0.19421949833631516,
+    0.9599999785423279
+   ]
+  },
+  {
+   "key": "uv",
+   "title": "Surface UV",
+   "source": "NASA POWER ALLSKY_SFC_UV_INDEX",
+   "q": [
+    0.1899999976158142,
+    0.3799999952316284,
+    0.5099999904632568,
+    1.090000033378601,
+    1.9199999570846558,
+    2.190000057220459,
+    3.380000114440918
+   ]
+  },
+  {
+   "key": "dust",
+   "title": "Dust near the ground",
+   "source": "NASA MERRA-2 via GIBS",
+   "q": [
+    0.25,
+    1.4203704595565796,
+    2.0250000953674316,
+    5.596990585327148,
+    19.47951364517212,
+    93.22792358398438,
+    105.0
+   ]
+  },
+  {
+   "key": "rain",
+   "title": "Rain",
+   "source": "NASA POWER PRECTOTCORR",
+   "q": [
+    0.0,
+    149.75250244140625,
+    374.5841369628906,
+    633.1000366210938,
+    1009.3074340820312,
+    1602.22998046875,
+    6296.91015625
+   ]
+  }
+ ],
+ "ringing": {
+  "title": "Ringing ground: dry bedrock for lunar seismometers",
+  "world": "Moon & Mars",
+  "stage": "Science",
+  "why": "Water in rock pores soaks up seismic waves. The Moon's crust is bone dry, so moonquakes ring for a long time. Dry, bare crystalline rock far from earthquakes is Earth's closest match for testing lunar seismometers and the shaking from landings and mass drivers.",
+  "moon": "Apollo seismometers (1969 to 1977) recorded moonquakes whose signals kept ringing for tens of minutes to about an hour.",
+  "mars": "InSight found Mars's crust damps waves more than the Moon's but far less than Earth's wet crust.",
+  "gap": "No Earth rock is as dry as the Moon's, and Earth's oceans add constant background noise.",
+  "conf": "Low"
+ },
+ "presets": [
+  {
+   "name": "Mars dust plain (TES: bright, low thermal inertia)",
+   "t": {
+    "brightness": 230,
+    "ati": 25,
+    "rain": 10
+   }
+  },
+  {
+   "name": "Mars dark sand and rock (TES: dark, high thermal inertia)",
+   "t": {
+    "brightness": 40,
+    "ati": 230,
+    "rain": 10
+   }
+  },
+  {
+   "name": "Mars crusted soil (TES: middle brightness and inertia)",
+   "t": {
+    "brightness": 150,
+    "ati": 130,
+    "rain": 10
+   }
+  },
+  {
+   "name": "Lunar mare soil (dark, loose, bone dry, big swings)",
+   "t": {
+    "brightness": 30,
+    "ati": 25,
+    "swing": 245,
+    "rain": 5
+   }
+  },
+  {
+   "name": "Lunar highlands soil (bright, loose, bone dry, big swings)",
+   "t": {
+    "brightness": 200,
+    "ati": 25,
+    "swing": 245,
+    "rain": 5
+   }
+  }
+ ],
+ "ops": [
+  {
+   "key": "plume_blast",
+   "title": "Landing-blast ground",
+   "world": "Moon",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "A lander's exhaust blasts loose dust and rocks outward at high speed, a known Artemis hazard. Fine, loose, dry, flat ground is where to test landing pads, berms and plume shields.",
+   "moon": "Apollo 12 landed about 160 m from the Surveyor 3 probe; parts brought home showed pitting from the dust its exhaust blasted.",
+   "gap": "Earth soil is usually clumped by moisture and roots; lunar dust is drier, sharper and in vacuum flies much farther."
+  },
+  {
+   "key": "dirty_panels",
+   "title": "Dirty solar panels",
+   "world": "Moon & Mars",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "On the Moon and Mars no rain washes dust off. Where the most dust falls with the least rain and strong sun is where to test dust-shedding panels and coatings.",
+   "mars": "NASA's InSight lander ended its mission in 2022 when dust on its solar panels cut its power.",
+   "gap": "The dust map tops out at its highest colour band, so the dustiest places rank as ties."
+  },
+  {
+   "key": "dark_pocket",
+   "title": "Work in the shadows",
+   "world": "Moon",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "Astronauts will walk into permanently shadowed craters to sample ice in darkness and deep cold. Ground shaded at winter noon that is also very cold and dry is where to rehearse that work.",
+   "moon": "LRO's LOLA maps put 11% of the ground south of 85S in permanent shadow; Diviner finds crater floors near -240 C.",
+   "gap": "Earth's shade lifts in summer and its coldest nights are far warmer than lunar crater floors."
+  },
+  {
+   "key": "radio_shadow",
+   "title": "Radio shadow",
+   "world": "Moon",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "From the lunar south pole the Earth hangs no more than about 7 degrees above the horizon, so ridges and crater walls cut the radio link. Valleys walled above 7 degrees in most directions are where to test relays and mesh networks.",
+   "moon": "NASA is planning lunar relay satellites (LunaNet), partly because many south-polar sites lose direct sight of Earth for part of each month.",
+   "gap": "Earth's terrain here is measured at about 2.4 km; smaller canyons are missed."
+  },
+  {
+   "key": "walk_back",
+   "title": "The walk back",
+   "world": "Moon",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "If a rover breaks down, the crew walks home. This finds Earth ground with the same mix of slopes as the Moon's natural travel corridors, measured the same way over 5 km.",
+   "moon": "On the lunar corridors found by Umbra's light-flow, half the ground is under 4.6 degrees at a 5 km baseline (LOLA elevation).",
+   "gap": "Slopes are compared at a 5 km baseline; footing, boulders and dust at the metre scale are not."
+  },
+  {
+   "key": "oxygen_feed",
+   "title": "Oxygen-plant feedstock",
+   "world": "Moon",
+   "stage": "Operations",
+   "conf": "Low",
+   "why": "Lunar oxygen plants will cook oxygen out of local rock. Test plants need tonnes of rock like the Moon's lava plains or highlands, close enough to a town to ship it.",
+   "moon": "Mare basalt and highland anorthosite are the two main lunar feedstocks; Apollo samples are the reference.",
+   "gap": "The rock map gives rock type, not titanium content or grain size; samples must be checked."
+  }
+ ]
+}

@@ -1,0 +1,198 @@
+{
+ "blocks_km2": 91809,
+ "all_four": 74,
+ "hubs": [
+  {
+   "lat": -89.464,
+   "lon": 223.7,
+   "sun": 0.88,
+   "ice_km": 2,
+   "flat": 0.66,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 2.2,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -86,
+   "lon": 2.25,
+   "sun": 0.82,
+   "ice_km": 0,
+   "flat": 0.7,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 114.1,
+   "lightflow_near": "de Gerlache"
+  },
+  {
+   "lat": -89.303,
+   "lon": 245.52,
+   "sun": 0.79,
+   "ice_km": 2,
+   "flat": 0.7,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 1.3,
+   "lightflow_near": "Henson"
+  },
+  {
+   "lat": -85.435,
+   "lon": 32.18,
+   "sun": 0.75,
+   "ice_km": 1,
+   "flat": 0.86,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 135.4,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -88.866,
+   "lon": 131.46,
+   "sun": 0.73,
+   "ice_km": 1.4142135623730951,
+   "flat": 0.74,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 12.9,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -85.292,
+   "lon": 36.9,
+   "sun": 0.7,
+   "ice_km": 1.4142135623730951,
+   "flat": 0.88,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 137.2,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -86.371,
+   "lon": 336.87,
+   "sun": 0.7,
+   "ice_km": 1,
+   "flat": 0.78,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 74.9,
+   "lightflow_near": "Lacus Tenebrarum"
+  },
+  {
+   "lat": -88.003,
+   "lon": 150.57,
+   "sun": 0.7,
+   "ice_km": 1,
+   "flat": 0.78,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 41.8,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -87.342,
+   "lon": 264.48,
+   "sun": 0.7,
+   "ice_km": 1,
+   "flat": 0.69,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 21,
+   "lightflow_near": "Lacus Tenebrarum"
+  },
+  {
+   "lat": -86.95,
+   "lon": 335.58,
+   "sun": 0.7,
+   "ice_km": 0,
+   "flat": 0.67,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 63.3,
+   "lightflow_near": "Lacus Tenebrarum"
+  },
+  {
+   "lat": -86.957,
+   "lon": 135.44,
+   "sun": 0.67,
+   "ice_km": 2,
+   "flat": 0.94,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 67.1,
+   "lightflow_near": "Shackleton"
+  },
+  {
+   "lat": -85.323,
+   "lon": 244.65,
+   "sun": 0.67,
+   "ice_km": 1,
+   "flat": 0.84,
+   "f": [
+    "power",
+    "ice",
+    "landing",
+    "pad"
+   ],
+   "n": 4,
+   "lightflow_km": 79.3,
+   "lightflow_near": "Henson"
+  }
+ ]
+}

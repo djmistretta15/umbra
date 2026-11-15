@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umbra Atlas</title>
+<meta name="description" content="Three globes, real NASA imagery: the places on Earth that already behave like the Moon and Mars.">
+<style>
+:root{--bg:#04060d;--ink:#eef2fa;--dim:#8f9bb3;--line:rgba(160,180,220,.16);--panel:rgba(9,14,28,.72);--amber:#ffb547;--moon:#b9c8ea;--mars:#ff7a4d}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Segoe UI",sans-serif;overflow:hidden}
+#stars{position:fixed;inset:0;z-index:0}
+#earth{position:fixed;inset:0;z-index:1}
+a{color:inherit}
+.top{position:fixed;z-index:5;left:0;right:0;top:0;display:flex;align-items:center;gap:22px;padding:16px 24px;pointer-events:none}
+.top>*{pointer-events:auto}
+.brand{font:700 15px/1 ui-monospace,Consolas,monospace;letter-spacing:.32em;color:var(--amber);text-decoration:none}
+.top nav{display:flex;gap:18px;margin-left:auto}
+.top nav a{color:var(--dim);text-decoration:none;font-size:14px}.top nav a:hover,.top nav a[aria-current]{color:var(--ink)}
+.hero{position:fixed;z-index:4;left:24px;top:62px;max-width:440px;pointer-events:none;transition:opacity .6s}
+.eyebrow{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0 0 10px}
+.hero h1{font-size:40px;line-height:1.08;margin:0 0 12px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--moon),#fff 45%,var(--mars));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--dim);margin:0;font-size:16px}
+.trips{position:fixed;z-index:4;left:24px;bottom:24px;width:340px;max-height:calc(100vh - 330px);overflow:auto;display:grid;gap:8px;padding-right:4px;scrollbar-width:thin}
+.trips h2,.side h2{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:0 0 2px}
+.trip{all:unset;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;transition:border-color .2s,transform .2s}
+.trip:hover{border-color:rgba(255,181,71,.5);transform:translateX(3px)}
+.trip:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.trip[aria-pressed=true]{border-color:var(--amber);background:rgba(40,28,8,.6)}
+.trip .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:700 18px ui-monospace,Consolas,monospace;color:var(--amber);background:radial-gradient(circle,rgba(255,181,71,.18),transparent 70%);border:1px solid rgba(255,181,71,.4)}
+.trip b{display:block;font-size:15px}.trip span{display:block;color:var(--dim);font-size:13px}
+.side{position:fixed;z-index:4;right:24px;top:64px;bottom:24px;width:380px;display:flex;flex-direction:column;gap:12px;pointer-events:none}
+.side>*{pointer-events:auto}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--panel);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#detail{flex:1;min-height:0;overflow:auto;padding:18px;scrollbar-width:thin;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+#detail.on{opacity:1;transform:none}
+#detail h3{margin:0;font-size:24px;line-height:1.15}
+#detail .meta{color:var(--dim);font:13px ui-monospace,Consolas,monospace;margin:4px 0 12px}
+#detail .lead{margin:0 0 14px;color:#cfd6e6}
+.big{display:flex;align-items:baseline;gap:8px;margin:0 0 14px}.big strong{font:700 38px/1 ui-monospace,Consolas,monospace;color:var(--amber)}.big span{color:var(--dim)}
+.test{all:unset;display:block;width:100%;box-sizing:border-box;padding:10px 12px;margin:0 0 6px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:background .2s,border-color .2s}
+.test:hover{background:rgba(255,255,255,.04)}.test:focus-visible{outline:2px solid var(--amber)}
+.test[aria-expanded=true]{background:rgba(255,255,255,.05);border-color:var(--line)}
+.test .t{display:flex;gap:8px;align-items:center;font-weight:600}
+.tag{flex:none;font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;border:1px solid}
+.tag.moon{color:var(--moon);border-color:rgba(185,200,234,.45)}.tag.mars{color:var(--mars);border-color:rgba(255,122,77,.5)}.tag.both{color:#fff;border-color:rgba(255,255,255,.35);background:linear-gradient(90deg,rgba(185,200,234,.18),rgba(255,122,77,.18))}
+.test .x{display:none;margin-top:8px;font-size:13.5px;color:#c4ccdc}
+.test[aria-expanded=true] .x{display:block}
+.x p{margin:0 0 6px}.x .k{font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);display:block}
+.empty{color:var(--dim);display:grid;place-items:center;text-align:center;height:100%;padding:20px}
+.worlds{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.world{position:relative;padding:10px;overflow:hidden}
+.world .g{height:150px;margin:0 auto}
+.world h4{margin:0;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}
+.world.moon h4{color:var(--moon)}.world.mars h4{color:var(--mars)}
+.world .where{font-size:12.5px;color:var(--dim);min-height:2.6em;margin-top:2px}
+.world.lit{border-color:currentColor}.world.moon.lit{color:var(--moon)}.world.mars.lit{color:var(--mars)}
+.world.lit .where{color:var(--ink)}
+.layers{display:flex;gap:6px;justify-content:flex-end}
+.layers button{all:unset;cursor:pointer;font:12px ui-monospace,Consolas,monospace;color:var(--dim);padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:var(--panel)}
+.layers button[aria-pressed=true]{color:var(--ink);border-color:var(--amber)}
+.layers button:focus-visible{outline:2px solid var(--amber)}
+.credit{position:fixed;z-index:4;left:50%;transform:translateX(-50%);bottom:10px;font-size:11.5px;color:#66728c;text-align:center;pointer-events:none;width:min(560px,60vw)}
+.pin{pointer-events:auto;cursor:pointer;transform:translate(-50%,-50%);display:grid;place-items:center;width:34px;height:34px}
+.pin i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font:700 12px ui-monospace,Consolas,monospace;font-style:normal;color:#1a1003;background:var(--amber);box-shadow:0 0 0 3px rgba(255,181,71,.25),0 0 18px rgba(255,181,71,.8);transition:transform .2s}
+.pin.flip label{left:auto;right:30px}
+.pin:hover i,.pin.sel i{transform:scale(1.35)}
+.pin label{position:absolute;left:30px;top:9px;white-space:nowrap;font:600 12px system-ui,sans-serif;color:#fff;text-shadow:0 1px 4px #000,0 0 10px #000;pointer-events:none;opacity:.9}
+.hint{color:var(--dim);font-size:12.5px;margin:2px 0 0}
+#loading{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:var(--bg);transition:opacity .8s;font:13px ui-monospace,Consolas,monospace;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+#loading.done{opacity:0;pointer-events:none}
+.world .top2{display:flex;align-items:center;justify-content:space-between}
+.xp{all:unset;cursor:pointer;font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.06em;color:var(--dim);padding:3px 9px;border-radius:99px;border:1px solid var(--line)}
+.xp:hover{color:var(--ink);border-color:currentColor}.xp:focus-visible{outline:2px solid var(--amber)}
+.world .g{cursor:grab}.world .g:active{cursor:grabbing}
+#ov{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 60% 40%,#15122a,#03040a 70%);display:none;opacity:0;transition:opacity .45s}
+#ov.show{display:block}#ov.on{opacity:1}
+#ov-g{position:absolute;inset:0}
+#ov .head{position:absolute;left:24px;top:20px;max-width:420px;z-index:2}
+#ov .head h2{margin:6px 0 6px;font-size:40px;line-height:1.05}
+#ov .head p{margin:0;color:var(--dim)}
+#ov.moon .eyebrow{color:var(--moon)}#ov.mars .eyebrow{color:var(--mars)}
+#ov-close{all:unset;cursor:pointer;position:absolute;right:24px;top:20px;z-index:3;font:600 13px ui-monospace,Consolas,monospace;color:var(--ink);padding:8px 14px;border-radius:99px;border:1px solid var(--line);background:var(--panel)}
+#ov-close:hover{border-color:var(--amber)}#ov-close:focus-visible{outline:2px solid var(--amber)}
+#ov .places{position:absolute;left:24px;bottom:24px;z-index:2;display:grid;gap:6px;width:320px}
+#ov .places button{all:unset;cursor:pointer;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);font-size:14px}
+#ov .places button:hover,#ov .places button[aria-pressed=true]{border-color:currentColor}
+#ov.moon .places button[aria-pressed=true]{color:var(--moon)}#ov.mars .places button[aria-pressed=true]{color:var(--mars)}
+#ov .places button:focus-visible{outline:2px solid var(--amber)}
+#ov-hc{position:absolute;left:24px;top:150px;bottom:24px;width:370px;z-index:3;overflow:auto;padding:14px 14px 10px;border-radius:12px;border:1px solid rgba(95,227,255,.35);background:rgba(6,10,22,.9);backdrop-filter:blur(8px);font-size:13px}
+#ov.hcv .places{display:none}#ov.hcv #ov-pole{left:410px}
+#ov-hc h3{margin:2px 0 4px;font-size:19px;line-height:1.2}#ov-hc .eyebrow{color:#5fe3ff;margin:0}#ov-hc .hx{all:unset;cursor:pointer;position:absolute;right:12px;top:8px;font-size:18px;color:var(--dim)}
+#ov-hc .big{display:flex;gap:10px;margin:8px 0 4px}#ov-hc .big div{flex:1;border:1px solid var(--line);border-radius:10px;padding:6px 8px}#ov-hc .big b{display:block;font:700 22px ui-monospace,Consolas,monospace}#ov-hc .big small{color:var(--dim);font-size:11px;line-height:1.25;display:block}
+#ov-hc .seg{display:flex;height:9px;border-radius:5px;overflow:hidden;margin:8px 0 3px}#ov-hc .seg i{display:block}
+#ov-hc .key{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--dim);margin-bottom:8px}#ov-hc .key span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:var(--c)}
+#ov-hc .ins{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:7px 9px;margin:4px 0 0;border-radius:9px;border:1px solid var(--line)}#ov-hc .ins:hover,#ov-hc .ins[aria-expanded=true]{border-color:#5fe3ff}
+#ov-hc .ins b{font-size:14px}#ov-hc .ins .pr{color:var(--dim);font-size:11.5px}#ov-hc .dots{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}#ov-hc .dots i{width:9px;height:9px;border-radius:50%}
+#ov-hc .chs{margin:4px 0 8px 8px;border-left:2px solid rgba(95,227,255,.3);padding-left:8px}
+#ov-hc .ch{all:unset;box-sizing:border-box;display:flex;gap:8px;width:100%;cursor:pointer;padding:5px 6px;border-radius:7px;line-height:1.3}#ov-hc .ch:hover,#ov-hc .ch[aria-pressed=true]{background:rgba(95,227,255,.1)}
+#ov-hc .ch i{flex:none;width:9px;height:9px;border-radius:50%;margin-top:4px}#ov-hc .ch small{display:block;color:var(--dim);font-size:11px}#ov-hc .ch .tag{font:600 9.5px ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:#66728c}
+#ov-hc .em{margin:6px 0 2px;padding:7px 9px;border-radius:8px;background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.3);font-size:12px}#ov-hc .em b{color:var(--amber);font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:2px}
+#ov-hc .em button{all:unset;cursor:pointer;display:inline-block;margin:5px 6px 0 0;padding:3px 9px;border-radius:99px;border:1px solid rgba(255,181,71,.5);font-size:11.5px}#ov-hc .em button:hover{border-color:var(--amber);color:var(--amber)}
+#ov-hc .fine{color:#66728c;font-size:11px;margin:10px 0 0;line-height:1.4}
+.ppin.hc i{background:#5fe3ff;box-shadow:0 0 14px #5fe3ff,0 0 0 3px rgba(95,227,255,.25)}.ppin.hc label{color:#bff4ff}
+.ppin.epi i{width:14px;height:14px;background:transparent;border:2.5px solid #fff4c2;box-shadow:0 0 14px #ffb547}.ppin.epi label{color:#fff4c2}
+#ov-leg .stf{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 6px}
+#ov-leg .hcl{margin-top:8px;padding-top:7px;border-top:1px solid var(--line)}#ov-leg .hcl b{color:#5fe3ff}
+@media (max-width:820px){#ov-hc{left:16px;right:16px;top:auto;bottom:56px;width:auto;max-height:46vh}}
+#ov .tip{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;color:#66728c;font-size:12px;z-index:2;margin:0}
+.ppin{transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;display:grid;place-items:center;width:22px;height:22px}
+.ppin i{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transition:transform .2s}
+.ppin label{position:absolute;left:20px;top:3px;white-space:nowrap;font:600 12px system-ui,sans-serif;color:#fff;text-shadow:0 1px 4px #000,0 0 10px #000;pointer-events:none}
+.ppin.sel i{transform:scale(1.7)}
+#ov .ovl{position:absolute;z-index:2;right:24px;bottom:24px;width:340px;display:grid;gap:8px;justify-items:end}
+#ov .grp{flex-wrap:wrap;gap:5px}#ov .grp-l{width:100%;text-align:right;font:600 10.5px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:#66728c;margin-top:2px}#ov .grp br{display:none}
+#ov .layers button:disabled{opacity:.4;cursor:wait}
+#ov-leg{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);font-size:12.5px}
+#ov-leg .u{color:var(--dim);margin:2px 0 6px}#ov-leg .bar{height:10px;border-radius:5px}#ov-leg .ends{display:flex;justify-content:space-between;font:11px ui-monospace,Consolas,monospace;color:var(--dim);margin-top:3px}
+#ov-leg .cat{display:flex;gap:8px;align-items:center;margin-top:4px}#ov-leg .cat i{flex:none;width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.2)}#ov-leg .src{color:#66728c;font-size:11px;margin-top:6px}
+#ov-pole{position:absolute;left:24px;top:max(170px,calc(50% - 150px));z-index:2;width:300px;text-align:center}#ov.polev .places{display:none}#ov-pc{width:280px;height:280px;border-radius:50%;cursor:crosshair;box-shadow:0 0 0 1px var(--line),0 10px 40px rgba(0,0,0,.6)}#ov-pole p{margin:4px 0 0;font-size:11px;color:var(--dim)}
+#ov .ovr{position:absolute;right:24px;top:70px;width:320px;z-index:3;overflow:auto;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(9,14,28,.88);backdrop-filter:blur(8px);font-size:13px}
+#ov .ovr h3{margin:2px 0 6px;font:600 15px ui-monospace,Consolas,monospace}#ov .ovr .eyebrow{margin:0;padding-right:24px}#ov .ovr .ex{color:var(--dim);margin:0 0 6px;font-size:12px}
+#ov .ovr dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:6px 0}#ov .ovr dt{color:var(--dim)}#ov .ovr dd{margin:0}#ov .ovr dd small{color:#66728c}
+#ov .ovr .mean{margin:6px 0;color:var(--ink)}#ov .ovr .k{margin:10px 0 4px;font:600 10.5px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+#ov .ovr .rt,#ov .ovr .rtrip{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:6px 9px;margin:3px 0;border-radius:8px;border:1px solid var(--line)}#ov .ovr .rt:hover,#ov .ovr .rtrip:hover{border-color:var(--amber)}#ov .ovr .rt:focus-visible,#ov .ovr .rtrip:focus-visible{outline:2px solid var(--amber)}
+#ov .ovr small{display:block;color:var(--dim);font-size:11px}#ov .ovr .rtrip{border-color:rgba(255,181,71,.5)}
+#ov .ovr .rx{all:unset;cursor:pointer;position:absolute;right:10px;top:6px;font-size:18px;color:var(--dim)}#ov .ovr .rx:hover{color:var(--ink)}
+.ppin.land i{width:8px;height:8px;border-radius:1px;transform:rotate(45deg);background:#cfe3ff;box-shadow:0 0 8px #cfe3ff}.ppin.hub i{width:9px;height:9px;background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.ppin.land label,.ppin.hub label{opacity:0;transition:opacity .15s;font-weight:500;font-size:11.5px}.ppin.land:hover label,.ppin.hub:hover label,.ppin.sel label{opacity:1}.ppin.land.sel i{transform:rotate(45deg) scale(1.7)}
+@media (max-width:820px){#ov .head h2{font-size:28px}#ov .places{width:auto;right:16px;left:16px;bottom:60px}#ov .head{left:16px;right:90px}#ov .ovl{display:none}#ov-pole{display:none}#ov.polev .places{display:grid}#ov .ovr{left:16px;right:16px;width:auto;top:auto;bottom:60px;z-index:4}}
+.tabs{display:flex;gap:6px;margin:0 0 2px}.tabs button{all:unset;cursor:pointer;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--panel)}
+.tabs button[aria-selected=true]{color:var(--amber);border-color:rgba(255,181,71,.6)}.tabs button:focus-visible{outline:2px solid var(--amber)}
+#alltests{display:grid;gap:4px}#alltests[hidden],#trips[hidden]{display:none!important}.grp{font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:8px 0 2px}
+.how-note{font-size:12.5px;color:#aeb8cc;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:0;backdrop-filter:blur(10px)}
+.tt{all:unset;display:flex;width:100%;box-sizing:border-box;margin:0 0 4px;gap:8px;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);backdrop-filter:blur(10px);cursor:pointer;font-size:13.5px}
+.tt:hover{border-color:rgba(255,181,71,.5)}.tt[aria-pressed=true]{border-color:var(--amber);background:rgba(40,28,8,.6)}.tt:focus-visible{outline:2px solid var(--amber)}
+.spot{all:unset;display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;width:100%;box-sizing:border-box;padding:6px 8px;border-radius:8px;border:1px solid var(--line);margin:0 0 4px;cursor:pointer;font-size:13.5px}
+.spot:hover{border-color:rgba(255,181,71,.5)}.spot:focus-visible{outline:2px solid var(--amber)}.spot b{font:700 13px ui-monospace,Consolas,monospace;color:var(--amber)}.spot em{font-style:normal;color:var(--dim);font:12px ui-monospace,Consolas,monospace}
+.kn{display:grid;grid-template-columns:1fr 90px 34px;gap:8px;align-items:center;font-size:13px;margin:0 0 3px}.kn i{display:block;height:6px;border-radius:3px;background:rgba(160,180,220,.15);overflow:hidden}.kn i s{display:block;height:100%;background:var(--amber)}.kn b{font:600 12px ui-monospace,Consolas,monospace;text-align:right}
+#detail .sec{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--dim)}.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:var(--c)}
+#cmp{position:fixed;inset:0;z-index:25;background:rgba(2,3,8,.86);backdrop-filter:blur(6px);overflow:auto;padding:28px 16px}#cmp[hidden]{display:none}
+.cmp-box{max-width:940px;margin:0 auto;padding:22px 24px;position:relative;background:rgba(9,14,28,.94)}
+.cmp-box h2{margin:4px 0 6px;font-size:28px;line-height:1.15}.cmp-box .eyebrow{margin:0;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+#cmp-close{all:unset;cursor:pointer;position:absolute;right:18px;top:18px;font:600 13px ui-monospace,Consolas,monospace;padding:7px 12px;border-radius:99px;border:1px solid var(--line)}#cmp-close:hover{border-color:var(--amber)}#cmp-close:focus-visible{outline:2px solid var(--amber)}
+#site{position:fixed;inset:0;z-index:25;background:rgba(2,3,8,.86);backdrop-filter:blur(6px);overflow:auto;padding:28px 16px}#site[hidden]{display:none}
+.site-t{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0 14px}.site-t td,.site-t th{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}.site-t th{font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)}
+.hubs{display:grid;gap:8px;margin:6px 0 16px}.hub{all:unset;cursor:pointer;display:block;border:1px solid var(--line);border-radius:10px;padding:9px 12px}.hub:hover,.hub:focus-visible{border-color:var(--amber)}.hub b{font-size:15px}.hub small{display:block;opacity:.75;margin-top:3px;line-height:1.4}
+.site-h{margin:18px 0 4px;font-size:18px}.site-v{font-size:13px;opacity:.85;line-height:1.5}
+.cmp-sides{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 10px}
+.cmp-side{border:1px solid var(--line);border-radius:12px;padding:12px 14px}.cmp-side.l{border-color:rgba(255,255,255,.35)}.cmp-side.r{border-color:rgba(255,181,71,.55)}
+.cmp-side label{display:block;font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.cmp-side select{width:100%;font:600 15px system-ui,sans-serif;color:var(--ink);background:#0b1222;border:1px solid var(--line);border-radius:8px;padding:7px 8px}
+.cmp-side select:focus-visible{outline:2px solid var(--amber)}
+.cmp-side .n{display:flex;align-items:baseline;gap:8px;margin-top:10px}.cmp-side .n strong{font:700 34px/1 ui-monospace,Consolas,monospace}.cmp-side.l .n strong{color:#fff}.cmp-side.r .n strong{color:var(--amber)}.cmp-side .n span{color:var(--dim);font-size:13px}
+.cmp-venn{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}.cmp-venn span{font-size:13px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:#cfd6e6}.cmp-venn b{font-family:ui-monospace,Consolas,monospace}
+.cmp-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:0 0 8px;font-size:13px;color:var(--dim)}
+.cmp-tools button{all:unset;cursor:pointer;font:600 12px ui-monospace,Consolas,monospace;padding:6px 11px;border-radius:99px;border:1px solid var(--line);color:var(--ink)}.cmp-tools button:hover{border-color:var(--amber)}.cmp-tools button:focus-visible{outline:2px solid var(--amber)}
+.crow{all:unset;display:grid;grid-template-columns:1fr 150px 150px;gap:12px;align-items:center;width:100%;box-sizing:border-box;padding:7px 10px;border-radius:9px;border:1px solid transparent;cursor:pointer;font-size:13.5px}
+.crow:hover{border-color:var(--line);background:rgba(255,255,255,.03)}.crow:focus-visible{outline:2px solid var(--amber)}
+.crow .t{display:flex;gap:8px;align-items:center}.crow .key{font:700 10px ui-monospace,Consolas,monospace;letter-spacing:.08em;color:#04060d;background:var(--amber);border-radius:99px;padding:1px 6px}
+.cbar{display:grid;grid-template-columns:1fr 28px;gap:6px;align-items:center;padding:3px 6px;border-radius:7px}.cbar i{display:block;height:7px;border-radius:4px;background:rgba(160,180,220,.15);overflow:hidden}.cbar i s{display:block;height:100%}
+.cbar.l i s{background:#fff}.cbar.r i s{background:var(--amber)}.cbar b{font:600 12px ui-monospace,Consolas,monospace;text-align:right}
+.cbar.win{background:rgba(255,181,71,.14);box-shadow:inset 0 0 0 1px rgba(255,181,71,.6)}.cbar.l.win{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.crow-h{display:grid;grid-template-columns:1fr 150px 150px;gap:12px;padding:0 10px 4px;font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.cmp-open{all:unset;cursor:pointer;display:block;text-align:center;font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.06em;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,181,71,.5);color:var(--amber);background:var(--panel);margin:4px 0 0}.cmp-open:hover{background:rgba(40,28,8,.6)}.cmp-open:focus-visible{outline:2px solid var(--amber)}
+@media (max-width:700px){.cmp-sides{grid-template-columns:1fr}.crow,.crow-h{grid-template-columns:1fr 92px 92px;gap:6px}.cmp-box{padding:18px 14px}.cmp-box h2{font-size:22px;padding-right:70px}}
+@media (max-width:1100px){.side{width:320px}.trips{width:290px}.hero h1{font-size:32px}}
+@media (max-width:820px){
+ html,body{overflow:auto}
+ #earth{position:relative;height:62vh}
+ .hero{position:relative;left:0;top:0;padding:70px 16px 0;max-width:none}
+ .hero h1{font-size:30px}
+ .trips,.side{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-height:none;padding:0 16px;margin:12px 0}
+ .side{display:flex}#detail{max-height:none}
+ .credit{position:relative;left:auto;transform:none;width:auto;padding:16px;bottom:auto}
+ .top{background:linear-gradient(var(--bg),transparent)}.top nav{gap:12px}
+}
+/* Entrance: solar system */
+#intro{position:fixed;inset:0;z-index:40;background:#02030a;transition:opacity .9s ease}
+#intro[hidden]{display:none}
+#intro.out{opacity:0;pointer-events:none}
+#intro-cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#intro-labels span{position:absolute;left:0;top:0;font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.2em;text-transform:uppercase;color:#cfd8ef;text-shadow:0 0 8px #000;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+#intro-labels .e{color:#8fd0ff}#intro-labels .m{color:var(--moon)}#intro-labels .r{color:var(--mars)}
+#intro.going #intro-labels span{opacity:0}
+.intro-copy{position:absolute;left:0;right:0;bottom:6vh;text-align:center;padding:0 16px;transition:opacity .5s,transform .5s}
+#intro.going .intro-copy{opacity:0;transform:translateY(20px)}
+.intro-copy h1{font-size:clamp(28px,3.8vw,48px);line-height:1.08;margin:0 auto 28px;max-width:900px;letter-spacing:-.01em;text-wrap:balance}
+.intro-copy h1 em{font-style:normal;background:linear-gradient(90deg,var(--moon),#fff 45%,var(--mars));-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro-go{all:unset;cursor:pointer;font:700 clamp(18px,2vw,24px)/1 system-ui,"Segoe UI",sans-serif;color:#1a1003;background:var(--amber);padding:18px 38px;border-radius:99px;box-shadow:0 0 0 6px rgba(255,181,71,.18),0 0 60px rgba(255,181,71,.55);transition:transform .2s;animation:breathe 2.8s ease-in-out infinite}
+#intro-go:hover{transform:scale(1.04)}#intro-go:focus-visible{outline:3px solid #fff;outline-offset:5px}
+@keyframes breathe{50%{box-shadow:0 0 0 12px rgba(255,181,71,.08),0 0 90px rgba(255,181,71,.75)}}
+.intro-note{color:#66728c;font-size:12.5px;margin:20px 0 0}
+#intro-skip{all:unset;cursor:pointer;position:absolute;right:24px;top:20px;font:600 13px ui-monospace,Consolas,monospace;color:var(--dim);padding:8px 14px;border-radius:99px;border:1px solid var(--line)}
+#intro-skip:hover{color:var(--ink)}#intro-skip:focus-visible{outline:2px solid var(--amber)}
+/* Header buttons and settings */
+.top nav button{all:unset;cursor:pointer;color:var(--dim);font-size:14px}.top nav .gear{font-size:18px;line-height:1;padding:2px 4px}
+.top .tools{display:flex;gap:8px;margin-left:10px}.top .tools button{all:unset;cursor:pointer;font-size:13px;color:var(--ink);padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);white-space:nowrap}.top .tools button:hover{border-color:var(--amber);color:var(--amber)}.top .tools button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+@media (max-width:1100px){.top .tools button{font-size:12px;padding:4px 9px}.top .tools{gap:6px;margin-left:0}}
+@media (max-width:820px){.top{flex-wrap:wrap;row-gap:10px}.top .tools{order:3;width:100%;overflow-x:auto;padding-bottom:2px}.hero{padding-top:110px!important}}
+.top nav button:hover,.top nav button[aria-expanded=true]{color:var(--ink)}.top nav button:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+#settings{position:fixed;z-index:12;right:24px;top:52px;width:310px;padding:16px;display:grid;gap:14px}
+#settings[hidden]{display:none}
+#settings h2{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:0}
+.sw{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:14px}
+.sw input{accent-color:#ffb547;width:16px;height:16px;margin:3px 0 0;flex:none}
+.sw small{display:block;color:var(--dim);font-size:12.5px}
+.chip{all:unset;cursor:pointer;font:600 12.5px ui-monospace,Consolas,monospace;color:var(--ink);padding:7px 12px;border-radius:99px;border:1px solid rgba(255,181,71,.45);background:rgba(40,28,8,.35)}
+.chip:hover{border-color:var(--amber)}.chip:focus-visible{outline:2px solid var(--amber)}
+/* Guided questions */
+#story{position:fixed;z-index:4;left:24px;top:62px;width:440px;padding:18px 20px 16px;min-height:330px;display:flex;flex-direction:column}#story[hidden]{display:none}
+#story[hidden]{display:none}
+.touring .hero{display:none}
+.touring .trips{max-height:calc(100vh - 430px)}
+.touring .credit{display:none}
+.sq-n{font:600 12px ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0 0 8px}
+.sq-q{font-size:28px;line-height:1.12;margin:0 0 10px;font-weight:700;letter-spacing:-.01em;text-wrap:balance;padding-right:18px}
+.sq-a{color:#cfd6e6;margin:0 0 14px;font-size:15.5px}
+#story.in .sq-q{animation:rise .6s both}#story.in .sq-a{animation:rise .6s .35s both}#story.in .sq-acts{animation:rise .5s .6s both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.sq-acts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.sq-acts:empty{display:none}
+.sq-nav{display:flex;align-items:center;gap:10px;margin-top:auto}
+.sq-dots{display:flex;gap:5px;margin-right:auto}.sq-dots i{width:7px;height:7px;border-radius:50%;background:rgba(160,180,220,.25)}.sq-dots i.done{background:rgba(255,181,71,.45)}.sq-dots i.on{background:var(--amber);transform:scale(1.3)}
+#sq-back{all:unset;cursor:pointer;color:var(--dim);font-size:14px;padding:8px 6px}#sq-back:hover{color:var(--ink)}#sq-back[disabled]{opacity:.3;cursor:default}
+#sq-next{all:unset;cursor:pointer;font-weight:700;font-size:14.5px;color:#1a1003;background:var(--amber);padding:9px 18px;border-radius:99px}#sq-next:hover{filter:brightness(1.08)}
+#sq-back:focus-visible,#sq-next:focus-visible,#sq-end:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#sq-end{all:unset;cursor:pointer;position:absolute;right:12px;top:10px;color:var(--dim);font-size:20px;line-height:1;padding:4px 7px;border-radius:8px}#sq-end:hover{color:var(--ink)}
+.pulse{animation:pulse 1.4s ease-out 2}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,181,71,.65)}100%{box-shadow:0 0 0 14px rgba(255,181,71,0)}}
+.flash{animation:flash 2.6s ease;border-radius:6px}@keyframes flash{0%,60%{background:rgba(255,181,71,.2)}100%{background:transparent}}
+@media (max-width:820px){#story{position:relative;left:auto;top:auto;width:auto;margin:70px 16px 0;min-height:0}.sq-q{font-size:24px}#settings{right:16px;left:16px;width:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}#story.in *,#intro-go,.pulse,.flash{animation:none!important}}
+#detail .src,#cmp .src,.ovr .src,#ov-hc .src{font-size:11.5px;line-height:1.45;color:var(--dim);margin:12px 0 0}#detail .src b,#cmp .src b,.ovr .src b,#ov-hc .src b{color:var(--ink,#eef2fa);font-weight:600}
+</style></head><body>
+<div id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-h"><canvas id="intro-cv" aria-hidden="true"></canvas><div id="intro-labels" aria-hidden="true"></div>
+<div class="intro-copy"><p class="eyebrow">Umbra · Earth, Moon and Mars</p>
+<h1 id="intro-h">The Moon and Mars are far away.<br><em>Pieces of them are already here.</em></h1>
+<button id="intro-go">Come take a look</button>
+<p class="intro-note">Real NASA imagery. You can turn this entrance off in Settings.</p></div>
+<button id="intro-skip">Skip · Esc</button></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div id="loading">Loading NASA imagery</div>
+<header class="top"><a class="brand" href="index.html">UMBRA</a>
+<div class="tools" role="group" aria-label="Atlas tools"><button id="cmp-btn">Known vs found</button><button id="site-btn">Where to build</button><button id="hc-btn">Hidden value</button><button id="tour-btn">Guided tour</button></div><nav aria-label="Pages"><a href="globe.html" aria-current="page">Atlas</a><a href="live.html">Live</a><a href="constraint-map.html">Constraint map</a><button id="set-btn" class="gear" aria-expanded="false" aria-controls="settings" aria-label="Settings" title="Settings">⚙</button></nav></header>
+<div id="settings" class="card" hidden role="group" aria-label="Settings"><h2>Settings</h2>
+<label class="sw"><input type="checkbox" id="pref-intro"><span>Solar system entrance<small>Play the "Come take a look" opening when the page loads.</small></span></label>
+<label class="sw"><input type="checkbox" id="pref-story"><span>Guided questions<small>Walk through the tool one question at a time.</small></span></label>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="chip" id="replay-intro">Replay entrance</button><button class="chip" id="restart-tour">Restart questions</button></div></div>
+
+<section class="hero" id="hero">
+<p class="eyebrow">Earth · Moon · Mars, measured</p>
+<h1>Some places on Earth are <em>already the Moon and Mars</em>.</h1>
+<p>We scored every place on Earth against conditions that NASA orbiters measured on the Moon and Mars. These are the trips where one expedition tests the most at once.</p>
+</section>
+
+<section id="story" class="card" hidden aria-live="polite" aria-label="Guided questions"><button id="sq-end" aria-label="Close the guided questions">&times;</button>
+<p class="sq-n"></p><h2 class="sq-q"></h2><p class="sq-a"></p><div class="sq-acts"></div>
+<div class="sq-nav"><div class="sq-dots" aria-hidden="true"></div><button id="sq-back">Back</button><button id="sq-next">Next question</button></div></section>
+
+<div id="earth" role="img" aria-label="Rotating Earth with the top Umbra trip sites marked"></div>
+
+<section class="trips" aria-label="Trips and tests"><div class="tabs" role="tablist"><button role="tab" id="tab-trips" aria-selected="true" aria-controls="trips">Top trips</button><button role="tab" id="tab-tests" aria-selected="false" aria-controls="alltests">All 36 tests</button></div>
+<div id="trips" role="tabpanel" style="display:grid;gap:8px"></div>
+<div id="alltests" role="tabpanel" hidden><p class="how-note">Every ~18 km cell of land gets a 0 to 100 score for each test: is the condition there, does it last, and what Earth can't copy. Open a test to see its rule and its five best places.</p>
+<div class="legend"><span style="--c:#b9c8ea">Moon</span><span style="--c:#ff7a4d">Mars</span><span style="--c:#ffb547">Both</span><span style="--c:#fff">Known analog site</span></div><button class="cmp-open" id="cmp-open2" style="margin:0 0 10px">Compare known sites with Umbra trips</button><div id="tlist"></div></div></section>
+
+<aside class="side">
+ <div id="detail" class="card on"><div class="empty">Pick a trip on the left or a marker on the globe.<br>Then open any test to see the NASA measurement behind it.</div></div>
+ <div class="worlds">
+  <div class="card world moon" id="w-moon"><div class="top2"><h4>Moon</h4><button class="xp" data-b="moon" aria-label="Explore the Moon full screen">Explore</button></div><div class="g" id="g-moon"></div><div class="where" id="where-moon">LRO data sets the targets</div></div>
+  <div class="card world mars" id="w-mars"><div class="top2"><h4>Mars</h4><button class="xp" data-b="mars" aria-label="Explore Mars full screen">Explore</button></div><div class="g" id="g-mars"></div><div class="where" id="where-mars">MGS and Odyssey data set the targets</div></div>
+ </div>
+ <div class="layers" role="group" aria-label="Moon and Mars imagery"><button id="ly-color" aria-pressed="true">Color</button><button id="ly-relief" aria-pressed="false">Elevation</button></div>
+</aside>
+
+<div id="site" role="dialog" aria-modal="true" aria-labelledby="site-t" hidden><div class="card cmp-box">
+<button id="site-close" class="x-close" style="all:unset;cursor:pointer;position:absolute;right:18px;top:18px;font:600 13px ui-monospace,Consolas,monospace;padding:7px 12px;border-radius:99px;border:1px solid var(--line)" aria-label="Close where to build">Close · Esc</button>
+<p class="eyebrow">Moon and Mars siting</p><h2 id="site-t">Where would a city go?</h2>
+<p class="site-v">New York grew where a sheltered harbor, rivers into the interior, fresh water and an island site all met in one place. Umbra asks the same question of NASA orbiter maps: where do the things a base needs sit within a short drive of each other? Click a site to see it on the globe.</p>
+<table class="site-t"><thead><tr><th>What made NYC a hub</th><th>Moon</th><th>Mars</th></tr></thead><tbody>
+<tr><td>Sheltered harbor</td><td>Flat, gentle ground to land (LOLA slopes)</td><td>Low ground, so a parachute has more air (MOLA)</td></tr>
+<tr><td>Fresh water</td><td>Ice in permanent shadow (LOLA, Diviner)</td><td>Hydrogen near the surface (Odyssey GRS)</td></tr>
+<tr><td>Energy</td><td>Crater rims lit most of the year</td><td>Sun all year near the equator</td></tr>
+<tr><td>Raw materials</td><td>Ilmenite for oxygen and titanium, iron, thorium (Lunar Prospector GRS)</td><td>Firm ground, not deep dust (TES thermal inertia)</td></tr>
+<tr><td>Route to the sea</td><td>A mass driver: a long, straight, flat strip running east near the equator</td><td>A flat apron for launch pads</td></tr>
+<tr><td>Islands</td><td>Launch pads 2 to 5 km from the habitat, out of the blast spray</td><td>Same</td></tr>
+<tr><td>Shelter</td><td>Lava tube skylights (LROC)</td><td>Not scored yet</td></tr>
+<tr><td>Telegraph</td><td>Earth always in view on the near side</td><td>Relay orbiters</td></tr>
+</tbody></table>
+<h3 class="site-h">Moon: the port cities</h3><p class="site-v">Near-side maria have the long flat runs a mass driver needs, ilmenite to make oxygen, and Earth overhead. Most functions in one place: Marius Hills, where a lava tube skylight sits on titanium-rich plains.</p><div class="hubs" id="site-moon"></div>
+<h3 class="site-h">Moon: the water town at the south pole</h3><p class="site-v">Only <b id="site-all4"></b> one-kilometre blocks near the pole have all four: sun most of the year, ice within 2 km, ground flat enough to land and a pad site 2 to 5 km out. The best ones land on Shackleton's rim, beside the hubs our separate light-flow run found, and near Malapert and Mons Mouton, which are Artemis III candidate regions.</p><div class="hubs" id="site-pole"></div>
+<h3 class="site-h">Mars</h3><p class="site-v">On Mars, water and year-round sun rarely meet. Shallow ice sits at mid latitudes; steady sun is at the equator. The best all-round hubs are low equatorial plains where Odyssey still sees a strong hydrogen signal.</p><div class="hubs" id="site-mars"></div>
+<h3 class="site-h">Does it find places NASA already chose?</h3><div class="site-v" id="site-val"></div>
+<p class="site-v" style="opacity:.6;margin-top:14px">Coarse 1 degree grids (polar detail at 1 km). Data: LRO LOLA LDEM_16, AVGVISIB and LPSR 60 m, LDSM 40 m slopes; Lunar Prospector GRS; LROC pits; MGS MOLA MEGDR; MGS TES thermal inertia; Mars Odyssey GRS water. Earth in view at the pole is computed by Umbra from LOLA heights (the globe's "Pole: Earth in view" layer).</p>
+</div></div>
+<div id="cmp" role="dialog" aria-modal="true" aria-labelledby="cmp-t" hidden><div class="card cmp-box">
+<button id="cmp-close" aria-label="Close the comparison">Close · Esc</button>
+<p class="eyebrow">Known vs found</p><h2 id="cmp-t">What the known analog sites have, and what Umbra found</h2>
+<p class="hint" id="cmp-sum"></p>
+<div class="cmp-sides"><div class="cmp-side l"><label for="cmp-l">Known analog site</label><select id="cmp-l"></select><div class="n"><strong id="cmp-ln"></strong><span>strong tests</span></div></div>
+<div class="cmp-side r"><label for="cmp-r">Umbra trip</label><select id="cmp-r"></select><div class="n"><strong id="cmp-rn"></strong><span>strong tests</span></div></div></div>
+<div class="cmp-venn" id="cmp-venn"></div>
+<div class="cmp-tools"><span id="cmp-note"></span><span><button id="cmp-all" aria-pressed="false">Show all 36 tests</button> <button id="cmp-map">Show both on the globe</button></span></div>
+<div class="crow-h"><span>Test (click to open)</span><span id="cmp-lh">Known site</span><span id="cmp-rh">Umbra trip</span></div><div id="cmp-rows"></div>
+<p class="hint" style="margin-top:12px">Both sides are scored the same way: the best score within a 2° area (about 200 km) on the 0.5° Umbra Live grid, as a share of the best score anywhere on Earth. Strong means 50 or more. <span class="key" style="font:700 10px ui-monospace,Consolas,monospace;color:#04060d;background:var(--amber);border-radius:99px;padding:1px 6px">KEY</span> marks a test one side passes strongly and the other does not.</p><p class="src" id="cmp-src"></p>
+</div></div>
+<div id="ov" role="dialog" aria-modal="true" aria-labelledby="ov-t"><div id="ov-g"></div>
+<div class="head"><p class="eyebrow" id="ov-e"></p><h2 id="ov-t"></h2><p id="ov-s"></p></div>
+<button id="ov-close" aria-label="Close">Close · Esc</button>
+<div class="places" id="ov-p"></div><div id="ov-hc" hidden aria-live="polite"></div>
+<div class="ovr" id="ov-r" hidden aria-live="polite"></div>
+<div id="ov-pole" hidden><canvas id="ov-pc" width="520" height="520" aria-label="South pole close-up. Click to read values."></canvas><p>South pole, 85°S to the pole · Earth side up · <span style="color:#5fe3ff">◆</span> light-flow hubs <span style="color:#ffb547">●</span> Umbra hubs</p></div>
+<div class="ovl" id="ov-l"><div id="ov-leg" hidden></div><div class="layers grp" id="ov-lyr" role="group" aria-label="Layers"></div><div class="layers grp" id="ov-opt" role="group" aria-label="Show"></div></div>
+<p class="tip">Drag to spin · scroll or pinch to zoom · click the ground to read NASA values</p></div>
+<p class="credit">Imagery: NASA GIBS Blue Marble (Earth), NASA Moon Trek LRO WAC and LOLA, NASA Mars Trek Viking MDIM 2.1 and MGS MOLA. Scores from LRO Diviner, LOLA, MGS MOLA and TES, Mars Odyssey GRS, and MODIS.</p>
+
+<script>/*UMBRA_DATA*/window.UMBRA={"tests":{"Sharp, dry dust that is also cold":{"id":"seal_dust","world":"Moon","why":"Regolith grinds seals, joints and bearings; cold stiffens them.","gap":"Earth wind rounds some grains; no electrostatic cling from sunlight.","moon":"Diviner: dust at the poles sits under 126 K on average, far colder than any Earth dust test.","mars":"","conf":"Medium"},"Low sun and black shadows":{"id":"low_sun","world":"Moon","why":"Cameras, lidar and eyes face glare beside total darkness.","gap":"Earth air scatters light into shadows; they never go fully black.","moon":"LOLA: 11% of ground within 5 degrees of the pole is in permanent shadow, so robots drive in and out of total darkness.","mars":"","conf":"Medium"},"Deep cold":{"id":"deep_cold","world":"Moon","why":"Shadowed crater floors freeze machines and hold the ice.","gap":"Best ice-free ground covers about 26% of the gap; the rest needs a chamber.","moon":"Diviner: coldest crater floors never pass 27 K (-246 C) even at noon in summer. 99% of ground south of 80S averages colder than Earth's record low air (184 K).","mars":"","conf":"High"},"Two weeks of night":{"id":"lunar_night","world":"Moon","why":"Landers must ride out 14 days of dark and cold on stored power.","gap":"Earth air and wind move heat; the Moon only radiates it away.","moon":"Diviner: half the ground south of 80S averages under 126 K (-148 C) across the year.","mars":"","conf":"High"},"Big daily temperature swings":{"id":"thermal_swing","world":"Moon & Mars","why":"Repeated hot-cold cycles crack joints, solder and seals over years.","gap":"MODIS: Earth's ground swings reach about 31 C from day to night; Mars about 80 C; the Moon far more.","moon":"Diviner: summer highs south of 80S run from 187 K to 286 K, while yearly averages sit near 126 K.","mars":"","conf":"High"},"Thin, dry air and strong UV":{"id":"thin_air","world":"Mars","why":"Low pressure and UV drive equipment cooling, materials ageing and crew health.","gap":"Earth's highest ground keeps about half its air; Mars has under 1%.","moon":"","mars":"MOLA terrain: half of Mars has under 624 Pa of air; even the deepest basin has 1258 Pa. Earth's highest bare ground still has about 81 times the median Mars pressure.","conf":"High"},"Rocky, flat ground to build landing pads":{"id":"pad_rock","world":"Moon","why":"Engine blast sprays loose regolith; pads must be built from local rock on flat ground.","gap":"Rocket plume in vacuum spreads farther than in air; gravity 1/6.","moon":"LOLA 40 m slopes: the sunniest ground (where a base and pad would go) has a median slope of 5 degrees, and 84% is under 10. Test sites should be that flat.","mars":"","conf":"Medium"},"Ice locked in dry frozen ground":{"id":"dry_permafrost","world":"Moon & Mars","why":"Ice cemented into soil is the water and fuel source, and fights drills.","gap":"Earth ground ice is warmer and younger than lunar cold-trap ice.","moon":"Diviner: ice is stable within 1 m of the surface on 38% of ground south of 80S. Where it is buried, the median dry cover is 8 cm (90% under 49 cm). That is the depth a drill test must match.","mars":"","conf":"Medium"},"Flat, featureless ground":{"id":"featureless","world":"Moon & Mars","why":"Robots lose track of distance travelled when nothing in view changes.","gap":"Earth light and haze still give visual cues the Moon lacks. Ice sheets are even flatter but are ice, not ground.","moon":"LOLA 40 m slopes: median 9 degrees near the pole; 20% of ground is steeper than 15 degrees, so long featureless runs are rarer there than on the maria.","mars":"","conf":"Medium"},"No usable compass":{"id":"no_compass","world":"Moon & Mars","why":"Neither world has a global magnetic field to steer by.","gap":"Field near the magnetic pole is weak, not absent, and it moves each year.","moon":"","mars":"","conf":"High"},"Ridges with sun that never sets":{"id":"power_ridge","world":"Moon","why":"Solar farms on crater rims that see the sun most of the time.","gap":"Earth's midnight sun lasts weeks to months; cloud still interrupts it.","moon":"LOLA: the sunniest spot within 5 degrees of the south pole is lit 88% of the time, but only 0.8 km2 is lit more than 70%. Earth's midnight sun gives 50% at most over a year.","mars":"","conf":"Medium"},"Sunlit ridge next to frozen ground":{"id":"sun_ice_edge","world":"Moon","why":"The best base sites sit on the edge: power on the rim, ice in the crater below.","gap":"Our Earth grid is 18 km; the lunar commute is under 1 km, so pick the exact spot locally.","moon":"LOLA: from ground lit over 70% of the time, permanent shadow is a median 350 m away (90% within 0.9 km). The engine now requires sun and frozen ground in the same 18 km cell.","mars":"","conf":"Low"},"Cold, hyperarid, sterile ground":{"id":"mars_hyperarid","world":"Mars","why":"Mars soil is bone dry with oxidizing salts that hurt crops and life detection.","gap":"Earth deserts still have trace life and liquid fog; no global perchlorate map was used.","moon":"","mars":"Odyssey gamma-ray map: even the dry low latitudes hold a median 4% water by weight, locked in salts and minerals (1.6 to 7.4%). The Earth test is getting water out of bone-dry, salty soil.","conf":"Medium"},"Highest natural cosmic-ray exposure":{"id":"radiation","world":"Moon & Mars","why":"Space radiation flips bits and wears electronics; Earth's thinnest shielding is high ground near the magnetic poles.","gap":"Earth's air and field still block most of it; a lunar surface dose is far higher.","moon":"","mars":"","conf":"Medium"},"Heat lost straight to the sky":{"id":"radiative_cold","world":"Moon","why":"With no air, hardware cools only by radiating to space; radiators and night heaters are sized for that.","gap":"Earth air still carries heat by convection, unlike the Moon.","moon":"","mars":"","conf":"Medium"},"Dry, fine dust lifted by heat: static and dust devils":{"id":"dust_devils","world":"Mars","why":"Mars dust devils and charged dust coat solar panels and optics; robots must clean or ride it out.","gap":"Earth dust devils are smaller and wetter than Mars's.","moon":"","mars":"TES albedo: 25% of Mars is bright, dust-covered ground that devils and storms can lift.","conf":"Low"},"Soft sand that traps wheels":{"id":"soft_sand","world":"Mars","why":"Spirit ended its drive stuck in soft sand; rovers need to detect and escape it.","gap":"Earth gravity presses wheels harder into the sand than Mars does.","moon":"","mars":"TES thermal inertia: 70% of Mars between 60S and 60N is sand or crusted soil, and 22% is loose dust. Spirit died in soft soil under a crust.","conf":"Medium"},"Windy, dusty plains":{"id":"dust_storm","world":"Mars","why":"Dust storms cut solar power for weeks and sandblast hardware.","gap":"Martian storms can wrap the whole planet; Earth's are regional.","moon":"","mars":"TES albedo: 25% of the planet is dust-mantled, the source for regional and global storms.","conf":"Low"},"Deep loose dust, not sand":{"id":"dust_mantle","world":"Mars","why":"Mars data shows a fifth of the planet is fine dust a rover sinks into, not dune sand. Wheels, drills and suits behave differently in each.","gap":"Earth dust is rarely more than a few cm deep outside dry lakebeds; Mars mantles can be metres thick.","moon":"","mars":"TES thermal inertia: 22% of Mars between 60S and 60N reads under 100, which means loose, fine dust. This test exists because the Mars data asked for it.","conf":"Low"},"Lava tubes and caves in young basalt":{"id":"lava_tubes","world":"Moon & Mars","why":"Lava tubes could shelter crews from radiation, impacts and temperature swings. Robots must learn to find, enter and map them.","gap":"Earth tubes are younger, wetter and smaller; lunar tubes may be far wider in low gravity.","moon":"LRO cameras have mapped about 300 lunar pits, 16 of them in mare basalt; some open into voids that may be lava tubes (Wagner and Robinson).","mars":"Orbiter images show pit chains and skylight-like holes on the flanks of Mars's big shield volcanoes.","conf":"Medium"},"Caves for robots without GPS or light":{"id":"karst_caves","world":"Moon & Mars","why":"Inside a cave a robot has no sun, no GPS and no radio link. It must navigate by what it senses itself.","gap":"These caves are dissolved limestone and salt, not lava; useful for the robot, not the geology.","moon":"","mars":"","conf":"Low"},"Dark basalt plains like the lunar maria":{"id":"mare_basalt","world":"Moon & Mars","why":"The lunar maria and most of Mars's crust are basalt. Excavators, sintered pads and oxygen extraction should be tested on it.","gap":"Earth basalt is weathered and often soil-covered; lunar mare basalt is bone-dry and fresh under regolith.","moon":"The dark lunar maria are basalt lava plains; Apollo 11, 12, 15 and 17 sampled them.","mars":"TES and other orbiter spectrometers show much of Mars's dark surface is basaltic.","conf":"Medium"},"Pale gabbro-family rock like the lunar highlands":{"id":"highland_rock","world":"Moon","why":"The bright lunar highlands are anorthosite. The closest mapped class on Earth is gabbro and related deep-cooled rock.","gap":"The global map lumps anorthosite with gabbro; true anorthosite massifs need a finer map.","moon":"Apollo 16 returned highland anorthosite; 69 meteorites in NASA's catalogue are classed lunar anorthosite.","mars":"","conf":"Low"},"Impact-shocked rock":{"id":"impact_rock","world":"Moon & Mars","why":"Craters are the main landform on the Moon and Mars. Shocked rock and impact melt are what samples will mostly be.","gap":"Earth keeps only about 200 confirmed craters, most eroded or buried; the Moon and Mars keep millions.","moon":"","mars":"","conf":"Low"},"Volcanic ash and glass beads":{"id":"volcanic_glass","world":"Moon & Mars","why":"Apollo 17's orange soil was volcanic glass beads, a candidate feedstock for oxygen. Ash fields test handling and processing.","gap":"Earth ash weathers to clay within thousands of years; lunar glass beads are billions of years old.","moon":"","mars":"","conf":"Medium"},"Salt deposits that preserve traces of life":{"id":"salt_biosig","world":"Mars","why":"Salt can trap and preserve organic molecules and microbes for very long times. It is a prime place to look for past life.","gap":"Earth salt flats hold living microbes today; Mars salt would hold only ancient traces, if any.","moon":"","mars":"Mars Odyssey's THEMIS camera found about 640 chloride salt deposits across the ancient southern highlands (Osterloo et al. 2010).","conf":"Medium"},"Soil that destroys organic molecules":{"id":"oxidant_soil","world":"Mars","why":"Mars soil chemistry and UV break down organics, so a life-detection instrument can miss what is there. Test it where the same happens.","gap":"Earth's ozone blocks the harshest UV; oxidants form more slowly here.","moon":"","mars":"NASA's Phoenix lander found perchlorate, a strong oxidant, in Mars soil in 2008.","conf":"Low"},"Volcanic heat and water in dry land":{"id":"hydrothermal","world":"Mars","why":"Hot springs build silica crusts that lock in traces of life. Spirit found silica-rich deposits on Mars that may have formed this way.","gap":"Earth springs are active and alive today; Mars deposits are billions of years old.","moon":"","mars":"","conf":"Low"},"Ancient exposed crust in dry land":{"id":"ancient_crust","world":"Moon & Mars","why":"Most of the Moon's surface is over 3 billion years old. Earth's oldest exposed shields hold its earliest record.","gap":"Rock type is a proxy for age; the map does not date the rock.","moon":"","mars":"","conf":"Low"},"Seismically quiet bedrock":{"id":"seismic_quiet","world":"Moon & Mars","why":"Seismometers read a planet's interior. They are tested best on solid rock far from earthquakes and people.","gap":"Earth's oceans and weather make background noise that the Moon does not have.","moon":"","mars":"NASA's InSight seismometer recorded 1,319 marsquakes before the mission ended in 2022.","conf":"Medium"},"Rock with strong fossil magnetism":{"id":"magnetic_memory","world":"Moon & Mars","why":"Mars and the Moon lost their global magnetic fields, but some rocks kept the old magnetism. It is a record of an ancient planetary core.","gap":"Earth still has an active field that dwarfs crustal anomalies; instruments must subtract it.","moon":"","mars":"Mars Global Surveyor mapped strong crustal magnetic fields, mostly in the ancient southern highlands.","conf":"Medium"},"Far from people, signals and contamination":{"id":"radio_quiet","world":"Moon & Mars","why":"Mars is minutes away by radio, so robots must decide alone; samples must stay free of Earth life. Test where people barely reach.","gap":"Distance to towns is a proxy; it does not measure radio noise directly.","moon":"","mars":"","conf":"Low"},"Dried ancient lake beds":{"id":"dried_lakes","world":"Mars","why":"Mars had lakes and river deltas, such as Jezero crater where Perseverance landed. Dry lake beds on Earth keep the same kind of layered record.","gap":"Earth lake beds dried thousands of years ago; Mars's dried billions of years ago.","moon":"","mars":"","conf":"Medium"},"Sand that moves like Mars sand (ratio match)":{"id":"sand_ratio","world":"Mars","why":"On Mars, thin air means sand moves only in rare gusts. The match is not the windiest desert but sand seas where wind relative to the lift threshold is just as low.","gap":"Matches the wind-to-threshold ratio, not grain hop height; Mars grains fly higher and longer in low gravity.","moon":"","mars":"Lifting a 0.25 mm grain takes about 1.1 m/s friction speed on Mars vs 0.24 on Earth. With typical Mars winds the ratio is about 0.36; Earth's median is 0.48.","conf":"Low"},"Ground ice balanced like Mars ice (ratio match)":{"id":"ice_ratio","world":"Mars","why":"On Mars, ground ice lasts where the air's frost point equals the ground's mean temperature. The match is where the same balance holds, with almost no snow to resupply it.","gap":"Earth's balance also depends on summer melt and snow, which Mars lacks.","moon":"","mars":"Mars mid-latitude ground ice sits near this balance line, which is why it is found shallow there (Phoenix dug into it at 68N).","conf":"Low"},"Earth's erasers switched off":{"id":"erasers_off","world":"Moon & Mars","why":"Water, life, earthquakes and people erase Earth's records. Where all four are weakest, Earth keeps records the way the Moon and Mars do.","gap":"Wind and ice also erase; not yet included.","moon":"Independent check with NASA's Meteorite Landings catalogue (31,085 finds on land, never given to the engine): 67% of finds lie in the top quarter of land where water, life and earthquakes are weakest (chance would give 25%). The median find sits at the 78th percentile.","mars":"Independent check with NASA's Meteorite Landings catalogue (31,085 finds on land, never given to the engine): 67% of finds lie in the top quarter of land where water, life and earthquakes are weakest (chance would give 25%). The median find sits at the 78th percentile.","conf":"Medium"}},"sites":[{"lat":19,"lon":19,"count":9,"tests":["Big daily temperature swings","Rocky, flat ground to build landing pads","Flat, featureless ground","Dry, fine dust lifted by heat: static and dust devils","Windy, dusty plains","Deep loose dust, not sand","Impact-shocked rock","Soil that destroys organic molecules","Rock with strong fossil magnetism"]},{"lat":-23,"lon":-69,"count":8,"tests":["Sharp, dry dust that is also cold","Big daily temperature swings","Windy, dusty plains","Volcanic ash and glass beads","Salt deposits that preserve traces of life","Soil that destroys organic molecules","Volcanic heat and water in dry land","Dried ancient lake beds"]},{"lat":35,"lon":85,"count":8,"tests":["Sharp, dry dust that is also cold","Big daily temperature swings","Thin, dry air and strong UV","Cold, hyperarid, sterile ground","Heat lost straight to the sky","Dry, fine dust lifted by heat: static and dust devils","Caves for robots without GPS or light","Rock with strong fossil magnetism"]},{"lat":-77,"lon":163,"count":7,"tests":["Deep cold","Two weeks of night","Ice locked in dry frozen ground","Ridges with sun that never sets","Sunlit ridge next to frozen ground","Cold, hyperarid, sterile ground","Ground ice balanced like Mars ice (ratio match)"]},{"lat":23,"lon":41,"count":7,"tests":["Big daily temperature swings","Rocky, flat ground to build landing pads","Flat, featureless ground","Dry, fine dust lifted by heat: static and dust devils","Lava tubes and caves in young basalt","Dark basalt plains like the lunar maria","Ancient exposed crust in dry land"]},{"lat":25,"lon":-5,"count":7,"tests":["Big daily temperature swings","Rocky, flat ground to build landing pads","Flat, featureless ground","Windy, dusty plains","Pale gabbro-family rock like the lunar highlands","Ancient exposed crust in dry land","Rock with strong fossil magnetism"]},{"lat":81,"lon":-91,"count":7,"tests":["Sharp, dry dust that is also cold","Deep cold","Two weeks of night","No usable compass","Ridges with sun that never sets","Seismically quiet bedrock","Rock with strong fossil magnetism"]},{"lat":39,"lon":73,"count":6,"tests":["Sharp, dry dust that is also cold","Highest natural cosmic-ray exposure","Caves for robots without GPS or light","Impact-shocked rock","Rock with strong fossil magnetism","Ground ice balanced like Mars ice (ratio match)"]}],"meteor":{"n_found":31085,"median_pct":77.97990973364371,"share_top10":0.008750201061605276,"share_top25":0.6659160366736369}};/*END*/</script>
+<script>window.UMBRA_SITE={"all4":74,"moon":[{"n":"Marius Hills, Oceanus Procellarum","lat":17.5,"lon":-57.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","Earth in view","lava tube","thorium and rare earths"],"t":174,"ti":8.78},{"n":"South of Marius Hills","lat":10.5,"lon":-52.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","Earth in view","thorium and rare earths","lava tube"],"t":121,"ti":6.33},{"n":"Oceanus Procellarum, south","lat":-3.5,"lon":-32.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","thorium and rare earths","Earth in view"],"t":182,"ti":8.32},{"n":"Oceanus Procellarum, west","lat":-0.5,"lon":-43.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","thorium and rare earths","Earth in view"],"t":182,"ti":6.17},{"n":"Oceanus Procellarum, far west","lat":1.5,"lon":-53.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","Earth in view","thorium and rare earths"],"t":182,"ti":5.82},{"n":"Sinus Medii","lat":1.5,"lon":-1.5,"h":["landing","mass driver","ilmenite (oxygen, titanium)","iron","thorium and rare earths","Earth in view"],"t":182,"ti":1.3}],"pole":[{"n":"Shackleton rim","lat":-89.464,"lon":223.7,"h":["sun most of the year","ice in shadow","landing","pad site 2-5 km out"],"s":0.88,"lf":2.2},{"n":"Malapert Massif area","lat":-86,"lon":2.25,"h":["sun most of the year","ice in shadow","landing","pad site 2-5 km out"],"s":0.82,"lf":114.1},{"n":"Shackleton, Henson side","lat":-89.303,"lon":245.52,"h":["sun most of the year","ice in shadow","landing","pad site 2-5 km out"],"s":0.79,"lf":1.3},{"n":"Mons Mouton area","lat":-85.435,"lon":32.18,"h":["sun most of the year","ice in shadow","landing","pad site 2-5 km out"],"s":0.75,"lf":135.4},{"n":"Shackleton, far side","lat":-88.866,"lon":131.46,"h":["sun most of the year","ice in shadow","landing","pad site 2-5 km out"],"s":0.73,"lf":12.9}],"mars":[{"n":"Medusae Fossae lowlands","lat":-9.5,"lon":176.5,"h":["landing","firm ground","water (GRS)","sun all year","flat launch apron"],"w":7.398,"e":-1.47},{"n":"Medusae Fossae lowlands, east","lat":-10.5,"lon":-175.5,"h":["firm ground","water (GRS)","sun all year","flat launch apron","landing"],"w":6.909,"e":-1.96},{"n":"South of Elysium Planitia","lat":-3.5,"lon":170.5,"h":["landing","firm ground","water (GRS)","sun all year","flat launch apron"],"w":6.592,"e":-3},{"n":"Meridiani and Arabia","lat":8.5,"lon":5.5,"h":["landing","water (GRS)","sun all year","flat launch apron","firm ground"],"w":6.335,"e":-1.12},{"n":"Chryse, near Mawrth Vallis","lat":25.5,"lon":-9.5,"h":["landing","firm ground","water (GRS)","sun all year","flat launch apron"],"w":6.217,"e":-2.2}],"vm":[{"name":"Apollo 11","lat":0.67,"lon":23.47,"hubN":5,"hub":["landing","comms","ilmenite","massdriver","iron"],"beats_pct":87},{"name":"Apollo 12","lat":-3.01,"lon":-23.42,"hubN":6,"hub":["landing","massdriver","ilmenite","iron","kreep","comms"],"beats_pct":95},{"name":"Apollo 14","lat":-3.65,"lon":-17.47,"hubN":6,"hub":["landing","massdriver","ilmenite","iron","kreep","comms"],"beats_pct":95},{"name":"Apollo 15","lat":26.13,"lon":3.63,"hubN":6,"hub":["ilmenite","iron","kreep","comms","massdriver","landing"],"beats_pct":95},{"name":"Apollo 16","lat":-8.97,"lon":15.5,"hubN":2,"hub":["comms","landing"],"beats_pct":60},{"name":"Apollo 17","lat":20.19,"lon":30.77,"hubN":5,"hub":["landing","ilmenite","iron","comms","massdriver"],"beats_pct":87},{"name":"Marius Hills","lat":14.1,"lon":-56.8,"hubN":7,"hub":["landing","massdriver","ilmenite","iron","comms","shelter","kreep"],"beats_pct":100}],"vr":[{"name":"Jezero (Perseverance)","lat":18.4,"lon":77.5,"hubN":3,"hub":["sun","landing","launch"],"beats_pct":34},{"name":"Gale (Curiosity)","lat":-5.4,"lon":137.8,"hubN":5,"hub":["firm","water","sun","launch","landing"],"beats_pct":96},{"name":"Meridiani (Opportunity)","lat":-1.9,"lon":-5.5,"hubN":4,"hub":["landing","water","sun","launch"],"beats_pct":82},{"name":"Arcadia Planitia ice","lat":40,"lon":-160,"hubN":4,"hub":["landing","firm","water","launch"],"beats_pct":82},{"name":"Deuteronilus Mensae","lat":44,"lon":22,"hubN":3,"hub":["firm","landing","launch"],"beats_pct":34},{"name":"Protonilus Mensae","lat":44,"lon":47,"hubN":2,"hub":["landing","launch"],"beats_pct":7},{"name":"Mawrth Vallis","lat":24,"lon":-19,"hubN":5,"hub":["firm","sun","landing","launch","water"],"beats_pct":96}]};window.UMBRA_CMP={"keys":["seal_dust","low_sun","deep_cold","lunar_night","thermal_swing","thin_air","pad_rock","dry_permafrost","featureless","no_compass","power_ridge","sun_ice_edge","mars_hyperarid","radiation","radiative_cold","dust_devils","soft_sand","dust_storm","dust_mantle","lava_tubes","karst_caves","mare_basalt","highland_rock","impact_rock","volcanic_glass","salt_biosig","oxidant_soil","hydrothermal","ancient_crust","seismic_quiet","magnetic_memory","radio_quiet","dried_lakes","sand_ratio","ice_ratio","erasers_off"],"known":[["Haughton Crater",75.43,-89.82,[13,20,86,61,0,0,0,46,0,80,14,26,0,0,0,0,0,0,0,0,0,0,0,75,0,0,0,0,0,95,17,30,0,0,0,56]],["McMurdo Dry Valleys",-77.55,161.5,[0,0,0,0,0,0,0,0,0,0,50,0,0,48,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,28,0,0,0,85]],["Atacama (Yungay)",-24.08,-69.92,[33,0,33,0,80,20,25,0,0,0,0,0,0,10,45,16,0,42,0,0,2,11,0,1,0,65,86,94,0,0,0,8,96,12,0,0]],["Mauna Kea / HI-SEAS",19.8,-155.47,[0,0,12,0,0,0,0,0,0,0,0,0,0,17,0,0,0,0,0,26,0,0,0,0,0,0,0,0,0,1,57,0,0,0,0,0]],["Black Point Lava Flow",35.68,-111.43,[30,0,35,0,52,0,13,0,29,0,0,0,0,33,8,10,0,0,0,58,100,5,0,22,0,0,0,1,0,13,26,8,0,19,0,27]],["Meteor Crater",35.03,-111.02,[30,0,34,0,52,0,12,0,29,0,0,0,0,33,8,10,0,0,0,58,100,5,0,22,0,0,0,0,0,13,26,4,0,19,0,24]],["Mars Desert Research Station",38.41,-110.79,[32,0,47,0,26,0,13,0,5,0,0,0,0,52,14,4,0,1,0,15,48,0,0,78,19,0,0,0,0,8,26,6,0,11,0,28]],["Svalbard (AMASE)",79.43,13.93,[0,6,62,16,0,0,0,4,0,38,26,0,0,0,0,0,0,0,0,0,54,0,0,0,0,0,0,0,0,20,0,13,0,0,0,12]],["Salar de Uyuni",-20.13,-67.49,[33,0,39,0,32,31,13,0,18,0,0,0,4,9,48,3,0,13,0,0,38,0,0,0,0,66,0,23,0,0,0,0,86,4,0,0]],["Eureka, Ellesmere",79.99,-85.93,[25,9,86,67,0,0,0,62,0,87,45,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,33,0,0,2,66]],["Concordia Station",-75.1,123.33,[0,0,0,0,0,0,0,0,0,0,0,0,0,74,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,48]],["Qaidam Basin",37.5,93,[97,0,58,0,100,41,64,0,78,0,0,0,47,68,66,100,0,18,29,0,2,0,6,0,0,0,43,0,77,31,0,27,0,4,0,48]],["Rio Tinto",37.7,-6.55,[3,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,31,0,0,0,0,0,0,0,0,19,0,0,0,0,0,1]],["Lanzarote",29,-13.6,[0,0,6,0,1,0,1,0,1,0,0,0,0,0,0,0,0,17,0,100,0,48,0,0,0,0,0,17,0,27,0,2,0,0,0,20]],["Iceland (Holuhraun)",64.85,-16.83,[2,1,49,0,0,0,0,0,0,0,0,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,100,4,0,0,0,0]],["Kilauea",19.42,-155.29,[0,0,12,0,0,0,0,0,0,0,0,0,0,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,57,0,0,0,0,0]],["Pilbara",-21.2,119.4,[3,0,5,0,19,0,40,0,38,0,0,0,0,0,0,0,0,0,0,0,9,34,6,19,0,0,0,0,1,55,100,12,0,0,0,16]],["Ries Crater",48.88,10.56,[1,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29,0,0,13,0,0,0,0,0,0,0,0,0,0,0,0]],["Sudbury",46.6,-81.2,[2,0,59,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,0,0,0,34,100,3,0,0,0,0]],["Craters of the Moon",43.42,-113.52,[16,0,50,0,7,0,0,0,8,0,0,0,0,47,11,0,0,0,0,63,76,28,0,45,0,0,0,0,0,26,19,4,0,0,0,4]],["Death Valley",36.5,-117,[40,0,34,0,59,0,59,0,0,0,0,0,0,20,7,24,0,24,3,0,65,0,0,0,5,40,0,11,4,0,22,7,76,5,0,2]],["White Sands",32.8,-106.3,[21,0,34,0,40,0,35,0,36,0,0,0,0,31,4,12,0,1,0,0,96,40,0,0,13,0,0,0,0,8,82,1,0,0,0,9]],["Sahara (Tindouf / Morocco)",28,-8,[15,0,15,0,48,0,65,0,80,0,0,0,0,0,0,17,0,58,4,0,0,0,0,70,0,0,0,0,0,0,100,7,0,0,0,43]]],"trips":{"19,19":[15,0,10,0,50,2,96,0,94,0,0,0,0,4,20,52,0,43,86,0,0,0,0,100,0,0,63,19,0,71,100,17,0,6,0,72],"-23,-69":[35,0,40,0,80,27,31,0,23,0,0,0,4,11,54,14,0,44,0,0,44,11,0,33,67,96,100,100,5,0,0,4,100,7,0,0],"35,85":[93,0,71,0,56,100,45,21,40,0,0,0,93,74,98,67,0,28,9,0,100,0,4,0,0,0,12,0,34,41,100,41,0,0,0,41],"-77,163":[15,10,86,80,0,0,0,100,12,0,70,93,100,13,0,0,0,0,0,0,0,0,0,0,0,0,0,11,0,0,0,18,0,0,100,66],"23,41":[9,0,7,0,61,0,71,0,87,0,0,0,0,0,0,38,0,6,33,98,0,100,0,0,0,0,18,22,100,92,0,22,0,0,0,89],"25,-5":[15,0,11,0,69,0,95,0,94,0,0,0,0,0,0,27,0,45,6,0,0,0,99,0,0,0,0,0,97,56,100,12,0,0,0,58],"81,-91":[31,10,91,91,0,0,0,61,19,92,59,33,0,0,0,0,0,0,0,0,0,0,27,0,0,0,0,0,19,100,100,53,0,0,1,65],"39,73":[33,0,74,0,0,0,0,0,0,0,0,0,0,87,36,0,0,0,0,0,100,0,0,100,0,0,0,0,0,0,100,17,0,0,48,0]},"finds":[["Hotan area","China",35,81,[79,0,73,0,67,96,34,31,14,0,0,0,64,74,99,94,0,20,9,0,100,0,0,0,0,0,0,7,0,0,100,26,0,0,0,7],10,1110],["Ataq area","Yemen",15,47,[5,0,4,0,78,0,57,0,75,0,0,0,0,1,0,50,0,82,100,0,100,0,9,0,0,17,24,15,54,15,0,7,0,0,0,43],8,5013],["Wadi Halfa area","Sudan",21,33,[13,0,8,0,52,0,93,0,100,0,0,0,0,0,0,22,0,13,29,0,1,0,0,0,0,0,0,0,100,95,100,23,0,17,0,92],8,3683],["Arlit area","Niger",21,9,[21,0,14,0,49,0,90,0,93,0,0,0,0,0,0,38,0,30,42,0,8,0,0,0,0,80,8,0,91,74,100,30,100,0,0,96],8,1885],["Al Jawf area","Libya",21,25,[22,0,14,0,64,0,89,0,90,0,0,0,0,0,0,43,0,34,66,0,39,0,0,28,0,0,0,0,93,92,100,52,0,12,0,98],7,3354],["Chaman area","Pakistan",31,67,[28,0,33,0,67,5,46,0,65,0,0,0,0,22,7,40,0,0,0,0,85,0,78,0,0,0,0,0,6,0,100,4,0,0,0,5],7,2487],["Aksu area","China",41,81,[39,0,68,0,27,0,15,0,39,0,0,0,6,94,22,11,0,0,0,0,100,0,0,0,0,0,0,0,0,2,100,11,0,0,13,20],7,1103],["Maltahöhe area","Namibia",-25,17,[14,0,15,0,55,0,74,0,66,0,0,0,0,7,0,10,48,1,0,0,37,81,0,0,0,0,0,0,21,19,0,3,0,81,0,30],6,6472]]};window.UMBRA_ALL={"tests":{"seal_dust":{"stage":"Mines and roads","cells":3682,"how":"Grain mix close to lunar soil (sand and silt, almost no clay), months of dry weather, and frost cracking that keeps grains sharp. Then scaled by how cold the ground gets (MODIS) against the coldest lunar crater floor. Water, rain, plant life and wind that rounds grains all cut the score.","top":[[37.58,94.75,29,"China"],[33.92,83.08,29,"China"],[41.75,91.75,21,"China"],[37.58,89.08,20,"China"],[40.25,103.42,20,"China"]],"known":[[0,0],[0,0],[4,93],[0,28.2],[9,98.2],[8,97.7],[9,98.3],[0,0],[6,96.3]]},"low_sun":{"stage":"Mobility and navigation","cells":792,"how":"Snow-free days a year when the noon sun stays as low as it does at the lunar south pole. Haze and low altitude cut the score, because sky glow fills shadows that should be black.","top":[[66.58,-35.58,16,"Greenland"],[64.92,-131.08,16,"Canada"],[63.42,-146.42,13,"United States of America"],[66.58,127.08,13,"Russia"],[65.58,138.75,11,"Russia"]],"known":[[1,88.5],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[1,86.8],[0,0]]},"deep_cold":{"stage":"Mines and processing","cells":210605,"how":"Coldest-month night ground temperature from MODIS, scored as the share of the gap from 15 C down to the coldest lunar crater floor measured by Diviner.","top":[[71.58,135.08,24,"Russia"],[-66.58,93.25,23,"Antarctica"],[65.42,135.42,23,"Russia"],[62.92,144.25,23,"Russia"],[82.25,-86.08,22,"Canada"]],"known":[[21,98.3],[0,0],[4,37.2],[3,32.6],[8,51.2],[8,51.7],[10,54.8],[15,73.3],[8,50.8]]},"lunar_night":{"stage":"Power","cells":1999,"how":"Polar night of at least 14 days (more credit up to 90 nights), times how cold the coldest month gets (MODIS, -20 to -50 C), on bare ground.","top":[[71.58,134.92,40,"Russia"],[82.25,-86.08,39,"Canada"],[-73.42,164.58,36,"Antarctica"],[79.42,-105.42,35,"Canada"],[77.92,-88.08,32,"Canada"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[6,99.4],[0,0]]},"thermal_swing":{"stage":"All hardware","cells":3747,"how":"MODIS day-minus-night ground temperature swing. Credit starts at 14 C and is full at 40 C. Only dry, bare, snow-free ground counts.","top":[[37.42,92.25,62,"China"],[29.75,56.92,59,"Iran"],[-25.58,-69.75,55,"Chile"],[29.92,64.75,52,"Afghanistan"],[21.08,16.75,48,"Chad"]],"known":[[0,0],[0,0],[38,99.8],[0,0],[32,99.4],[32,99.4],[14,93.1],[0,0],[15,93.6]]},"thin_air":{"stage":"Habitats and life support","cells":824,"how":"Ground elevation from 2,500 m (no credit) to 5,500 m (full credit), for lower pressure and stronger UV. Only dry, bare, snow-free ground counts.","top":[[34.58,84.75,55,"China"],[34.92,79.58,47,"China"],[-23.08,-66.42,29,"Argentina"],[36.42,92.42,24,"China"],[29.25,89.25,18,"China"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[12,99.6]]},"pad_rock":{"stage":"Port (landing pads)","cells":11975,"how":"Gravel and rock in the topsoil from 8% to 35% (SoilGrids), on flat ground: full credit under 150 m of local relief, none above 900 m. Dry, bare, snow-free only.","top":[[21.25,31.25,94,"Sudan"],[19.92,19.58,91,"Chad"],[24.42,25.25,90,"Egypt"],[24.42,-4.08,90,"Mali"],[21.75,12.42,89,"Niger"]],"known":[[0,0],[0,0],[9,88.9],[0,0],[11,90.1],[5,86.8],[10,89.4],[0,0],[11,90.1]]},"dry_permafrost":{"stage":"Mines","cells":1165,"how":"Mean yearly ground temperature from -2 C to -18 C (MODIS) with almost no precipitation: full credit under 80 mm a year, none above 450 mm (NASA POWER). Bare ground, not ice sheets.","top":[[-77.42,163.92,50,"Antarctica"],[82.08,-69.75,47,"Canada"],[82.25,-36.58,45,"Greenland"],[80.25,-88.75,44,"Canada"],[82.08,-52.75,37,"Greenland"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"featureless":{"stage":"Mobility and navigation","cells":33099,"how":"Local relief under 15 m gets full credit, fading to none at 250 m. Bare, dry, snow-free ground that is not ice.","top":[[22.92,-1.42,94,"Algeria"],[19.75,12.25,94,"Niger"],[20.08,33.08,94,"Sudan"],[22.75,-6.75,93,"Mauritania"],[19.92,26.25,92,"Sudan"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[27,93.1],[0,0],[0,0],[3,87.1]]},"no_compass":{"stage":"Mobility and navigation","cells":29731,"how":"Horizontal strength of Earth's magnetic field (IGRF 2026 model): full credit under 1,500 nT, none above 9,000 nT. That is where a compass stops pointing reliably.","top":[[80.08,99.08,98,"Russia"],[80.25,-104.42,93,"Open ocean/ice"],[-66.42,137.75,92,"Antarctica"],[82.08,-88.08,89,"Canada"],[76.08,-100.08,82,"Canada"]],"known":[[76,99],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[31,93.9],[0,0]]},"power_ridge":{"stage":"Power","cells":590,"how":"Days of midnight sun (30 to 100), times clear summer skies (NASA POWER cloud), times how far a ridge rises above its surroundings (150 to 1,200 m). Halved on ice.","top":[[76.25,-62.25,46,"Greenland"],[-73.92,165.42,41,"Antarctica"],[72.08,-28.58,40,"Greenland"],[82.58,-67.25,36,"Canada"],[75.58,-83.25,36,"Canada"]],"known":[[2,96],[17,99.8],[0,0],[0,0],[0,0],[0,0],[0,0],[11,99.4],[0,0]]},"sun_ice_edge":{"stage":"Power + mines","cells":206,"how":"Places that score on both the sunlit-ridge test and the dry frozen ground test at once (square root of the two multiplied), so power and ice sit side by side.","top":[[-77.75,166.75,40,"Antarctica"],[82.08,-69.75,39,"Canada"],[-73.42,164.58,34,"Antarctica"],[81.92,-29.08,29,"Greenland"],[79.42,-91.25,24,"Canada"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"mars_hyperarid":{"stage":"Habitats and food","cells":160,"how":"Almost no rain (full credit under 2 mm a year, none above 120 mm), dry air (humidity 15% to 55%) and cold mean ground temperature, on bare ground.","top":[[-77.25,163.58,17,"Antarctica"],[35.75,84.58,16,"China"],[38.92,92.58,11,"China"],[34.92,79.58,7,"China"],[-22.92,-67.92,3,"Chile"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"radiation":{"stage":"All hardware","cells":97046,"how":"Elevation from 1,500 to 4,500 m, times weak magnetic shielding (low cosmic-ray cutoff rigidity), so more cosmic rays reach the ground.","top":[[-80.25,80.08,78,"Antarctica"],[42.25,80.25,75,"Kazakhstan"],[-84.08,167.25,73,"Antarctica"],[-81.08,63.92,72,"Antarctica"],[-76.42,96.08,71,"Antarctica"]],"known":[[0,0],[0,0],[2,73],[14,77.4],[22,80.2],[17,78.4],[21,79.7],[0,0],[5,74.3]]},"radiative_cold":{"stage":"Power","cells":3314,"how":"Very dry air (water vapour 0.05 to 0.6 kPa) on high ground (1,500 to 4,500 m), snow-free, so heat leaves straight to space at night.","top":[[34.58,82.75,96,"China"],[-25.58,-67.92,91,"Argentina"],[36.92,88.75,79,"China"],[35.75,77.75,79,"China"],[38.42,95.08,68,"China"]],"known":[[0,0],[0,0],[1,95.6],[0,0],[5,97.3],[3,96.7],[5,97.2],[0,0],[11,97.9]]},"dust_devils":{"stage":"Mobility and navigation","cells":452,"how":"Silty soil (15% to 45% silt), dry air (humidity 10% to 45%) and a big daily ground swing (18 to 38 C, MODIS) to drive rising hot air. Bare ground only.","top":[[37.25,93.92,24,"China"],[35.08,80.25,22,"China"],[20.75,17.75,19,"Chad"],[41.42,94.25,16,"China"],[23.42,7.42,16,"Algeria"]],"known":[[0,0],[0,0],[2,96.7],[0,0],[2,97.1],[2,97.1],[1,93.9],[0,0],[0,0]]},"soft_sand":{"stage":"Mobility and navigation","cells":139,"how":"Sand share of the soil from 70% to 95%, with little rain (full credit under 20 mm a year, none above 200 mm). Bare ground only.","top":[[22.42,28.75,50,"Egypt"],[24.08,53.42,40,"United Arab Emirates"],[-23.92,15.08,35,"Namibia"],[-28.42,17.92,33,"Namibia"],[27.58,-113.75,31,"Mexico"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"dust_storm":{"stage":"Power","cells":694,"how":"Mean wind from 3 to 7 m/s, silty soil (10% to 40% silt) and little rain (20 to 250 mm a year). Bare ground only.","top":[[22.58,-16.25,36,"Morocco"],[14.25,47.92,29,"Yemen"],[26.25,-9.08,25,"Western Sahara"],[28.75,48.42,24,"Kuwait"],[27.25,43.92,21,"Saudi Arabia"]],"known":[[0,0],[0,0],[12,98.9],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"dust_mantle":{"stage":"Mobility and navigation","cells":439,"how":"Silt 25% to 50% with little clay (under 12% best), dry air and almost no rain (under 20 mm best). Added because Mars TES data shows widespread loose dust.","top":[[15.92,47.08,26,"Yemen"],[19.58,18.25,22,"Chad"],[20.42,49.42,22,"Saudi Arabia"],[21.75,25.08,17,"Sudan"],[22.25,6.75,17,"Algeria"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"lava_tubes":{"stage":"Habitat","cells":626,"how":"Share of basalt bedrock (USGS lithology), near young basaltic volcanoes (Smithsonian GVP), in dry land (full credit under 100 mm rain, none above 800 mm). Not ice.","top":[[26.08,40.08,100,"Saudi Arabia"],[14.42,44.75,100,"Yemen"],[23.92,5.92,100,"Algeria"],[28.42,-13.92,100,"Spain"],[15.42,26.42,100,"Sudan"]],"known":[[0,0],[0,0],[0,99.4],[0,0],[58,99.9],[55,99.9],[0,0],[0,0],[0,0]]},"karst_caves":{"stage":"Mobility and navigation","cells":5776,"how":"Limestone, dolomite or salt bedrock (USGS lithology) with 100 to 800 m of relief, so caves can run deep. Not ice.","top":[[32.75,48.08,100,"Iran"],[31.58,35.25,100,"Palestine"],[42.75,19.08,100,"Montenegro"],[32.25,-5.08,100,"Morocco"],[36.42,82.75,100,"China"]],"known":[[0,0],[0,0],[0,0],[0,0],[75,99.5],[83,99.6],[0,0],[54,99.1],[18,97.2]]},"mare_basalt":{"stage":"Mines and roads","cells":423,"how":"Mostly basalt bedrock (USGS lithology) on flat ground (relief under 100 m best), dry and bare. Not ice.","top":[[22.58,41.25,92,"Saudi Arabia"],[25.75,17.42,90,"Libya"],[30.92,39.25,88,"Saudi Arabia"],[-26.25,18.58,79,"Namibia"],[31.92,-113.42,75,"Mexico"]],"known":[[0,0],[0,0],[0,0],[0,0],[4,99.6],[4,99.6],[0,0],[0,0],[0,0]]},"highland_rock":{"stage":"Mines and roads","cells":89,"how":"Gabbro-family bedrock, Earth's closest match to the pale lunar highlands, on bare ground. Not ice.","top":[[23.75,-7.25,92,"Mauritania"],[26.75,59.08,91,"Iran"],[33.08,53.08,90,"Iran"],[30.58,68.08,82,"Pakistan"],[35.75,59.25,74,"Iran"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"impact_rock":{"stage":"Science","cells":1701,"how":"Density of known impact craters (Impact Earth database) in dry land.","top":[[29.75,39.25,100,"Saudi Arabia"],[24.58,23.92,100,"Libya"],[17.58,22.08,100,"Chad"],[27.58,5.25,100,"Algeria"],[39.25,73.75,100,"China"]],"known":[[70,99.9],[0,0],[0,0],[0,0],[16,99],[23,99.2],[46,99.7],[0,0],[0,0]]},"volcanic_glass":{"stage":"Mines and processing","cells":60,"how":"Share of volcanic ash and cinder bedrock (USGS lithology), dry and bare. Not ice.","top":[[30.25,-114.92,85,"Mexico"],[-23.25,-67.92,66,"Chile"],[-17.92,-70.25,50,"Peru"],[42.58,97.08,49,"China"],[25.75,-111.25,46,"Mexico"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"salt_biosig":{"stage":"Science","cells":756,"how":"Salt bedrock or mapped dry lake beds, in hyperarid land (full credit under 20 mm rain a year, none above 250 mm).","top":[[18.25,50.75,100,"Yemen"],[28.75,27.08,100,"Egypt"],[-21.25,-69.75,99,"Chile"],[23.58,52.25,98,"United Arab Emirates"],[28.25,48.42,93,"Saudi Arabia"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"oxidant_soil":{"stage":"Science","cells":92,"how":"Almost no rain (full credit under 2 mm a year, none above 60 mm) plus strong sunlight UV, on bare ground. Not ice.","top":[[-23.25,-68.75,27,"Chile"],[21.25,18.42,20,"Chad"],[38.75,92.75,13,"China"],[16.75,44.42,11,"Yemen"],[27.58,36.92,8,"Saudi Arabia"]],"known":[[0,0],[0,0],[16,100],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"hydrothermal":{"stage":"Science","cells":122,"how":"Near volcanoes (Smithsonian GVP) in hyperarid, bare land.","top":[[-23.58,-68.92,74,"Chile"],[-17.25,-71.08,46,"Peru"],[21.42,16.58,42,"Chad"],[15.75,44.92,27,"Yemen"],[26.08,40.25,25,"Saudi Arabia"]],"known":[[0,0],[0,0],[23,100],[0,0],[0,0],[0,99.3],[0,0],[0,0],[0,0]]},"ancient_crust":{"stage":"Science","cells":3378,"how":"Old metamorphic and granite-family bedrock (USGS lithology) in dry, low-relief, bare land. Not ice.","top":[[20.58,33.75,97,"Sudan"],[23.58,41.75,97,"Saudi Arabia"],[24.75,-5.58,94,"Mali"],[22.25,17.25,94,"Chad"],[15.92,28.92,92,"Sudan"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"seismic_quiet":{"stage":"Science","cells":18905,"how":"Few M4.5+ earthquakes (USGS), hard crystalline or volcanic bedrock, and 30 to 300 km from the nearest town. Not ice.","top":[[54.92,131.25,100,"Russia"],[1.25,-57.58,100,"Brazil"],[63.58,95.25,100,"Russia"],[62.25,173.25,100,"Russia"],[-54.75,-63.75,100,"Argentina"]],"known":[[0,0],[0,0],[0,0],[0,0],[2,78.6],[11,86.1],[0,0],[7,83.1],[0,0]]},"magnetic_memory":{"stage":"Science","cells":50029,"how":"Strength of the magnetic signal locked in crustal rock (NOAA EMAG2v3), from 150 nT to 700 nT.","top":[[35.42,77.42,100,"Siachen Glacier"],[17.92,105.75,100,"Vietnam"],[-35.58,-64.75,100,"Argentina"],[9.25,25.92,100,"South Sudan"],[-35.58,-71.42,100,"Chile"]],"known":[[0,0],[0,0],[0,0],[58,94],[23,91.8],[7,87.5],[26,92.2],[0,0],[0,0]]},"radio_quiet":{"stage":"Science","cells":163867,"how":"Distance from the nearest town: full credit at 900 km.","top":[[-84.92,75.75,100,"Antarctica"],[-86.42,29.75,100,"Antarctica"],[-84.92,56.92,100,"Antarctica"],[-75.25,-128.25,100,"Antarctica"],[-79.42,-151.92,100,"Antarctica"]],"known":[[28,72.6],[22,69.8],[3,49.5],[0,0],[0,0],[0,0],[4,51.5],[7,55.8],[0,0]]},"dried_lakes":{"stage":"Science","cells":775,"how":"Mapped dry lake beds in dry land (full credit under 50 mm rain a year, none above 400 mm).","top":[[22.25,9.25,100,"Algeria"],[32.25,39.25,100,"Jordan"],[-23.25,-68.42,100,"Chile"],[40.42,90.25,100,"China"],[28.92,15.25,100,"Libya"]],"known":[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[42,99.9]]},"sand_ratio":{"stage":"Mobility and navigation","cells":398,"how":"Sandy, dry ground where wind strength compared with the push needed to lift a 0.25 mm grain matches the same ratio on Mars.","top":[[-28.58,17.92,66,"Namibia"],[-23.75,15.08,62,"Namibia"],[27.58,-113.58,58,"Mexico"],[-14.42,-75.58,54,"Peru"],[-17.75,-70.75,49,"Peru"]],"known":[[0,0],[0,0],[8,99.4],[0,0],[3,98.6],[1,97.7],[3,98.7],[0,0],[0,0]]},"ice_ratio":{"stage":"Mines","cells":18,"how":"Where the air's frost point matches the mean ground temperature, the balance that keeps Mars ice shallow, in cold, dry ground. Not ice sheets.","top":[[-77.25,163.58,98,"Antarctica"],[38.58,72.42,48,"Tajikistan"],[74.42,-25.92,41,"Greenland"],[81.58,-33.75,40,"Greenland"],[-67.75,67.42,21,"Antarctica"]],"known":[[0,96.4],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]},"erasers_off":{"stage":"Science","cells":216717,"how":"Low rain (none above 600 mm a year), little carbon in the soil, few earthquakes, and 20 to 300 km from towns. All four at once.","top":[[-80.25,85.42,100,"Antarctica"],[-78.08,114.58,100,"Antarctica"],[-81.25,69.08,100,"Antarctica"],[-78.25,44.42,100,"Antarctica"],[-78.08,132.58,100,"Antarctica"]],"known":[[0,0],[75,78.3],[0,0],[0,0],[14,65.2],[4,60.1],[21,67.2],[1,57.1],[0,0]]}},"known":[["Haughton Crater",75.43,-89.82],["McMurdo Dry Valleys",-77.55,161.5],["Atacama (Yungay)",-24.08,-69.92],["Mauna Kea",19.8,-155.47],["Black Point Lava Flow",35.68,-111.43],["Meteor Crater",35.03,-111.02],["Mars Desert Research Station",38.41,-110.79],["Svalbard (Bockfjord)",79.43,13.93],["Salar de Uyuni",-20.13,-67.49]]};</script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.34.4/dist/globe.gl.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+const D=window.UMBRA;
+// Names for the 2 degree portfolio blocks (block centre lat,lon)
+const NAMES={"19,19":["Northern Chad","Borkou plains, Chad"],"-23,-69":["Atacama","Chile"],"35,85":["Western Tibet","Changtang plateau, China"],"-77,163":["McMurdo Dry Valleys","Antarctica"],"23,41":["Saudi lava fields","Harrat Khaybar, Saudi Arabia"],"25,-5":["Erg Chech","Algerian Sahara"],"81,-91":["Axel Heiberg area","Nunavut, Canada"],"39,73":["Pamir and Lake Karakul","Tajikistan"]};
+const sites=D.sites.map((s,i)=>{const n=NAMES[s.lat+","+s.lon]||["Site "+(i+1),""];return Object.assign({name:n[0],place:n[1]},s)}).sort((a,b)=>b.count-a.count);
+sites.forEach((s,i)=>s.rank=i+1);
+
+// Where each test applies on the Moon and Mars (real named places, shown as examples)
+const MOON={pole:[-89.5,0,"Lunar south pole, the planned base region"],mare:[8.5,31.4,"Mare Tranquillitatis basalt plains"],tube:[14.1,-56.8,"Marius Hills pit, a lava tube skylight"],high:[-9,15.5,"Central highlands near Descartes"]};
+const MARS={ice:[46,-170,"Arcadia Planitia, shallow ground ice"],volc:[-8.3,-120.1,"Arsia Mons, Tharsis lava fields"],lake:[18.4,77.5,"Jezero Crater, an old lake bed"],dust:[-5.4,137.8,"Gale Crater plains and dunes"],quiet:[4.5,135.6,"Elysium Planitia, InSight lander site"],old:[-35,145,"Terra Cimmeria ancient magnetized crust"],dusty:[20,5,"Arabia Terra, deep dust"]};
+const MOON_OF={mare_basalt:"mare",lava_tubes:"tube",highland_rock:"high"};
+const MARS_OF={dry_permafrost:"ice",ice_ratio:"ice",lava_tubes:"volc",mare_basalt:"volc",hydrothermal:"volc",volcanic_glass:"volc",salt_biosig:"lake",dried_lakes:"lake",seismic_quiet:"quiet",magnetic_memory:"old",ancient_crust:"old",dust_mantle:"dusty"};
+const worldOf=w=>w==="Moon"?"moon":w==="Mars"?"mars":"both";
+
+// Starfield
+const sc=document.getElementById('stars'),sx=sc.getContext('2d');
+function stars(){const d=devicePixelRatio||1;sc.width=innerWidth*d;sc.height=innerHeight*d;sc.style.width=innerWidth+'px';sc.style.height=innerHeight+'px';
+ let r=12345;const rnd=()=>(r=(r*16807)%2147483647)/2147483647;
+ sx.fillStyle='#04060d';sx.fillRect(0,0,sc.width,sc.height);
+ const g=sx.createRadialGradient(sc.width*.75,sc.height*.2,0,sc.width*.75,sc.height*.2,sc.width*.6);g.addColorStop(0,'rgba(60,40,110,.22)');g.addColorStop(1,'rgba(0,0,0,0)');sx.fillStyle=g;sx.fillRect(0,0,sc.width,sc.height);
+ for(let i=0;i<900;i++){const a=rnd()*.8+.1,s=rnd()<.06?1.6:.8;sx.fillStyle=`rgba(${200+rnd()*55|0},${210+rnd()*45|0},255,${a})`;sx.fillRect(rnd()*sc.width,rnd()*sc.height,s*d,s*d)}}
+stars();addEventListener('resize',stars);
+
+if(!window.Globe){document.getElementById('loading').textContent='The 3D library could not load. Check your connection and reload.';return;}
+
+// Imagery
+const GIBS='https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=BlueMarble_ShadedRelief_Bathymetry&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=4096&HEIGHT=2048&FORMAT=image/jpeg';
+const TREK={moon:{color:['Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02','jpg'],relief:['Moon/EQ/LRO_LOLA_ClrShade_Global_128ppd_v04','png']},
+ mars:{color:['Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m','jpg'],relief:['Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m','jpg']}};
+const texCache={};
+function trek(body,kind,z=2){const key=body+kind;if(texCache[key])return texCache[key];
+ const [layer,ext]=TREK[body][kind],cols=2**(z+1),rows=2**z,c=document.createElement('canvas');c.width=cols*256;c.height=rows*256;const x=c.getContext('2d');
+ x.fillStyle=body==='moon'?'#777':'#8a4a2e';x.fillRect(0,0,c.width,c.height);
+ const jobs=[];for(let r=0;r<rows;r++)for(let q=0;q<cols;q++)jobs.push(new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{x.drawImage(im,q*256,r*256);res()};im.onerror=res;im.src=`https://trek.nasa.gov/tiles/${layer}/1.0.0/default/default028mm/${z}/${r}/${q}.${ext}`}));
+ return texCache[key]=Promise.all(jobs).then(()=>c.toDataURL('image/jpeg',.9));}
+
+// Earth globe
+const el=document.getElementById('earth');
+const narrow=()=>matchMedia('(max-width:820px)').matches;
+const earth=Globe()(el).backgroundColor('rgba(0,0,0,0)').globeImageUrl(GIBS).showAtmosphere(true).atmosphereColor('#8fb7ff').atmosphereAltitude(.2)
+ .htmlElementsData(sites).htmlLat('lat').htmlLng('lon').htmlAltitude(.01).htmlElement(s=>{const d=document.createElement('div');d.className=s.lon<-80&&s.lat>78?"pin flip":"pin";d.innerHTML=`<i>${s.count}</i><label>${s.name}</label>`;d.title=`${s.name}: ${s.count} tests in one trip`;d.onclick=e=>{e.stopPropagation();select(s)};s.el=d;return d})
+ .pointsData([]).pointLat('lat').pointLng('lon').pointColor('c').pointRadius('r').pointAltitude('a').pointResolution(8).pointLabel('lab').onPointClick(p=>p.kind==='known'?openKnown(p.k):openTest(p.id,p.i))
+ .ringsData([]).ringLat('lat').ringLng('lon').ringColor(()=>t=>`rgba(255,181,71,${1-t})`).ringMaxRadius(6).ringPropagationSpeed(2.4).ringRepeatPeriod(1100);
+function sizeEarth(){earth.width(el.clientWidth).height(el.clientHeight)}sizeEarth();addEventListener('resize',sizeEarth);
+const ctl=earth.controls();ctl.autoRotate=!matchMedia('(prefers-reduced-motion:reduce)').matches;ctl.autoRotateSpeed=.35;ctl.enableDamping=true;
+earth.pointOfView({lat:18,lng:40,altitude:narrow()?2.6:2.2});
+let shown=false;const done=()=>{if(!shown){shown=true;document.getElementById('loading').classList.add('done')}};
+earth.onGlobeReady(()=>setTimeout(done,300));setTimeout(done,6000);
+
+// Moon and Mars mini globes
+function mini(id,color){const g=document.getElementById(id);const G=Globe()(g).width(g.clientWidth).height(150).backgroundColor('rgba(0,0,0,0)').showAtmosphere(id==='g-mars').atmosphereColor('#ff9a6b').atmosphereAltitude(.12)
+ .ringsData([]).ringLat(d=>d[0]).ringLng(d=>d[1]).ringColor(()=>t=>`rgba(${color},${1-t})`).ringMaxRadius(14).ringPropagationSpeed(5).ringRepeatPeriod(900)
+ .pointsData([]).pointLat(d=>d[0]).pointLng(d=>d[1]).pointColor(()=>`rgb(${color})`).pointRadius(2.2).pointAltitude(.02);
+ const c=G.controls();c.autoRotate=true;c.autoRotateSpeed=.8;c.enableZoom=false;G.pointOfView({altitude:2.3});return G}
+const moonG=mini('g-moon','185,200,234'),marsG=mini('g-mars','255,140,90');
+let layer='color';
+function skin(){trek('moon',layer).then(u=>moonG.globeImageUrl(u));trek('mars',layer).then(u=>marsG.globeImageUrl(u))}skin();
+for(const [id,k] of [['ly-color','color'],['ly-relief','relief']])document.getElementById(id).onclick=()=>{layer=k;document.getElementById('ly-color').setAttribute('aria-pressed',k==='color');document.getElementById('ly-relief').setAttribute('aria-pressed',k==='relief');skin()};
+addEventListener('resize',()=>{for(const [G,id] of [[moonG,'g-moon'],[marsG,'g-mars']])G.width(document.getElementById(id).clientWidth)});
+
+const TGT={moon:null,mars:null};
+function aim(G,box,where,p,text){const on=!!p;TGT[box==='w-moon'?'moon':'mars']=p;document.getElementById(box).classList.toggle('lit',on);
+ G.ringsData(on?[p]:[]).pointsData(on?[p]:[]);G.controls().autoRotate=!on;if(on)G.pointOfView({lat:p[0]<-80?-62:p[0],lng:p[1],altitude:1.9},1200);
+ document.getElementById(where).textContent=text}
+function showTest(t){if(!t){aim(moonG,'w-moon','where-moon',null,'Open a test to see where it applies');aim(marsG,'w-mars','where-mars',null,'Open a test to see where it applies');return}
+ const w=worldOf(t.world);
+ if(w!=='mars'){const m=MOON[MOON_OF[t.id]||'pole'];aim(moonG,'w-moon','where-moon',m,m[2])}else aim(moonG,'w-moon','where-moon',null,'Not a Moon test');
+ if(w!=='moon'){const m=MARS[MARS_OF[t.id]||'dust'];aim(marsG,'w-mars','where-mars',m,m[2])}else aim(marsG,'w-mars','where-mars',null,'Not a Mars test')}
+
+// Trip list
+const list=document.getElementById('trips');
+for(const s of sites){const b=document.createElement('button');b.className='trip';b.setAttribute('aria-pressed','false');b.innerHTML=`<div class="n">${s.count}</div><div><b>${s.name}</b><span>${s.place} · ${s.count} tests in one trip</span></div>`;b.onclick=()=>select(s);s.btn=b;list.appendChild(b)}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const det=document.getElementById('detail');let cur=null;
+const S_ = { modis: "NASA MODIS Terra land surface temperature 2018-2022 (via NASA GIBS)", rain: "NASA POWER precipitation", cloud: "NASA POWER cloud cover", uv: "NASA POWER UV index", soil: "SoilGrids 2.0 soil texture", gravel: "SoilGrids 2.0 gravel and rock", carbon: "SoilGrids 2.0 soil carbon", elev: "WorldClim 2.1 elevation", hum: "WorldClim 2.1 humidity", vap: "WorldClim 2.1 water vapour", wind: "WorldClim 2.1 wind", sun: "Sun position computed for every latitude", lith: "USGS global lithology", gvp: "Smithsonian Global Volcanism Program", quake: "USGS earthquakes M4.5+", craters: "Impact Earth crater database", emag: "NOAA EMAG2v3 crustal magnetism", igrf: "IGRF 2026 geomagnetic model", cut: "cosmic-ray cutoff from a dipole field model", towns: "Natural Earth populated places", playa: "Natural Earth dry lake beds", srtm: "AWS Terrain Tiles (SRTM) slopes and horizons", depo: "NASA MERRA-2 dust deposition (via NASA GIBS)", lola: "LRO LOLA slopes" };
+const SRC = { seal_dust: "soil rain modis hum", low_sun: "sun elev", deep_cold: "modis", lunar_night: "sun modis", thermal_swing: "modis hum", thin_air: "elev", pad_rock: "gravel elev", dry_permafrost: "modis rain", featureless: "elev", no_compass: "igrf", power_ridge: "sun cloud elev", sun_ice_edge: "sun cloud elev modis rain", mars_hyperarid: "rain hum modis", radiation: "elev cut", radiative_cold: "vap elev", dust_devils: "soil hum modis", soft_sand: "soil rain", dust_storm: "wind soil rain", dust_mantle: "soil hum rain", lava_tubes: "lith gvp rain", karst_caves: "lith elev", mare_basalt: "lith elev", highland_rock: "lith", impact_rock: "craters", volcanic_glass: "lith", salt_biosig: "lith playa rain", oxidant_soil: "rain elev", hydrothermal: "gvp rain", ancient_crust: "lith rain elev", seismic_quiet: "quake lith towns", magnetic_memory: "emag", radio_quiet: "towns", dried_lakes: "playa rain", sand_ratio: "soil wind", ice_ratio: "vap modis", erasers_off: "rain carbon quake towns", ringing_ground: "rain lith quake", plume_blast: "soil rain srtm lith", dirty_panels: "depo rain uv", dark_pocket: "srtm modis rain", radio_shadow: "srtm", walk_back: "srtm lola rain", oxygen_feed: "lith towns" };
+const EMASK='bare-ground, snow and ice masks from SoilGrids 2.0, WorldClim 2.1 and Natural Earth glaciers';
+const srcE=ids=>{const s=new Set();ids.forEach(id=>(SRC[id]||'').split(' ').filter(Boolean).forEach(k=>s.add(S_[k])));return [...s]};
+const srcP=(ids,extra)=>'<p class="src"><b>Sources.</b> Earth: '+esc(srcE(ids).join('; '))+'; '+EMASK+'.'+(extra?' '+extra:'')+'</p>';
+function select(s){cur=s;curTest=null;markTests&&markTests();plotSpots&&plotSpots(null);ctl.autoRotate=false;document.getElementById('hero').style.opacity=narrow()?1:.18;
+ for(const o of sites){o.btn.setAttribute('aria-pressed',o===s);o.el&&o.el.classList.toggle('sel',o===s)}
+ earth.ringsData([s]).pointOfView({lat:s.lat,lng:s.lon,altitude:narrow()?1.6:1.25},1600);
+ const ts=s.tests.map(n=>Object.assign({title:n},D.tests[n]));
+ const nm=ts.filter(t=>t.world!=='Mars').length,nr=ts.filter(t=>t.world!=='Moon').length;
+ det.innerHTML=`<h3>${esc(s.name)}</h3><div class="meta">${esc(s.place)} · ${Math.abs(s.lat)}°${s.lat<0?'S':'N'} ${Math.abs(s.lon)}°${s.lon<0?'W':'E'} · 2° block</div>
+ <div class="big"><strong>${s.count}</strong><span>Moon and Mars tests in one trip<br>${nm} match the Moon, ${nr} match Mars (some match both)</span></div>
+ <button class="cmp-open" data-trip="${s.lat},${s.lon}" style="margin:0 0 14px">Compare with a known analog site</button><h2>What you can test here</h2><p class="hint">Open one to see the NASA measurement it is matched against.</p><div id="tl" style="margin-top:8px"></div>`+srcP(ts.map(t=>t.id),'Moon and Mars: the NASA measurements in each test. Umbra engine, 10 arc-minute grid; a trip counts tests in Earth\'s top 3% inside one 2° block.');
+ const tl=det.querySelector('#tl');
+ ts.forEach(t=>{const w=worldOf(t.world),b=document.createElement('button');b.className='test';b.setAttribute('aria-expanded','false');
+  const ev=[t.moon&&`<p><span class="k">Moon, measured</span>${esc(t.moon)}</p>`,t.mars&&`<p><span class="k">Mars, measured</span>${esc(t.mars)}</p>`].filter(Boolean).join('');
+  b.innerHTML=`<div class="t"><span class="tag ${w}">${w==='both'?'Moon + Mars':w}</span>${esc(t.title)}</div><div class="x"><p><span class="k">Why it matters</span>${esc(t.why)}</p>${ev}<p><span class="k">Where Earth falls short</span>${esc(t.gap)}</p></div>`;
+  b.onclick=()=>{const open=b.getAttribute('aria-expanded')!=='true';tl.querySelectorAll('.test').forEach(x=>x.setAttribute('aria-expanded','false'));b.setAttribute('aria-expanded',open);showTest(open?t:null)};
+  tl.appendChild(b)});
+ det.classList.remove('on');requestAnimationFrame(()=>det.classList.add('on'));det.scrollTop=0;
+ showTest(null);const first=tl.querySelector('.test');if(first)first.click();
+ if(narrow())el.scrollIntoView({behavior:'smooth'});}
+function occlude(){const c=earth.camera().position,R=earth.getGlobeRadius?earth.getGlobeRadius():100;for(const s of sites){if(!s.el)continue;const p=earth.getCoords(s.lat,s.lon,0);const v=(p.x*c.x+p.y*c.y+p.z*c.z)>R*R*1.02;s.el.style.opacity=v?1:0;s.el.style.pointerEvents=v?'auto':'none'}requestAnimationFrame(occlude)}requestAnimationFrame(occlude);
+
+// All 36 tests and every analog spot
+const A=window.UMBRA_ALL,TITLE={};for(const [t,v] of Object.entries(D.tests))TITLE[v.id]=t;
+const COL={moon:'#b9c8ea',mars:'#ff7a4d',both:'#ffb547'};
+const ll=(a,b)=>Math.abs(a).toFixed(1)+'°'+(a<0?'S':'N')+' '+Math.abs(b).toFixed(1)+'°'+(b<0?'W':'E');
+let curTest=null;
+function plotSpots(id){const P=[];
+ for(const [k,v] of Object.entries(A.tests)){if(id&&k!==id)continue;const t=D.tests[TITLE[k]],w=worldOf(t.world);
+  v.top.forEach((s,i)=>P.push({kind:'top',id:k,i,lat:s[0],lon:s[1],c:COL[w],r:id?.6:.3,a:id?.015:.008,lab:'<b>'+esc(TITLE[k])+'</b><br>#'+(i+1)+' on Earth · score '+s[2]+' · '+esc(s[3])}))}
+ A.known.forEach((s,k)=>{const sc=id?' · score '+A.tests[id].known[k][0]:'';P.push({kind:'known',k,lat:s[1],lon:s[2],c:'#ffffff',r:id?.35:.3,a:.02,lab:'<b>'+esc(s[0])+'</b><br>Known analog site'+sc})});
+ earth.pointsData(P);if(id)earth.ringsData(A.tests[id].top.map(s=>({lat:s[0],lon:s[1]})))}
+function markTests(){document.querySelectorAll('.tt').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===curTest))}
+const tlist=document.getElementById('tlist');
+for(const [g,lab] of [['moon','Moon tests'],['mars','Mars tests'],['both','Moon and Mars tests']]){const hd=document.createElement('p');hd.className='grp';tlist.appendChild(hd);let n=0;
+ for(const [t,v] of Object.entries(D.tests)){if(worldOf(v.world)!==g)continue;n++;const b=document.createElement('button');b.className='tt';b.dataset.id=v.id;b.setAttribute('aria-pressed','false');
+  b.innerHTML='<span class="tag '+g+'">'+(g==='both'?'Both':g)+'</span>'+esc(t);b.onclick=()=>openTest(v.id);tlist.appendChild(b)}
+ hd.textContent=lab+' · '+n}
+{const hd=document.createElement('p');hd.className='grp';hd.textContent='Known analog sites · '+A.known.length;tlist.appendChild(hd);
+ A.known.forEach((s,k)=>{const b=document.createElement('button');b.className='tt';b.innerHTML='<span class="tag" style="color:#fff;border-color:rgba(255,255,255,.4)">Site</span>'+esc(s[0]);b.onclick=()=>openKnown(k);tlist.appendChild(b)})}
+function openTest(id,spot){const t=D.tests[TITLE[id]],a=A.tests[id],w=worldOf(t.world);
+ cur=null;curTest=id;ctl.autoRotate=false;document.getElementById('hero').style.opacity=narrow()?1:.18;
+ for(const o of sites){o.btn.setAttribute('aria-pressed','false');o.el&&o.el.classList.remove('sel')}markTests();plotSpots(id);
+ const ev=[t.moon&&'<p><span class="k">Moon, measured by NASA</span>'+esc(t.moon)+'</p>',t.mars&&'<p><span class="k">Mars, measured by NASA</span>'+esc(t.mars)+'</p>'].filter(Boolean).join('');
+ det.innerHTML='<h3>'+esc(t.title||TITLE[id])+'</h3><div class="meta"><span class="tag '+w+'">'+(w==='both'?'Moon + Mars':w)+'</span> · '+esc(a.stage)+' · confidence '+esc(t.conf)+'</div>'+
+  '<div class="x" style="display:block"><p><span class="k">Why it matters</span>'+esc(t.why)+'</p>'+ev+
+  '<p><span class="k">How we score Earth</span>'+esc(a.how)+'</p><p class="hint">Score = 100 × present × lasting × what Earth can copy. '+a.cells.toLocaleString()+' land cells score above half the best.</p>'+
+  '<p><span class="k">Where Earth falls short</span>'+esc(t.gap)+'</p></div>'+
+  '<p class="sec">Five best places on Earth</p><div id="spots"></div><p class="sec">How the known analog sites score</p><div id="kns"></div>'+srcP([id],'Moon and Mars: the NASA measurements above. Umbra engine, 10 arc-minute grid.');
+ const sp=det.querySelector('#spots');a.top.forEach((s,i)=>{const b=document.createElement('button');b.className='spot';b.innerHTML='<b>'+(i+1)+'</b><span>'+esc(s[3])+' <em>'+ll(s[0],s[1])+'</em></span><b>'+s[2]+'</b>';
+  b.onclick=()=>earth.pointOfView({lat:s[0],lng:s[1],altitude:narrow()?1.4:1.1},1400);sp.appendChild(b)});
+ const kn=det.querySelector('#kns');A.known.map((k,i)=>[k[0],a.known[i][0],i]).sort((x,y)=>y[1]-x[1]).forEach(([n,s,i])=>{const r=document.createElement('div');r.className='kn';r.innerHTML='<span>'+esc(n)+'</span><i><s style="width:'+s+'%"></s></i><b>'+s+'</b>';kn.appendChild(r)});
+ det.classList.remove('on');requestAnimationFrame(()=>det.classList.add('on'));det.scrollTop=0;showTest(Object.assign({id},t));
+ const s=a.top[spot||0];earth.pointOfView({lat:s[0],lng:s[1],altitude:spot!=null?1.2:(narrow()?2.4:2)},1600);
+ if(narrow()&&spot==null)det.scrollIntoView({behavior:'smooth'})}
+function openKnown(k){const s=A.known[k];cur=null;curTest=null;markTests();plotSpots(null);ctl.autoRotate=false;
+ const rows=Object.entries(A.tests).map(([id,v])=>[id,v.known[k][0]]).filter(r=>r[1]>0).sort((x,y)=>y[1]-x[1]);
+ det.innerHTML='<h3>'+esc(s[0])+'</h3><div class="meta">Known analog site · '+ll(s[1],s[2])+'</div><button class="cmp-open" data-known="'+esc(s[0])+'" style="margin:0 0 14px">Compare with an Umbra trip</button><div class="big"><strong>'+rows.length+'</strong><span>of 36 tests score above zero here</span></div><p class="hint">Click a test to see its rule and where Earth does it best.</p><div id="kr" style="margin-top:8px"></div>'+srcP(rows.map(r=>r[0]),'Each score is this site\'s place on the same 10 arc-minute Umbra grid as every other spot on Earth.');
+ const kr=det.querySelector('#kr');rows.forEach(([id,sc])=>{const t=D.tests[TITLE[id]],b=document.createElement('button');b.className='spot';b.style.gridTemplateColumns='1fr 70px 30px';
+  b.innerHTML='<span>'+esc(TITLE[id])+'</span><span class="kn" style="display:block;margin:0"><i><s style="width:'+sc+'%"></s></i></span><b>'+sc+'</b>';b.onclick=()=>openTest(id);kr.appendChild(b)});
+ det.classList.remove('on');requestAnimationFrame(()=>det.classList.add('on'));det.scrollTop=0;showTest(null);
+ earth.ringsData([{lat:s[1],lon:s[2]}]).pointOfView({lat:s[1],lng:s[2],altitude:1.3},1400)}
+const tabT=document.getElementById('tab-trips'),tabA=document.getElementById('tab-tests'),pT=document.getElementById('trips'),pA=document.getElementById('alltests');
+function tab(all){tabT.setAttribute('aria-selected',!all);tabA.setAttribute('aria-selected',all);pT.hidden=all;pA.hidden=!all}
+tabT.onclick=()=>tab(false);tabA.onclick=()=>tab(true);
+
+// Known analog sites vs Umbra trips
+const CM=window.UMBRA_CMP,cmpEl=document.getElementById('cmp'),cmpL=document.getElementById('cmp-l'),cmpR=document.getElementById('cmp-r');let cmpAll=false,cmpFocus=null;
+const nStrong=v=>v.filter(x=>x>=50).length,avg=a=>(a.reduce((x,y)=>x+y,0)/a.length).toFixed(1);
+CM.known.forEach((k,i)=>cmpL.add(new Option(k[0],i)));const FINDS=(CM.finds||[]).map(x=>({name:x[0],place:x[1],lat:x[2],lon:x[3],vec:x[4],jobs:x[5],km:x[6],find:true}));
+{const g1=document.createElement('optgroup');g1.label='Umbra expedition trips';sites.forEach((s,i)=>g1.appendChild(new Option(s.name+' ('+s.place+')',i)));cmpR.appendChild(g1);
+ const g2=document.createElement('optgroup');g2.label='Umbra underpriced finds (no analog study yet)';FINDS.forEach((s,i)=>g2.appendChild(new Option(s.name+' ('+s.place+'), '+s.km.toLocaleString()+' km from any studied site','f'+i)));cmpR.appendChild(g2);}
+const cmpS=()=>{const v=cmpR.value;return v[0]==='f'?FINDS[+v.slice(1)]:sites[+v]};
+const tripV=s=>s.vec||CM.trips[s.lat+','+s.lon];
+document.getElementById('cmp-sum').textContent='The '+CM.known.length+' known sites average '+avg(CM.known.map(k=>nStrong(k[3])))+' strong tests each. Umbra\'s '+sites.length+' trips average '+avg(sites.map(s=>nStrong(tripV(s))))+', and its '+FINDS.length+' underpriced finds, places no analog study has used, average '+avg(FINDS.map(s=>nStrong(s.vec)))+'. Pick any pair to see exactly where they differ.';
+function drawCmp(){const k=CM.known[+cmpL.value],s=cmpS(),a=k[3],b=tripV(s);
+ document.getElementById('cmp-ln').textContent=nStrong(a);document.getElementById('cmp-rn').textContent=nStrong(b);
+ document.getElementById('cmp-lh').textContent=k[0];document.getElementById('cmp-rh').textContent=s.name;
+ const idx=CM.keys.map((_,i)=>i),both=idx.filter(i=>a[i]>=50&&b[i]>=50),onlyL=idx.filter(i=>a[i]>=50&&b[i]<50),onlyR=idx.filter(i=>b[i]>=50&&a[i]<50);
+ document.getElementById('cmp-venn').innerHTML='<span>Both strong: <b>'+both.length+'</b></span><span>Only '+esc(k[0])+': <b>'+onlyL.length+'</b></span><span>Only '+esc(s.name)+': <b>'+onlyR.length+'</b></span>';
+ const rows=idx.filter(i=>cmpAll||a[i]>=50||b[i]>=50).sort((i,j)=>{const ki=(a[i]>=50)!==(b[i]>=50),kj=(a[j]>=50)!==(b[j]>=50);return (kj-ki)||(Math.abs(b[j]-a[j])-Math.abs(b[i]-a[i]))||(b[j]+a[j]-b[i]-a[i])});
+ document.getElementById('cmp-note').textContent=cmpAll?'All 36 tests, key differences first':'Showing the '+rows.length+' tests where at least one side is strong, key differences first';
+ document.getElementById('cmp-src').innerHTML='<b>Sources.</b> Earth: '+esc(srcE(rows.map(i=>CM.keys[i])).join('; '))+'; '+EMASK+'. Underpriced finds from Umbra\'s mispricing run (results/underpriced.json).';
+ const box=document.getElementById('cmp-rows');box.innerHTML='';
+ rows.forEach(i=>{const id=CM.keys[i],t=D.tests[TITLE[id]],w=worldOf(t.world),key=(a[i]>=50)!==(b[i]>=50),r=document.createElement('button');r.className='crow';
+  r.innerHTML='<span class="t"><span class="tag '+w+'">'+(w==='both'?'Both':w)+'</span>'+esc(TITLE[id])+(key?' <span class="key">KEY</span>':'')+'</span>'+
+   '<span class="cbar l'+(key&&a[i]>=50?' win':'')+'"><i><s style="width:'+a[i]+'%"></s></i><b>'+a[i]+'</b></span><span class="cbar r'+(key&&b[i]>=50?' win':'')+'"><i><s style="width:'+b[i]+'%"></s></i><b>'+b[i]+'</b></span>';
+  r.setAttribute('aria-label',TITLE[id]+': '+k[0]+' '+a[i]+', '+s.name+' '+b[i]+(key?', key difference':''));
+  r.onclick=()=>{closeCmp();openTest(id)};box.appendChild(r)})}
+const SI=window.UMBRA_SITE,siteEl=document.getElementById('site');let siteFocus=null;
+function hubBtn(x,body){const b=document.createElement('button');b.className='hub';const extra=body==='moon'&&x.t?' · flat run '+(x.t>=180?'over 180':x.t)+' km':body==='pole'?' · sun '+Math.round(x.s*100)+'%':body==='mars'?' · '+x.e+' km elevation':'';
+ b.innerHTML='<b>'+x.n+'</b> <span style="opacity:.6">'+Math.abs(x.lat).toFixed(1)+(x.lat<0?'S ':'N ')+Math.abs(x.lon).toFixed(1)+(body==='mars'||x.lon<0?(x.lon<0?'W':'E'):'E')+extra+'</span><small>'+x.h.join(' · ')+'</small>';
+ b.onclick=()=>{closeSite();const isM=body==='mars',G=isM?marsG:moonG,lon=x.lon>180?x.lon-360:x.lon;aim(G,isM?'w-mars':'w-moon',isM?'where-mars':'where-moon',[x.lat,lon,x.n],x.n+': '+x.h.slice(0,3).join(', '));pulse(document.getElementById(isM?'w-mars':'w-moon'))};return b}
+for(const k of ['moon','pole','mars']){const el=document.getElementById('site-'+k);SI[k].forEach(x=>el.appendChild(hubBtn(x,k)))}
+document.getElementById('site-all4').textContent=SI.all4;
+{const top=a=>a.filter(v=>v.beats_pct>=80).map(v=>v.name+' (beats '+v.beats_pct+'%)').join(', '),low=a=>a.filter(v=>v.beats_pct<80).map(v=>v.name).join(', ');
+ document.getElementById('site-val').innerHTML='<p><b>Moon:</b> '+top(SI.vm)+' score higher than most of the Moon. '+low(SI.vm)+' scores lower: it was chosen for highland rock, not for building.</p><p><b>Mars:</b> '+top(SI.vr)+' score high. '+low(SI.vr)+' score lower because their ice or lake beds sit away from steady sun or wet ground on this coarse grid. That gap is the real trade-off on Mars.</p>'}
+function openSite(){siteFocus=document.activeElement;siteEl.hidden=false;document.getElementById('site-close').focus()}
+function closeSite(){siteEl.hidden=true;siteFocus&&siteFocus.focus&&siteFocus.focus()}
+document.getElementById('site-btn').onclick=openSite;document.getElementById('site-close').onclick=closeSite;siteEl.addEventListener('click',e=>{if(e.target===siteEl)closeSite()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!siteEl.hidden){e.stopImmediatePropagation();closeSite()}},true);
+function openCmp(ki,si){if(ki!=null)cmpL.value=ki;if(si!=null)cmpR.value=si;cmpFocus=document.activeElement;cmpEl.hidden=false;drawCmp();document.getElementById('cmp-close').focus()}
+function closeCmp(){cmpEl.hidden=true;cmpFocus&&cmpFocus.focus&&cmpFocus.focus()}
+cmpL.onchange=cmpR.onchange=drawCmp;
+document.getElementById('cmp-all').onclick=e=>{cmpAll=!cmpAll;e.currentTarget.setAttribute('aria-pressed',cmpAll);e.currentTarget.textContent=cmpAll?'Show strong tests only':'Show all 36 tests';drawCmp()};
+document.getElementById('cmp-close').onclick=closeCmp;cmpEl.addEventListener('click',e=>{if(e.target===cmpEl)closeCmp()});
+document.getElementById('cmp-map').onclick=()=>{const k=CM.known[+cmpL.value],s=cmpS();closeCmp();if(!s.find)select(s);earth.ringsData([s,{lat:k[1],lon:k[2]}]).pointOfView({lat:(s.lat+k[1])/2,lng:s.lon,altitude:2.4},1600)};
+document.getElementById('cmp-btn').onclick=()=>openCmp(null,null);document.getElementById('cmp-open2').onclick=()=>openCmp(null,null);
+det.addEventListener('click',e=>{const b=e.target.closest('.cmp-open');if(!b)return;
+ if(b.dataset.trip){const i=sites.findIndex(s=>s.lat+','+s.lon===b.dataset.trip);let best=0,bd=1e9;CM.known.forEach((k,j)=>{const d=Math.hypot(k[1]-sites[i].lat,(k[2]-sites[i].lon)*Math.cos(k[1]*Math.PI/180));if(d<bd){bd=d;best=j}});openCmp(best,i)}
+ if(b.dataset.known){const j=CM.known.findIndex(k=>k[0]===b.dataset.known);let best=0,bd=1e9;sites.forEach((s,i)=>{const d=Math.hypot(CM.known[j][1]-s.lat,(CM.known[j][2]-s.lon)*Math.cos(s.lat*Math.PI/180));if(d<bd){bd=d;best=i}});openCmp(j,best)}});
+cmpL.value=CM.known.findIndex(k=>k[0]==='Haughton Crater');cmpR.value=sites.findIndex(s=>s.name==='Axel Heiberg area');
+plotSpots(null);
+// Full screen Moon / Mars explorer
+const INFO={moon:{e:'Moon · LRO data',t:'The Moon',s:'Every Moon test in Umbra is set by what Lunar Reconnaissance Orbiter measured here. Spin it, zoom in, and pick a place.',places:MOON,col:'185,200,234'},
+ mars:{e:'Mars · MGS and Odyssey data',t:'Mars',s:'Mars tests come from Mars Global Surveyor and Mars Odyssey measurements: air pressure, ground heat, dust and water.',places:MARS,col:'255,140,90'}};
+const ov=document.getElementById('ov'),ovG=document.getElementById('ov-g');let ovOpen=null,big=null,bigBody=null,ovLayer='color',lastFocus=null,ovPins=[],ovRelief=true;const ovShow={land:true,hub:true};
+// Science layers: built by code/build_globe_tex.mjs from NASA PDS rasters into tex/globe_tex.js (loaded on demand)
+const RAMP={magma:['#000004','#2c115f','#721f81','#b73779','#f1605d','#feb078','#fcfdbf'],viridis:['#440154','#3b528b','#21918c','#5ec962','#fde725'],cividis:['#00204d','#31446b','#666970','#958f78','#cbba69','#ffea46'],blues:['#081d58','#225ea8','#41b6c4','#c7e9b4','#ffffd9'],ice:['#e0f3ff','#7cc4f2','#2b7bd6','#1a3d8f','#0b1a47'],inferno:['#000004','#320a5e','#781c6d','#bc3754','#ed6925','#fbb61a','#fcffa4'],sun:['#140b34','#4b1d6b','#a33b5c','#e46e2f','#fdbd3a','#fff9c4']};
+const SCI={moon:[
+ {k:'feo',n:'Iron',u:'FeO, weight %',lo:'2',hi:'22',ramp:'inferno',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
+ {k:'tio2',n:'Titanium',u:'TiO2, weight %',lo:'0',hi:'8',ramp:'viridis',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
+ {k:'th',n:'Thorium',u:'Th, parts per million',lo:'0',hi:'10',ramp:'magma',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
+ {k:'sun',pole:1,n:'Pole: sunlight',u:'share of the year in sunlight',lo:'0%',hi:'90%',ramp:'sun',src:'LRO LOLA average visibility (AVGVISIB), 60 m'},
+ {k:'shadow',pole:1,n:'Pole: never lit',cat:[['#2878ff','Permanent shadow'],['#080a14','Sunlit some of the year']],src:'LRO LOLA permanent shadow map (LPSR), 60 m'},
+ {k:'cold',pole:1,n:'Pole: hottest it gets',u:'maximum surface temperature, K',lo:'25 K',hi:'330 K',ramp:'inferno',src:'LRO Diviner Polar Resource Product'},
+ {k:'ice',pole:1,n:'Pole: ice depth',u:'depth where water ice can survive',lo:'at surface',hi:'1 m',ramp:'ice',none:'Ice not stable within the top 2 m',src:'LRO Diviner Polar Resource Product'},
+ {k:'earth',pole:1,n:'Pole: Earth in view',u:'share of the time Earth is above the horizon (direct radio)',lo:'never',hi:'always',ramp:'viridis',src:'Umbra calculation from LRO LOLA heights (LDEM 80 m) over the libration cycle'},
+ {k:'flat',pole:1,n:'Pole: flat ground',u:'share of each km under 8° slope',lo:'0%',hi:'100%',ramp:'cividis',src:'LRO LOLA slope (LDSM 40 m)'},
+ {k:'pstack',pole:1,stack:1,n:'Overlap: where it lines up'}],
+mars:[
+ {k:'pressure',n:'Air pressure',u:'Pa (Earth at sea level: 101,325)',lo:'100',hi:'1,300',ramp:'magma',src:'MGS MOLA MEGDR heights, P = 610 Pa × e^(-h / 11.1 km)'},
+ {k:'ground',n:'Ground type',cat:[['#f4e3b5','Deep dust (TI under 100)'],['#d9a45b','Dusty (100 to 150)'],['#b8613a','Sand and crust (150 to 400)'],['#6d3b5e','Rocky (400 to 1,000)'],['#1d2a5c','Bedrock (over 1,000)']],src:'MGS TES night thermal inertia (TI), to 60° latitude'},
+ {k:'dust',n:'Bright dust',u:'surface albedo',lo:'0.08',hi:'0.32',ramp:'cividis',src:'MGS TES albedo'},
+ {k:'water',n:'Water',u:'water-equivalent hydrogen, weight %',lo:'1.5',hi:'8',ramp:'blues',src:'Mars Odyssey Gamma Ray Spectrometer, 5° bins'},
+ {k:'base',n:'Umbra base zone',cat:[['#ffb547','Water over 5%, below datum, firm ground, within 50° of the equator']],src:'Odyssey GRS, MOLA and TES, the same rule as the Umbra pipeline'},
+ {k:'stack',stack:1,n:'Overlap: where it lines up'}]};
+const BASE_SRC={moon:{color:['Color','LRO Wide Angle Camera mosaic, NASA Moon Trek'],relief:['Elevation','LRO LOLA color shaded relief, NASA Moon Trek']},mars:{color:['Color','Viking MDIM 2.1 color mosaic, NASA Mars Trek'],relief:['Elevation','MGS MOLA color shaded relief, NASA Mars Trek']}};
+const R_MOON=1737400;
+let TEX=null,texP=null;
+function loadTex(){if(texP)return texP;return texP=new Promise(res=>{if(window.UMBRA_TEX){res(TEX=window.UMBRA_TEX);return}const s=document.createElement('script');s.src='tex/globe_tex.js';s.async=true;s.onload=()=>res(TEX=window.UMBRA_TEX||null);s.onerror=()=>res(null);document.head.appendChild(s)}).then(t=>{if(t){moonG.bumpImageUrl(t.moon.bump);marsG.bumpImageUrl(t.mars.bump);if(big)bigSkin()}return t})}
+const imgOf=u=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u});
+const sciCache={},capImg={};
+function sciTex(body,k){const key=body+k;if(sciCache[key])return sciCache[key];const L=SCI[body].find(x=>x.k===k);
+ return sciCache[key]=Promise.all([trek(body,'color',3).then(imgOf),L.stack?Promise.resolve(stkCanvas(body)):imgOf(L.pole?TEX.pole.layers[k]:TEX[body].layers[k])]).then(([b,o])=>{
+  const W=b.width,H=b.height,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(b,0,0);
+  x.fillStyle=L.pole?'rgba(4,6,13,.25)':'rgba(4,6,13,.5)';x.fillRect(0,0,W,H);
+  if(!L.pole){x.globalAlpha=.85;if(L.stack)x.imageSmoothingEnabled=false;x.drawImage(o,0,0,W,H);x.globalAlpha=1;x.imageSmoothingEnabled=true}else{capImg[k]=o;
+   const P=o.width,t=document.createElement('canvas');t.width=t.height=P;const tx=t.getContext('2d');tx.drawImage(o,0,0);const src=tx.getImageData(0,0,P,P).data;
+   const y0=Math.floor(175/180*H),dst=x.getImageData(0,y0,W,H-y0),d=dst.data,m=5058*60/P;
+   for(let y=y0;y<H;y++){const la=(90-(y+.5)/H*180)*Math.PI/180,r=2*R_MOON*Math.tan((Math.PI/2+la)/2)/m;
+    for(let q=0;q<W;q++){const lo=(-180+(q+.5)/W*360)*Math.PI/180,px=Math.floor(P/2+r*Math.sin(lo)),py=Math.floor(P/2-r*Math.cos(lo));if(px<0||py<0||px>=P||py>=P)continue;
+     const s=(py*P+px)*4,a=src[s+3]/255;if(!a)continue;const j=((y-y0)*W+q)*4;d[j]=d[j]*(1-a)+src[s]*a;d[j+1]=d[j+1]*(1-a)+src[s+1]*a;d[j+2]=d[j+2]*(1-a)+src[s+2]*a}}
+   x.putImageData(dst,0,y0)}
+  return c.toDataURL('image/jpeg',.9)})}
+// overlap: switch filters on, each cell counts how many it meets; the brightest clusters are the epicenters
+const STK={moon:[
+ {k:'sun',n:'Sunlight',d:'Lit a third of the year or more: solar power',src:'LOLA AVGVISIB'},
+ {k:'ice',n:'Ice within 5 km',d:'Diviner ice in the top metre, or permanent shadow, within 5 km',src:'Diviner, LOLA LPSR'},
+ {k:'earth',n:'Earth in view',d:'Earth above the horizon half the time or more: direct radio home',src:'Umbra calculation from LOLA heights'},
+ {k:'flat',n:'Flat ground',d:'A quarter or more of the km under 8° slope: room to land and build',src:'LOLA LDSM'}],
+mars:[
+ {k:'water',n:'Water',d:'Over 5 wt% water-equivalent hydrogen in the ground',src:'Odyssey GRS'},
+ {k:'low',n:'Low ground',d:'Below the datum: thicker air for landing',src:'MOLA'},
+ {k:'firm',n:'Firm ground',d:'Thermal inertia 150 or more: not deep dust',src:'TES'},
+ {k:'lat',n:'Within 50° of the equator',d:'Warmer, with more sunlight',src:'latitude'}]};
+const stkOn={moon:{sun:1,ice:1,earth:1,flat:1},mars:{water:1,low:1,firm:1,lat:1}},stkM={},stkR={};
+const STKC=['#3b2a6b','#8a3b8f','#e0603a','#ffb547'],STKTOP='#fff4c2';
+function gv(g,i){const b=dec(g)[i];if(b===255)return NaN;const t=b/254;return g.log?Math.exp(Math.log(g.lo)+t*(Math.log(g.hi)-Math.log(g.lo))):g.lo+t*(g.hi-g.lo)}
+function stkMasks(body){if(stkM[body])return stkM[body];const M={};
+ if(body==='moon'){const P=TEX.pole.vals,n=P.n,N=n*n,ice0=new Uint8Array(N);M.has=new Uint8Array(N);for(const k of ['sun','earth','flat','ice'])M[k]=new Uint8Array(N);
+  for(let i=0;i<N;i++){const s=gv(P.sun,i);if(!ok(s))continue;M.has[i]=1;M.sun[i]=s>=.33;M.earth[i]=gv(P.earth,i)>=.5;M.flat[i]=gv(P.flat,i)>=.25;const ic=gv(P.ice,i);ice0[i]=(ok(ic)&&ic<=1)||gv(P.shadow,i)>.5}
+  const R=Math.round(5000/P.m_per_px);
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){if(!ice0[y*n+x])continue;for(let dy=-R;dy<=R;dy++)for(let dx=-R;dx<=R;dx++){const X=x+dx,Y=y+dy;if(dx*dx+dy*dy<=R*R&&X>=0&&Y>=0&&X<n&&Y<n)M.ice[Y*n+X]=1}}
+  M.W=M.H=n}
+ else{const V=TEX.mars.vals,W=360,H=180,N=W*H;M.has=new Uint8Array(N);for(const k of ['water','low','firm','lat'])M[k]=new Uint8Array(N);
+  for(let i=0;i<N;i++){const la=90-(Math.floor(i/W)+.5),w=gv(V.water,i),h=gv(V.height,i),t=gv(V.ti,i);M.has[i]=ok(h);M.water[i]=w>5;M.low[i]=h<0;M.firm[i]=t>=150;M.lat[i]=Math.abs(la)<=50}
+  M.W=W;M.H=H}
+ return stkM[body]=M}
+function stkXY(body,lat,lon){if(body==='moon'){const P=TEX.pole.vals,n=P.n,r=2*R_MOON*Math.tan((Math.PI/2+lat*Math.PI/180)/2)/P.m_per_px,a=lon*Math.PI/180;return[Math.floor(n/2+r*Math.sin(a)),Math.floor(n/2-r*Math.cos(a))]}
+ return[Math.floor((((lon+180)%360)+360)%360),Math.min(179,Math.max(0,Math.floor(90-lat)))]}
+function stkRun(body){if(stkR[body])return stkR[body];const M=stkMasks(body),W=M.W,H=M.H,N=W*H,F=STK[body].filter(f=>stkOn[body][f.k]),act=F.length,cnt=new Uint8Array(N);
+ for(let i=0;i<N;i++)if(M.has[i])for(const f of F)cnt[i]+=M[f.k][i];
+ const moon=body==='moon',m=moon?TEX.pole.vals.m_per_px:0;
+ const ll=moon?(x,y)=>{const X=(x+.5-W/2)*m,Y=-(y+.5-H/2)*m;return[(2*Math.atan(Math.hypot(X,Y)/(2*R_MOON))-Math.PI/2)*180/Math.PI,Math.atan2(X,Y)*180/Math.PI]}:(x,y)=>[90-(y+.5),x+.5-180];
+ const km2=moon?()=>(m/1000)**2:(x,y)=>59.16*59.16*Math.cos((90-(y+.5))*Math.PI/180);
+ const all=i=>act>0&&M.has[i]&&cnt[i]===act;let area=0,tot=0;const seen=new Uint8Array(N),cl=[];
+ for(let i=0;i<N;i++){if(!M.has[i])continue;const x=i%W,y=(i-x)/W;tot+=km2(x,y);if(!all(i))continue;area+=km2(x,y);if(seen[i])continue;
+  const st=[i],mem=[];seen[i]=1;let a=0,sx=0,sy=0;
+  while(st.length){const j=st.pop(),jx=j%W,jy=(j-jx)/W;mem.push(j);sx+=jx;sy+=jy;a+=km2(jx,jy);
+   for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){let X=jx+dx;const Y=jy+dy;if(!moon)X=(X+W)%W;if(X<0||Y<0||X>=W||Y>=H)continue;const q=Y*W+X;if(!seen[q]&&all(q)){seen[q]=1;st.push(q)}}}
+  cl.push({a,mem,cx:sx/mem.length,cy:sy/mem.length})}
+ cl.sort((p,q)=>q.a-p.a);
+ const epi=cl.slice(0,3).map((c,r)=>{let b=c.mem[0],bd=1e9;for(const j of c.mem){const d=(j%W-c.cx)**2+(Math.floor(j/W)-c.cy)**2;if(d<bd){bd=d;b=j}}const [la,lo]=ll(b%W,Math.floor(b/W));return{lat:la,lon:lo,a:c.a,r:r+1}});
+ const near=(lat,lon)=>{const [x,y]=stkXY(body,lat,lon);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const X=moon?x+dx:(x+dx+W)%W,Y=y+dy;if(X>=0&&Y>=0&&X<W&&Y<H&&all(Y*W+X))return true}return false};
+ const hubs=moon?[['light-flow hubs',LF.filter(h=>near(h[0],h[1])).length,LF.length],['Umbra pole hubs',SI.pole.filter(h=>near(h.lat,h.lon)).length,SI.pole.length]]:[['Umbra Mars hubs',SI.mars.filter(h=>near(h.lat,h.lon)).length,SI.mars.length]];
+ return stkR[body]={cnt,act,F,area,tot,epi,hubs,n:cl.length}}
+function stkCanvas(body){const R=stkRun(body),M=stkMasks(body),c=document.createElement('canvas');c.width=M.W;c.height=M.H;const x=c.getContext('2d'),im=x.createImageData(M.W,M.H),d=im.data;
+ const hex=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16)),pal=STKC.map(hex),top=hex(STKTOP);
+ for(let i=0;i<M.W*M.H;i++){if(!M.has[i]||!R.act)continue;const k=R.cnt[i],j=i*4;
+  if(!k){if(body==='moon'){d[j]=d[j+1]=d[j+2]=8;d[j+3]=170}continue}
+  const col=k===R.act?top:pal[Math.min(3,Math.floor((k-1)/Math.max(1,R.act-1)*4))];d[j]=col[0];d[j+1]=col[1];d[j+2]=col[2];d[j+3]=k===R.act?255:Math.round(110+110*k/R.act)}
+ x.putImageData(im,0,0);return c}
+function stkColor(k,act){return k===act?STKTOP:STKC[Math.min(3,Math.floor((k-1)/Math.max(1,act-1)*4))]}
+function stkToggle(f){const b=bigBody;stkOn[b][f]=stkOn[b][f]?0:1;delete stkR[b];for(const L of SCI[b])if(L.stack){delete sciCache[b+L.k];delete capImg[L.k]}setPins();bigSkin()}
+function bigSkin(){if(!big)return;const b=bigBody,k=ovLayer,L=SCI[b].find(x=>x.k===k);
+ (L?(TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
+ big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();legend();poleView()}
+// buttons
+const lyrEl=document.getElementById('ov-lyr'),optEl=document.getElementById('ov-opt'),legEl=document.getElementById('ov-leg');
+function btn(txt,on,fn,dis,title){const b=document.createElement('button');b.textContent=txt;b.setAttribute('aria-pressed',!!on);if(dis){b.disabled=true}if(title)b.title=title;b.onclick=fn;return b}
+function lab(t){const s=document.createElement('span');s.className='grp-l';s.textContent=t;return s}
+function setLayer(k){const was=SCI[bigBody].find(x=>x.k===ovLayer);ovLayer=k;const L=SCI[bigBody].find(x=>x.k===k);
+ if(L&&L.pole&&!(was&&was.pole)&&big)big.pointOfView({lat:-78,lng:0,altitude:1.1},1400);if((L&&L.stack)||(was&&was.stack))setPins();bigSkin()}
+function drawLyr(){const b=bigBody;lyrEl.innerHTML='';lyrEl.append(lab('Imagery'));
+ for(const k of ['color','relief'])lyrEl.append(btn(BASE_SRC[b][k][0],ovLayer===k,()=>setLayer(k)));
+ lyrEl.append(document.createElement('br'),lab('NASA science'));
+ for(const L of SCI[b])lyrEl.append(btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX,TEX?L.u||L.n:'Loading the science layers'));
+ optEl.innerHTML='';
+ optEl.append(btn('3D relief',ovRelief,()=>{ovRelief=!ovRelief;bigSkin()},!TEX,(b==='moon'?'LRO LOLA':'MGS MOLA')+' heights as a bump map'));
+ optEl.append(btn('Landing sites',ovShow.land,()=>{ovShow.land=!ovShow.land;setPins();drawLyr()}));
+ optEl.append(btn('Umbra hubs',ovShow.hub,()=>{ovShow.hub=!ovShow.hub;setPins();drawLyr()}));if(b==='moon')optEl.append(btn('Hidden channels',hcOn,()=>hcToggle(!hcOn),false,'What else 21 NASA Moon datasets measure'))}
+function grad(r){return 'linear-gradient(90deg,'+RAMP[r].join(',')+')'}
+function legend(){const b=bigBody,L=SCI[b].find(x=>x.k===ovLayer);
+ if(!L){legEl.innerHTML='<b>'+BASE_SRC[b][ovLayer][0]+'</b><div class="src">Source: '+BASE_SRC[b][ovLayer][1]+'. Click the ground to read the NASA science values there.</div>'+hcLeg();legEl.hidden=false;return}
+ let h='<b>'+L.n+'</b>';
+ if(L.stack){const R=stkRun(b),F=STK[b],moon=b==='moon';
+  h+='<div class="u">Switch filters on and off. Each one adds a layer; the brightest ground meets every filter at once.</div><div class="layers stf"></div>';
+  for(let k=R.act;k>=1;k--)h+='<div class="cat"><i style="background:'+stkColor(k,R.act)+'"></i>'+(k===R.act?(R.act>1?'All '+R.act+' at once':'Meets it'):k+' of '+R.act)+'</div>';
+  if(R.act){h+='<div class="u" style="margin-top:6px">All at once: '+f0(R.area)+' km², '+(R.area/R.tot*100).toFixed(1)+'% of '+(moon?'the ground south of 85°S':'the mapped ground')+', in '+R.n+' patches.';
+   h+=' '+R.hubs.map(x=>x[1]+' of '+x[2]+' '+x[0]).join(' and ')+' sit in it.</div>';
+   if(R.epi.length)h+='<div class="u">Epicenters (largest patches, ringed): '+R.epi.map(e=>e.r+'. '+llTxt(e.lat,e.lon)+', '+f0(e.a)+' km²').join(' · ')+'</div>'}
+  h+='<div class="src">Source: '+F.map(f=>f.n+': '+f.src).join('; ')+(moon?'. Shown in the close-up above.':'')+'</div>'+hcLeg();legEl.innerHTML=h;
+  const box=legEl.querySelector('.stf');for(const f of F)box.append(btn(f.n,stkOn[b][f.k],()=>stkToggle(f.k),false,f.d));legEl.hidden=false;return}
+ if(L.cat)h+=L.cat.map(c=>'<div class="cat"><i style="background:'+c[0]+'"></i>'+c[1]+'</div>').join('');
+ else h+='<div class="u">'+L.u+'</div><div class="bar" style="background:'+grad(L.ramp)+'"></div><div class="ends"><span>'+L.lo+'</span><span>'+L.hi+'</span></div>'+(L.none?'<div class="cat"><i style="background:#080a14"></i>'+L.none+'</div>':'');
+ h+='<div class="src">Source: '+L.src+(L.pole?'. Shown in the close-up above; the globe cap is coarser.':'')+'</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false}
+// south pole close-up (polar stereographic, 85S to the pole, Earth-facing side up)
+const LF=[[-89.264,246.88,"Henson",44,215,2.9,0],[-89.379,153.92,"Shackleton",39,187,1.7,1],[-89.378,227.06,"Henson",40,187,0.8,0],[-89.508,217.15,"Shackleton",39,185,0.2,1],[-89.551,184.55,"Shackleton",26,184,2.6,1],[-87.898,236.52,"Henson",35,145,2.2,0],[-88.01,259.81,"Lacus Tenebrarum",43,145,3.4,0],[-87.976,248.8,"Henson",27,142,1.1,0],[-87.824,230.61,"Henson",32,137,2,0],[-88.465,292.27,"de Gerlache",50,127,1.1,1],[-89.036,109.92,"Shackleton",32,124,1.4,1],[-87.196,294.07,"Lacus Tenebrarum",25,121,0.8,0]];
+const CRATERS=[["Shackleton",-89.67,129.8],["de Gerlache",-88.5,-87.1],["Haworth",-87.45,-5],["Shoemaker",-88.1,44.9],["Faustini",-87.2,84.3],["Sverdrup",-88.3,-152],["Cabeus",-85.3,-42.1],["Nobile",-85.2,53.5]];
+const poleEl=document.getElementById('ov-pole'),pc=document.getElementById('ov-pc'),px2=pc.getContext('2d');let poleMarks=[];
+const CAPR=2*R_MOON*Math.tan(2.5*Math.PI/180),SPAN=5058*60;
+function capXY(lat,lon){const S=pc.width,r=2*R_MOON*Math.tan((Math.PI/2+lat*Math.PI/180)/2)/SPAN*S,a=lon*Math.PI/180;return[S/2+r*Math.sin(a),S/2-r*Math.cos(a)]}
+function capLL(x,y){const S=pc.width,X=(x-S/2)/S*SPAN,Y=-(y-S/2)/S*SPAN,r=Math.hypot(X,Y);return[(2*Math.atan(r/(2*R_MOON))-Math.PI/2)*180/Math.PI,Math.atan2(X,Y)*180/Math.PI]}
+function poleView(){const L=SCI[bigBody].find(x=>x.k===ovLayer);const on=bigBody==='moon'&&L&&L.pole&&TEX;poleEl.hidden=!on;ov.classList.toggle('polev',!!on);if(!on)return;
+ const draw=o=>{const S=pc.width;px2.clearRect(0,0,S,S);px2.fillStyle='#05070f';px2.beginPath();px2.arc(S/2,S/2,CAPR/SPAN*S,0,7);px2.fill();px2.drawImage(o,0,0,S,S);poleMarks=[];
+  px2.font='600 17px system-ui,sans-serif';px2.textAlign='center';
+  if(L.stack){const R=stkRun('moon');for(const e of R.epi){const [x,y]=capXY(e.lat,e.lon);px2.strokeStyle='#04060d';px2.lineWidth=6;px2.beginPath();px2.arc(x,y,17,0,7);px2.stroke();px2.strokeStyle=STKTOP;px2.lineWidth=2.5;px2.beginPath();px2.arc(x,y,17,0,7);px2.stroke();
+   px2.fillStyle=STKTOP;px2.strokeStyle='#04060d';px2.lineWidth=4;px2.strokeText(e.r,x+22,y-14);px2.fillText(e.r,x+22,y-14);
+   poleMarks.push({x,y,lat:e.lat,lon:e.lon,name:'Epicenter '+e.r,extra:'Largest patches where all '+R.act+' filters line up: this one is '+f0(e.a)+' km²'})}}
+  for(const c of CRATERS){const [x,y]=capXY(c[1],c[2]);px2.fillStyle='rgba(255,255,255,.85)';px2.strokeStyle='rgba(0,0,0,.8)';px2.lineWidth=4;px2.strokeText(c[0],x,y+5);px2.fillText(c[0],x,y+5)}
+  for(const h of LF){const [x,y]=capXY(h[0],h[1]);px2.fillStyle='#5fe3ff';px2.strokeStyle='#04060d';px2.lineWidth=2;px2.beginPath();px2.moveTo(x,y-8);px2.lineTo(x+8,y);px2.lineTo(x,y+8);px2.lineTo(x-8,y);px2.closePath();px2.fill();px2.stroke();
+   poleMarks.push({x,y,lat:h[0],lon:h[1],name:'Light-flow hub near '+h[2],extra:'Traffic '+h[4]+' of 12,000 physics-only trips pass here · sun '+h[3]+'% · shadow ice '+h[5]+' km away'+(h[6]?' · at an Artemis III candidate feature':'')})}
+  for(const h of SI.pole){const [x,y]=capXY(h.lat,h.lon);px2.fillStyle='#ffb547';px2.strokeStyle='#04060d';px2.lineWidth=2;px2.beginPath();px2.arc(x,y,8,0,7);px2.fill();px2.stroke();
+   poleMarks.push({x,y,lat:h.lat,lon:h.lon,name:h.n,extra:'Umbra hub: '+h.h.join(', ')})}
+  px2.fillStyle='#8f9bb3';px2.font='600 15px ui-monospace,Consolas,monospace';px2.fillText('0° · Earth side',S/2,22)};
+ const k=ovLayer;if(capImg[k])draw(capImg[k]);else(L.stack?Promise.resolve(capImg[k]=stkCanvas('moon')):imgOf(TEX.pole.layers[k])).then(o=>{capImg[k]=o;if(ovLayer===k)draw(o)})}
+pc.addEventListener('click',e=>{const r=pc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*pc.width,y=(e.clientY-r.top)/r.height*pc.height;
+ const hit=poleMarks.find(m=>Math.hypot(m.x-x,m.y-y)<14);if(hit){readout('moon',hit.lat,hit.lon,hit.name,hit.extra);return}
+ const [la,lo]=capLL(x,y);if(la<=-85)readout('moon',la,lo)});
+// values under the cursor
+function dec(g){if(!g.u){const s=atob(g.b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);g.u=u}return g.u}
+function v1(g,lat,lon){const u=dec(g),x=Math.floor((((lon+180)%360)+360)%360),y=Math.min(179,Math.max(0,Math.floor(90-lat))),b=u[y*360+Math.min(359,x)];if(b===255)return NaN;const t=b/254;
+ return g.log?Math.exp(Math.log(g.lo)+t*(Math.log(g.hi)-Math.log(g.lo))):g.lo+t*(g.hi-g.lo)}
+function vp(g,lat,lon){const V=TEX.pole.vals,n=V.n,m=V.m_per_px,u=dec(g),r=2*R_MOON*Math.tan((Math.PI/2+lat*Math.PI/180)/2)/m,a=lon*Math.PI/180,x=Math.floor(n/2+r*Math.sin(a)),y=Math.floor(n/2-r*Math.cos(a));
+ if(x<0||y<0||x>=n||y>=n)return NaN;const b=u[y*n+x];return b===255?NaN:g.lo+b/254*(g.hi-g.lo)}
+const f0=v=>Math.round(v).toLocaleString('en-US'),f1=v=>v.toFixed(1),ok=Number.isFinite;
+const llTxt=(la,lo)=>{lo=((lo+540)%360)-180;return Math.abs(la).toFixed(2)+'°'+(la<0?'S':'N')+' '+Math.abs(lo).toFixed(2)+'°'+(lo<0?'W':'E')};
+const rEl=document.getElementById('ov-r');
+function readout(body,lat,lon,name,extra){
+ if(!TEX){rEl.hidden=false;rEl.innerHTML='<p class="eyebrow">Loading</p><p>The NASA science layers are still loading. Try again in a moment.</p>';loadTex().then(()=>readout(body,lat,lon,name,extra));return}
+ const rows=[],ids=[];let mean='';const add=(k,v,s)=>rows.push('<dt>'+k+'</dt><dd>'+v+(s?' <small>'+s+'</small>':'')+'</dd>');
+ if(body==='moon'){const V=TEX.moon.vals,h=v1(V.height,lat,lon);add('Height',ok(h)?f0(h)+' m':'n/a','LOLA, vs 1,737.4 km sphere');
+  if(lat<=-85){const P=TEX.pole.vals,s=vp(P.sun,lat,lon),sh=vp(P.shadow,lat,lon),t=vp(P.tmax,lat,lon),ic=vp(P.ice,lat,lon);
+   add('Sunlight',ok(s)?Math.round(s*100)+'% of the year':'n/a','LOLA');add('Never lit',ok(sh)?(sh>.5?'yes, permanent shadow':Math.round(sh*100)+'% of this km'):'n/a','LOLA LPSR');
+   add('Hottest',ok(t)?f0(t)+' K ('+f0(t-273.15)+' °C)':'n/a','Diviner');add('Ice depth',ok(ic)?(ic<.02?'stable at the surface':ic>=1.99?'2 m or deeper':f1(ic)+' m'):'not stable in top 2 m','Diviner');
+   const ea=vp(P.earth,lat,lon),fl=vp(P.flat,lat,lon);add('Earth in view',ok(ea)?Math.round(ea*100)+'% of the time':'n/a','Umbra, from LOLA heights');add('Flat ground',ok(fl)?Math.round(fl*100)+'% of this km under 8°':'n/a','LOLA LDSM');
+   if(ok(s)&&s>.6){ids.push('power_ridge','low_sun','lunar_night');mean='A lit high point: solar power most of the year, with long low-sun shadows to drive through.'}
+   else if((ok(sh)&&sh>.5)||(ok(t)&&t<110)){ids.push('deep_cold','dry_permafrost','ice_ratio','sun_ice_edge');mean='A cold trap: never or rarely sunlit, cold enough to keep water ice for billions of years.'}
+   else{ids.push('low_sun','deep_cold','seal_dust');mean='Polar ground between light and shadow: low sun, deep cold at night, sharp dust.'}}
+  else{const fe=v1(V.feo,lat,lon),ti=v1(V.tio2,lat,lon),th=v1(V.th,lat,lon);
+   add('Iron',ok(fe)?f1(fe)+' wt% FeO':'n/a','Lunar Prospector');add('Titanium',ok(ti)?f1(ti)+' wt% TiO2':'n/a','Lunar Prospector');add('Thorium',ok(th)?f1(th)+' ppm':'n/a','Lunar Prospector');
+   if(fe>=14){ids.push('mare_basalt','lava_tubes','volcanic_glass');mean='Mare: dark basalt lava plains'+(ti>=5?', rich in ilmenite, the titanium mineral that can be baked for oxygen':'')+'.'}
+   else if(fe<8){ids.push('highland_rock','impact_rock');mean='Highlands: pale, ancient crust, battered by impacts.'}
+   else{ids.push('impact_rock','mare_basalt');mean='Mixed ground between highland and mare rock.'}
+   if(th>=5)mean+=' High thorium marks KREEP rock, rich in rare earths.';ids.push('thermal_swing','seal_dust');if(lat<-75)ids.push('low_sun')}}
+ else{const V=TEX.mars.vals,h=v1(V.height,lat,lon),p=v1(V.pressure,lat,lon),ti=v1(V.ti,lat,lon),al=v1(V.albedo,lat,lon),w=v1(V.water,lat,lon);
+  add('Height',ok(h)?f0(h)+' m':'n/a','MOLA, vs datum');add('Air pressure',ok(p)?f0(p)+' Pa':'n/a',ok(p)?'like Earth\'s air '+f0(7.4*Math.log(101325/p))+' km up':'');
+  const cl=!ok(ti)?null:ti<100?'deep dust':ti<150?'dusty':ti<=400?'sand and crust':ti<=1000?'rocky':'bedrock';
+  add('Ground',cl?cl+' (TI '+f0(ti)+')':'no data past 60°','TES');add('Albedo',ok(al)?al.toFixed(2)+(al>.24?', bright dust':''):'n/a','TES');add('Water',ok(w)?f1(w)+' wt%':'no data','Odyssey GRS');
+  const bz=ok(w)&&w>5&&h<0&&ti>=150&&Math.abs(lat)<=50;add('Umbra base zone',bz?'<b style="color:var(--amber)">yes</b>':'no','');
+  ids.push('thin_air');if(cl==='deep dust'||cl==='dusty')ids.push('dust_mantle','dust_devils','dust_storm');else if(cl==='sand and crust')ids.push('soft_sand','sand_ratio','dust_devils');else if(cl)ids.push('pad_rock','featureless');
+  if(ok(w)&&w>5)ids.push('dry_permafrost','ice_ratio');else ids.push('mars_hyperarid','oxidant_soil');ids.push('radiation');
+  mean=(bz?'Inside the Umbra base zone: water in the ground, thicker air for landing and firm footing. ':'')+(ok(p)?'Air at '+f0(p)+' Pa, under 1% of Earth\'s. No Earth ground is that thin, so Umbra uses the highest dry plateaus.':'')}
+ const SL=SCI[body].find(x=>x.k===ovLayer);if(SL&&SL.stack&&(body==='mars'||lat<=-85)){const M=stkMasks(body),[sx,sy]=stkXY(body,lat,lon),i=sy*M.W+sx;
+  if(sx>=0&&sy>=0&&sx<M.W&&sy<M.H&&M.has[i]){const F=STK[body].filter(f=>stkOn[body][f.k]);add('Lines up',F.filter(f=>M[f.k][i]).length+' of '+F.length+': '+F.map(f=>(M[f.k][i]?'✓ ':'✗ ')+f.n).join(', '),'')}}
+ const T=[...new Set(ids)].filter(id=>TITLE[id]&&A.tests[id]).slice(0,6);
+ let best=null,bn=0;for(const s of sites){const n=T.filter(id=>s.tests.includes(TITLE[id])).length;if(n>bn){bn=n;best=s}}
+ let x='<button class="rx" aria-label="Close the readout">×</button><p class="eyebrow">'+esc(name||'You clicked')+'</p><h3>'+llTxt(lat,lon)+'</h3>'+(extra?'<p class="ex">'+esc(extra)+'</p>':'')+'<dl>'+rows.join('')+'</dl>'+(mean?'<p class="mean">'+mean+'</p>':'');
+ if(T.length){x+='<p class="k">Umbra tests this ground sets</p>'+T.map(id=>{const t=A.tests[id].top[0];return '<button class="rt" data-id="'+id+'">'+esc(TITLE[id])+(t?'<small>Best on Earth: '+esc(t[3])+', '+llTxt(t[0],t[1])+' (score '+t[2]+')</small>':'')+'</button>'}).join('')}
+ if(best)x+='<p class="k">Best single Earth trip for these</p><button class="rtrip">'+esc(best.name)+'<small>'+bn+' of these '+T.length+' tests in one trip · '+best.count+' tests in all</small></button>';
+ x+='<p class="src"><b>Sources.</b> '+(body==='moon'?(lat<=-85?'LRO LOLA (height, sunlight, LPSR permanent shadow, LDSM slopes), LRO Diviner Polar Resource Product (temperature, ice depth); Earth in view computed by Umbra from LOLA heights.':'LRO LOLA (height), Lunar Prospector gamma-ray spectrometer (iron, titanium, thorium).'):'MGS MOLA MEGDR (height, pressure from elevation), MGS TES (thermal inertia, albedo), Mars Odyssey GRS (water).')+(T.length?' Best Earth spots: '+esc(srcE(T).join('; '))+'.':'')+'</p>';
+ rEl.innerHTML=x;rEl.hidden=false;fitR();
+ rEl.querySelector('.rx').onclick=()=>{rEl.hidden=true};
+ rEl.querySelectorAll('.rt').forEach(b=>b.onclick=()=>{closeOv();setTimeout(()=>openTest(b.dataset.id),60)});
+ const tb=rEl.querySelector('.rtrip');if(tb)tb.onclick=()=>{closeOv();setTimeout(()=>select(best),60)};
+ if(big)big.ringsData([[lat,lon]])}
+
+// ---------- Hidden channels: 21 NASA Moon datasets, every channel placed on the explorer ----------
+// s: 'map' = shown as a NASA data layer here, 'site' = pinned where it was measured or seen, 'dark' = no public map yet
+const AP={11:[0.674,23.473,'Apollo 11'],12:[-3.012,-23.422,'Apollo 12'],14:[-3.645,-17.471,'Apollo 14'],15:[26.132,3.634,'Apollo 15'],16:[-8.973,15.5,'Apollo 16'],17:[20.191,30.772,'Apollo 17']};
+const FT={shk:[-89.67,129.8,'Shackleton'],haw:[-87.45,-5,'Haworth'],cab:[-84.68,-48.7,'LCROSS impact in Cabeus'],sho:[-88.1,44.9,'Shoemaker'],fau:[-87.2,84.3,'Faustini'],tyc:[-43.3,-11.2,'Tycho'],rg:[7.5,-59,'Reiner Gamma swirl'],cb:[61.1,99.5,'Compton-Belkovich'],cla:[-58.4,-14.4,'Clavius'],mhp:[14.1,-56.8,'Marius Hills pit'],mtp:[8.33,33.22,'Mare Tranquillitatis pit'],mip:[-35.95,166.06,'Mare Ingenii pit'],n13:[20.71,-24.33,'Crater formed 17 Mar 2013'],ll:[20.2,30.6,'Lee-Lincoln fault scarp'],gr:[75.62,-26.63,'GRAIL impact site'],la:[11.84,-93.25,'LADEE impact site'],ari:[24,-48,'Aristarchus plateau'],mos:[26.3,147.4,'Moscoviense (pink spinel)'],ori:[-19.4,-94.7,'Orientale basin'],ser:[28,17.5,'Serenitatis mascon'],imb:[33,-16,'Imbrium mascon'],cri:[17,59,'Crisium mascon'],lk1:[38.33,-35,'Lunokhod 1 reflector'],lk2:[25.85,30.45,'Lunokhod 2 reflector'],im1:[-80.13,1.44,'IM-1 Odysseus'],im2:[-84.8,29.2,'IM-2 Athena (approx.)'],bg:[18.56,61.81,'Blue Ghost 1'],her:[86,-89.9,'Hermite, among the coldest places measured'],shr:[-89.464,223.7,'Shackleton rim hub'],ant:[-33,164,'Opposite Imbrium (approx.)']};
+const A6=[AP[11],AP[12],AP[14],AP[15],AP[16],AP[17]];
+const HC=[
+{n:'LOLA',p:'an altimeter',y:'LRO laser altimeter, 2009-',c:[
+ {n:'Height and slope',s:'map',L:'relief',u:1,d:'The headline use. Umbra uses it for landing ground and the mass-driver strip.'},
+ {n:'Pulse stretch',s:'dark',d:'How much each echo is smeared: roughness inside every 5 m laser spot.'},
+ {n:'Echo strength',s:'site',P:[FT.shk,FT.haw],d:'Brightness in its own laser light, even inside dark craters: a frost hint, and how a robot lidar will see the ground.'},
+ {n:'Horizon shape: sunlight',s:'map',L:'sun',u:1,d:'Heights give the horizon, the horizon gives sunlight and shadow.'},
+ {n:'Horizon shape: Earth in view',s:'map',L:'earth',d:'The same horizons say when Earth is up: radio windows for a base.'},
+ {n:'Roughness at every scale',s:'dark',d:'A terrain fingerprint from metres to kilometres.'},
+ {n:'Laser ranging from Earth',s:'dark',d:'Ground stations fire at LRO: timing and the first Earth-Moon laser links.'},
+ {n:'Crater counts',s:'dark',d:'Counted on LOLA terrain: how old each surface is.'}],
+ e:{t:'Earth has its own LOLA: NASA ICESat-2 and GEDI. Match laser to laser, Earth tracks whose roughness reads like LOLA over the south pole.',p:[[-77.5,162,'McMurdo Dry Valleys']],trip:'McMurdo'}},
+{n:'LROC',p:'a camera',y:'LRO cameras, NAC 0.5 m and WAC 7 colours, 2009-',c:[
+ {n:'Pictures of the surface',s:'map',L:'color',u:1,d:'The headline use: the colour globe you are looking at.'},
+ {n:'Lava tube skylights',s:'site',P:[FT.mhp,FT.mtp,FT.mip],u:1,d:'Pits that open into lava tubes: ready-made shelter. Umbra scores them.'},
+ {n:'Brightness vs sun angle',s:'site',P:[AP[11],AP[17],FT.bg],d:'How fluffy the soil is. Landers blow bright halos into it, seen around landing sites.'},
+ {n:'Shadow lengths',s:'dark',d:'Boulder heights from shadows: a landing hazard map.'},
+ {n:'Stereo',s:'dark',d:'Pairs of images make 2 m height maps of landing zones.'},
+ {n:'Repeat images: new craters',s:'site',P:[FT.n13],d:'Craters forming today, so the impact risk rate for a base.'},
+ {n:'Repeat images: rolled boulders',s:'site',P:[FT.ll],d:'Boulders that moved after moonquakes: a seismometer made from a camera.'},
+ {n:'UV colour ratio',s:'map',L:'tio2',d:'Titanium, the oxygen feedstock, and soil age. Shown here with Lunar Prospector titanium, which the WAC ratio sharpens.'},
+ {n:'Apollo hardware after 50 years',s:'site',P:A6,d:'Flags, rovers and tracks photographed again: how materials and footprints age.'}],
+ e:{t:'Desert rocket pads leave blast halos that Landsat sees over time: the Earth version of LROC lander halos.',p:[[31.42,-104.76,'Launch site, Van Horn, Texas']]}},
+{n:'Mini-RF',p:'an ice detector',y:'LRO S- and X-band radar, 2009-',c:[
+ {n:'Ice signal in polar craters',s:'site',P:[FT.shk,FT.sho],d:'The headline use, and still debated.'},
+ {n:'Echo strength',s:'site',P:[FT.tyc],d:'Rocks the size of the radio wave, centimetres to decimetres, even buried ones.'},
+ {n:'Polarization ratio',s:'site',P:[FT.tyc],d:'Ice and fresh rough ejecta look alike, so it is also a crater-age clock as ejecta smooths.'},
+ {n:'Penetration and loss',s:'dark',d:'Sees about a metre down. Titanium-rich soil absorbs more, so loss reads composition.'},
+ {n:'Dielectric constant',s:'dark',d:'Soil density: how well the ground will carry a load.'},
+ {n:'Bistatic mode',s:'site',P:[FT.cab],d:'A dish on Earth transmits, LRO listens: an Earth-Moon radio link test and an ice test by angle.'},
+ {n:'Works in total darkness',s:'map',L:'shadow',d:'Radar needs no sunlight, so it sees into the never-lit ground shown in blue.'}],
+ e:{t:'NISAR (NASA-ISRO, 2025) carries S-band radar like Mini-RF. In hyperarid sand radar sees metres down: Shuttle radar found buried rivers under the eastern Sahara in 1981.',p:[[22.5,29.5,'Buried river channels, Selima Sand Sheet']]}},
+{n:'Diviner',p:'a thermometer',y:'LRO radiometer, 9 channels, 2009-',c:[
+ {n:'Surface temperature',s:'map',L:'cold',u:1,d:'The headline use. Umbra uses it for deep cold and seal dust.'},
+ {n:'Ice stability depth',s:'map',L:'ice',u:1,d:'How deep you dig before ice can survive.'},
+ {n:'Cooling curve through the night',s:'dark',d:'How tightly packed the soil is with depth, and how deep the dust is.'},
+ {n:'Rock abundance',s:'site',P:[FT.tyc],d:'Rocks stay warm at night: finds boulders too small to photograph. Rocks break down, so it is a clock.'},
+ {n:'8-micron mineral channels',s:'site',P:[FT.cb],d:'Silicate minerals and feedstock. Picked out granite-like rock at Compton-Belkovich.'},
+ {n:'Eclipse cooling',s:'dark',d:'Hours-long test of how ground and hardware survive the night.'},
+ {n:'Coldest spots',s:'site',P:[FT.her,FT.haw],d:'Cold enough to freeze CO2 as well as water: a carbon resource.'},
+ {n:'Cold halos around new craters',s:'dark',d:'Fluffed soil around young impacts: another impact clock.'},
+ {n:'Thermal roughness',s:'dark',d:'Sunlit and shaded slopes inside one pixel.'}],
+ e:{t:'ASTER and ECOSTRESS read the same 8 to 12 micron mineral physics on Earth. The total solar eclipse of 2 Aug 2027 crosses North Africa: a planned mini lunar night over the Sahara.',p:[[25.7,32.64,'Eclipse of 2 Aug 2027, Luxor']]}},
+{n:'Illumination maps',p:'sunlight %',y:'Built from LOLA heights',c:[
+ {n:'Average sunlight',s:'map',L:'sun',u:1,d:'The headline use. Umbra hubs and light-flow use it.'},
+ {n:'Permanent shadow',s:'map',L:'shadow',u:1,d:'Cold traps, and faint light scattered off sunlit walls.'},
+ {n:'Longest unbroken darkness',s:'dark',d:'Sizes the batteries: a different number from the average.'},
+ {n:'Sun direction through the month',s:'dark',d:'Where to point panels and mirrors.'},
+ {n:'Sun gain with mast height',s:'site',P:[FT.shr],d:'A 10 m mast can gain a lot of sun: vertical real estate.'},
+ {n:'Earth visibility',s:'dark',d:'Radio windows, and Earthshine as faint light inside shadow.'},
+ {n:'Moving shadow edges',s:'dark',d:'Thermal cycling, and navigation in low sun.'},
+ {n:'Sun and Earth both up',s:'dark',d:'The operating calendar of a base: the real hub condition.'}],
+ e:{t:'Polar night under moonlight is a test bed for lunar-shadow light levels (NASA/NOAA VIIRS Day/Night Band sees it). Eureka\'s PEARL ridge lab can test sun gain with mast height.',p:[[80.05,-86.42,'PEARL, Eureka'],[78.22,15.65,'Svalbard']],trip:'Axel'}},
+{n:'Neutron detectors',p:'hydrogen finders',y:'Lunar Prospector 1998-99, LRO LEND',c:[
+ {n:'Hydrogen in the top metre',s:'site',P:[FT.cab,FT.shk],d:'The headline use: missing slowed neutrons mean hydrogen.'},
+ {n:'Thermal neutrons: rare earths',s:'map',L:'th',d:'Iron, titanium, gadolinium, samarium. Thorium shown here traces the same KREEP rock.'},
+ {n:'Fast neutrons',s:'dark',d:'Average atomic mass: bulk composition.'},
+ {n:'Buried ice depth',s:'dark',d:'Thermal vs slowed neutrons tell whether ice sits under a dry layer, and how deep: a digging plan.'},
+ {n:'Neutron dose to crews',s:'dark',d:'Part of crew dose, including neutrons made inside regolith shielding.'},
+ {n:'Solar-cycle record',s:'dark',d:'Years of cosmic-ray counts.'},
+ {n:'Hydrogen in sunlit soil',s:'dark',d:'Solar-wind hydrogen outside the dark craters: a resource where the power is.'}],
+ e:{t:'Earth already uses the Moon\'s method: cosmic-ray neutron sensors measure soil moisture. High plateaus with ice under a dry layer are the test bed.',p:[[39,73,'Pamir and Lake Karakul']],trip:'Pamir'}},
+{n:'LAMP',p:'frost in the dark',y:'LRO far-ultraviolet spectrograph, 2009-',c:[
+ {n:'Surface frost in shadow',s:'site',P:[FT.haw,FT.sho,FT.fau],d:'The headline use: about 1 to 2% frost in places, seen by starlight.'},
+ {n:'Darkness of shadowed soil',s:'map',L:'shadow',d:'Very porous, fluffy ground inside the blue areas: how far a rover sinks.'},
+ {n:'Daily water hopping',s:'dark',d:'The daytime water band changes with time of day: replenishment.'},
+ {n:'The thin atmosphere',s:'dark',d:'Helium, argon, hydrogen.'},
+ {n:'Impact plumes',s:'site',P:[FT.cab],d:'LCROSS released hydrogen and mercury: the ice may carry toxins.'},
+ {n:'UV colour slope',s:'dark',d:'How long soil has been exposed.'},
+ {n:'Spacecraft exhaust',s:'dark',d:'Our own landers contaminate the ice we came to study.'}],
+ e:{t:'Arctic permafrost stores mercury; thaw studies are a ready test of cleaning toxic meltwater. Atacama salts pull water from the air overnight and dry by day.',p:[[64.84,-147.72,'Permafrost mercury, Fairbanks']],trip:'Atacama'}},
+{n:'LCROSS',p:'it found about 5% water',y:'Spent rocket stage into Cabeus, 2009',c:[
+ {n:'Water amount',s:'site',P:[FT.cab],d:'The headline use.'},
+ {n:'The rest of the cocktail',s:'site',P:[FT.cab],d:'Ammonia (nitrogen for air and fertiliser), CO2, methane, methanol, sulfur compounds, mercury.'},
+ {n:'Plume growth',s:'site',P:[FT.cab],d:'How icy shadowed soil flies at impact.'},
+ {n:'The crater it left',s:'site',P:[FT.cab],d:'Known mass and speed vs crater size: strength of cold icy soil.'},
+ {n:'Hot spot cooling',s:'site',P:[FT.cab],d:'Thermal properties of shadowed soil.'},
+ {n:'Junk as a drill',s:'site',P:[FT.cab],d:'A spent stage used as a sampling tool.'},
+ {n:'One ground-truth point',s:'site',P:[FT.cab],d:'Calibrates LEND, LAMP, Mini-RF and Diviner at once.'}],
+ e:{t:'Ice laced with volcanic gases: Mount Erebus ice caves and Kverkfjoll glacier caves. NASA Ames Vertical Gun Range is Earth\'s LCROSS.',p:[[-77.53,167.15,'Mount Erebus ice caves'],[64.65,-16.68,'Kverkfjoll, Iceland']],trip:'McMurdo'}},
+{n:'M3',p:'found water on the surface',y:'NASA Moon Mineralogy Mapper on Chandrayaan-1, 2008-09',c:[
+ {n:'3-micron water and OH',s:'dark',d:'The headline use, global but not loaded here.'},
+ {n:'1- and 2-micron minerals',s:'site',P:[FT.ari],d:'Pyroxene, olivine, plagioclase: what every rock unit is made of.'},
+ {n:'A new rock type',s:'site',P:[FT.mos],d:'Pink spinel rich rock found from orbit.'},
+ {n:'Exposed ice in shadow',s:'site',P:[FT.sho,FT.haw,FT.fau],d:'Seen by faint bounced light.'},
+ {n:'Heat tail',s:'dark',d:'A thermometer hiding in the long-wavelength noise.'},
+ {n:'Daily water cycle',s:'dark',d:'The band changes with time of day and latitude, matching LAMP.'},
+ {n:'Space weathering and swirls',s:'site',P:[FT.rg],d:'Swirls stay fresh because local magnetic fields deflect the solar wind: a natural shelter clue.'}],
+ e:{t:'NASA EMIT on the ISS is the same kind of instrument and maps minerals in Earth\'s deserts. An EMIT mineral map can drop straight into Umbra Live.',p:[[19,19,'Northern Chad']],trip:'Chad'}},
+{n:'SOFIA',p:'molecular water on the sunlit Moon',y:'NASA/DLR airborne telescope, retired 2022',c:[
+ {n:'Water at Clavius',s:'site',P:[FT.cla],d:'The headline use: roughly 100 to 400 parts per million.'},
+ {n:'H2O vs OH',s:'site',P:[FT.cla],d:'The 6-micron band tells real water from OH, which 3 microns cannot.'},
+ {n:'Water sealed in glass',s:'site',P:[FT.cla],d:'Likely trapped in impact glass: bake the glass to get water.'},
+ {n:'More water toward high latitudes',s:'dark',d:'A siting clue.'},
+ {n:'Heat glow at 6 microns',s:'dark',d:'Temperature from the same band.'},
+ {n:'Above Earth\'s water vapour',s:'dark',d:'The platform itself: fly high to see water elsewhere.'}],
+ e:{t:'The driest high sites are where infrared telescopes go: Ali Observatory next to our Tibet block, and Chajnantor in the Atacama. Volcanic and impact glass rehearse baking water out of glass.',p:[[32.32,80.03,'Ali Observatory'],[-23.0,-67.76,'Chajnantor']],trip:'Tibet'}},
+{n:'Lunar Prospector gamma rays',p:'an element map',y:'Lunar Prospector, 1998-99',c:[
+ {n:'Thorium',s:'map',L:'th',u:1,d:'The headline use. Umbra uses it for rare earths in siting.'},
+ {n:'Iron',s:'map',L:'feo',u:1,d:'Metal feedstock. Umbra uses it.'},
+ {n:'Titanium',s:'map',L:'tio2',u:1,d:'Ilmenite, baked for oxygen. Umbra uses it.'},
+ {n:'Volcanism that should not exist',s:'site',P:[FT.cb],d:'A far-side thorium hot spot of granite-like rock.'},
+ {n:'Heat-producing elements',s:'map',L:'th',d:'Where the crust runs warmer.'},
+ {n:'Phosphorus for farms',s:'map',L:'th',d:'KREEP rock carries phosphorus: fertiliser for life support.'},
+ {n:'Gamma background',s:'dark',d:'Part of the radiation environment and the noise floor for every future detector.'}],
+ e:{t:'Earth maps K, Th and U the same way from aircraft. KREEP-like rock on Earth: carbonatites rich in rare earths and phosphate.',p:[[-28.86,122.55,'Mount Weld'],[35.48,-115.53,'Mountain Pass']]}},
+{n:'Clementine',p:'a missile-defense sensor test',y:'US defense and NASA, 1994',c:[
+ {n:'Colour ratios: iron and titanium',s:'map',L:'feo',d:'The method still used today. Shown here with Lunar Prospector iron.'},
+ {n:'Soil maturity',s:'dark',d:'How long soil has been exposed.'},
+ {n:'Near-infrared minerals',s:'site',P:[FT.ari],d:'Pyroxene and olivine.'},
+ {n:'Laser altimeter',s:'map',L:'relief',d:'First global shape of the Moon and the depth of the south-pole basin.'},
+ {n:'Bistatic radar',s:'site',P:[FT.shk],d:'The first hint of polar ice, 1996, debated.'},
+ {n:'Star trackers',s:'dark',d:'Navigation, plus earthshine and faint glow images.'},
+ {n:'Thermal camera',s:'dark',d:'Another temperature record.'},
+ {n:'Built in about two years',s:'dark',d:'Fast, cheap, and qualified in deep space.'}],
+ e:{t:'Ilmenite mines hosted in anorthosite: the Moon\'s two key rocks together, already being mined.',p:[[50.55,-63.4,'Lac Tio, Quebec'],[58.33,6.4,'Tellnes, Norway']]}},
+{n:'Apollo samples',p:'Moon rocks',y:'382 kg from six landings, 1969-72',c:[
+ {n:'Chemistry and minerals',s:'site',P:A6,d:'The ground truth that calibrates every orbital map.'},
+ {n:'Radiometric ages',s:'site',P:A6,d:'They calibrate crater-count dating for the Moon, Mars and Mercury.'},
+ {n:'Grain shape and size',s:'site',P:A6,d:'Sharp glassy dust: lungs, seals and simulant design.'},
+ {n:'Soil mechanics',s:'site',P:[AP[15],AP[16],AP[17]],d:'Penetrometer, core tubes, bootprints: bearing strength for building.'},
+ {n:'Solar-wind gases',s:'site',P:[AP[11],AP[17]],d:'Hydrogen, helium-3, nitrogen and carbon in sunlit soil, plus a record of the Sun.'},
+ {n:'Exposure ages',s:'dark',d:'How fast soil is churned: how fast hardware gets buried.'},
+ {n:'Magnetized rocks',s:'dark',d:'The Moon\'s ancient magnetic field.'},
+ {n:'A possible piece of early Earth',s:'site',P:[AP[14]],d:'The Moon as Earth\'s archive.'},
+ {n:'Plants grown in Apollo soil',s:'site',P:[AP[11],AP[12],AP[17]],d:'2022: they grew, but stressed.'},
+ {n:'Sealed for 50 years',s:'site',P:[AP[17]],d:'Tubes opened 2019-22: a storage time capsule.'}],
+ e:{t:'Earth\'s oldest record survives at Jack Hills; the Moon may hold what Earth erased. Lanzarote\'s La Geria vineyards farm in basaltic ash pits.',p:[[-26.1,117.2,'Jack Hills'],[28.96,-13.71,'La Geria, Lanzarote']]}},
+{n:'GRAIL',p:'a gravity map',y:'Twin probes Ebb and Flow, 2011-12',c:[
+ {n:'Crust thickness and density',s:'site',P:[FT.ori],d:'The headline use.'},
+ {n:'Crust porosity',s:'dark',d:'The upper crust is 10 to 20% cracks: why moonquakes ring and how stable the ground is.'},
+ {n:'Buried dikes and rifts',s:'dark',d:'Early Moon structure under the maria.'},
+ {n:'Mascons',s:'site',P:[FT.ser,FT.imb,FT.cri],d:'Mass lumps that pull low orbits down: relay satellite planning.'},
+ {n:'Gravity lows: empty lava tubes',s:'site',P:[FT.mhp],d:'Shelter found by gravity.'},
+ {n:'Tidal flexing',s:'dark',d:'Interior, and the reference frame for landing navigation.'},
+ {n:'Its own final impact',s:'site',P:[FT.gr],d:'The plume was seen by LAMP.'},
+ {n:'The ranging link',s:'dark',d:'Precision formation flying.'}],
+ e:{t:'GRACE-FO uses the same twin method on Earth and watches the fossil Nubian aquifer drain at Kufra, next to our Chad block: mining finite ancient water, like lunar ice.',p:[[24.2,23.3,'Kufra, Libya']],trip:'Chad'}},
+{n:'Apollo seismometers',p:'moonquakes',y:'Apollo 12, 14, 15, 16; 1969-77',c:[
+ {n:'Interior layers and core',s:'site',P:[AP[12],AP[14],AP[15],AP[16]],d:'The headline use.'},
+ {n:'Long ringing',s:'site',P:[AP[12]],d:'Dry, cracked crust rings for an hour.'},
+ {n:'Deep quakes on a tidal calendar',s:'dark',d:'Predictable monthly quakes.'},
+ {n:'Shallow quakes on young faults',s:'site',P:[FT.ll],d:'Up to about magnitude 5: avoid fault scarps when siting.'},
+ {n:'Thermal quakes at sunrise',s:'site',P:[AP[17]],d:'The lander\'s own base creaked daily: structures will flex and fatigue.'},
+ {n:'Meteoroid impacts',s:'dark',d:'About 1,700 recorded: the impact risk rate.'},
+ {n:'Crashed rocket stages',s:'dark',d:'Deliberate calibration sources.'},
+ {n:'A microphone for the base',s:'site',P:[AP[11]],d:'Picked up astronauts moving: footsteps, machines, faults.'}],
+ e:{t:'Desert rocks crack from daily heating, as at our big-swing sites. Fibre-optic cables already hear footsteps and quakes. Tidal tremor at Parkfield is Earth\'s deep moonquake.',p:[[35.9,-120.43,'Parkfield, San Andreas']],trip:'Chad'}},
+{n:'Apollo heat flow',p:'heat from the interior',y:'Apollo 15 and 17 probes',c:[
+ {n:'Heat leaking out',s:'site',P:[AP[15],AP[17]],d:'The headline use.'},
+ {n:'Steady temperature 1 m down',s:'site',P:[AP[15],AP[17]],d:'Bury habitats, batteries and electronics there.'},
+ {n:'Regolith as insulation',s:'site',P:[AP[15],AP[17]],d:'Very low conductivity.'},
+ {n:'Astronauts warmed the ground',s:'site',P:[AP[15],AP[17]],d:'Disturbed darker soil absorbed more sun: a base changes its own ground, which matters next to ice.'},
+ {n:'Drills that jammed',s:'site',P:[AP[15]],d:'Drilling mechanics in dense soil.'},
+ {n:'The snapped cable',s:'site',P:[AP[16]],d:'Suit and cable design.'},
+ {n:'Tapes lost and recovered',s:'dark',d:'Keeping data alive.'}],
+ e:{t:'Coober Pedy: many people live in dugouts cut into rock to escape desert heat. Mining, building and thermal life support in one.',p:[[-29.01,134.75,'Coober Pedy'],[33.54,9.97,'Matmata, Tunisia']]}},
+{n:'CRaTER',p:'radiation dose',y:'LRO radiation telescope, 2009-',c:[
+ {n:'Dose in lunar orbit',s:'dark',d:'The headline use; global, so no single place.'},
+ {n:'Dose behind tissue-like plastic',s:'dark',d:'What tissue under shielding receives.'},
+ {n:'Solar storm events',s:'dark',d:'Frequency and shape, for warnings.'},
+ {n:'Protons coming up from the soil',s:'dark',d:'The ground is itself a source, and the yield depends on hydrogen: another water channel.'},
+ {n:'A decade of weak solar cycles',s:'dark',d:'More cosmic rays than planned.'},
+ {n:'Plastic aging',s:'dark',d:'Materials under radiation.'}],
+ e:{t:'Mountain neutron monitors catch solar-storm spikes. Our highest cosmic-ray layer is Pamir and Tibet. Earth\'s surface dose is far lower: a stated gap.',p:[[46.55,7.98,'Jungfraujoch']],trip:'Pamir'}},
+{n:'Lunar Prospector magnetometer',p:'a magnetic anomaly map',y:'Lunar Prospector, 1998-99',c:[
+ {n:'Crustal anomalies',s:'site',P:[FT.rg],d:'The headline use.'},
+ {n:'Mini magnetospheres',s:'site',P:[FT.rg],d:'Small magnetic bubbles deflect the solar wind: partial shelters.'},
+ {n:'Earth\'s magnetotail response',s:'dark',d:'Interior conductivity and core size.'},
+ {n:'Anomalies opposite giant basins',s:'site',P:[FT.ant],d:'Impact physics.'},
+ {n:'No global field',s:'dark',d:'No compass navigation.'}],
+ e:{t:'The strongest crustal anomalies on Earth: Bangui, just south of Chad, and Kursk. Compass-free navigation tests.',p:[[6,18.5,'Bangui anomaly'],[51,37,'Kursk anomaly']],trip:'Chad'}},
+{n:'LADEE and ARTEMIS',p:'the thin atmosphere',y:'LADEE 2013-14; ARTEMIS probes 2011-',c:[
+ {n:'Sodium, potassium, helium, argon',s:'site',P:[FT.la],d:'The headline use. LADEE ended here.'},
+ {n:'A permanent dust cloud',s:'dark',d:'Lopsided, thicker in meteor showers: a dust hazard.'},
+ {n:'Water released by meteor showers',s:'dark',d:'From about 8 cm down under a dry layer.'},
+ {n:'Laser link from the Moon',s:'dark',d:'LLCD: high-rate laser comms.'},
+ {n:'Charging in Earth\'s tail',s:'dark',d:'Night side charges to high voltage: dust and electronics hazard.'},
+ {n:'The plasma wake',s:'dark',d:'Behind the Moon.'}],
+ e:{t:'Dust storms build strong electric fields. LLCD used optical ground stations at Table Mountain and White Sands.',p:[[34.38,-117.68,'Table Mountain'],[32.5,-106.6,'White Sands']]}},
+{n:'Laser reflectors',p:'Earth-Moon distance',y:'Apollo 11, 14, 15 and Lunokhod 1, 2',c:[
+ {n:'Millimetre ranging',s:'site',P:[AP[11],AP[14],AP[15],FT.lk1,FT.lk2],d:'The headline use.'},
+ {n:'Moon receding 3.8 cm a year',s:'site',P:[AP[11],AP[14],AP[15]],d:'Tidal history.'},
+ {n:'Tests of relativity',s:'dark',d:'Gravity physics.'},
+ {n:'A liquid core',s:'dark',d:'From the Moon\'s wobble.'},
+ {n:'Earth rotation and crust motion',s:'dark',d:'At the ranging stations.'},
+ {n:'50 years of dust on optics',s:'site',P:[AP[11],AP[14],AP[15]],d:'Returns are about ten times weaker: the soiling rate for panels and optics.'},
+ {n:'Still working after 55 years',s:'site',P:[AP[11]],d:'A passive instrument.'}],
+ e:{t:'Lunar laser ranging from Apache Point. Optics and panel soiling in desert solar plants, our dirty-panel layer.',p:[[32.78,-105.82,'Apache Point']],trip:'Atacama'}},
+{n:'Commercial landers',p:'deliveries',y:'CLPS, 2024-',c:[
+ {n:'Deliveries',s:'site',P:[FT.im1,FT.im2,FT.bg],d:'The headline use.'},
+ {n:'Landing in low sun on slopes',s:'site',P:[FT.im1,FT.im2],d:'Both IM landers tipped over.'},
+ {n:'Heat-flow drill to 1 m',s:'site',P:[FT.bg],d:'Blue Ghost.'},
+ {n:'GPS at the Moon',s:'site',P:[FT.bg],d:'LuGRE received GPS signals at the Moon.'},
+ {n:'Filming plume on surface',s:'site',P:[FT.bg],d:'SCALPSS cameras.'},
+ {n:'Dust shield and adhesion',s:'site',P:[FT.bg],d:'A working electrodynamic dust shield.'},
+ {n:'X-ray images of Earth',s:'site',P:[FT.bg],d:'LEXI: the Moon as an Earth observatory.'},
+ {n:'A 4G network',s:'site',P:[FT.im2],d:'Cell network demo near the south pole.'}],
+ e:{t:'Private LTE networks run autonomous trucks in Pilbara iron mines: the lunar robotic mining and comms analog.',p:[[-22.69,117.79,'Pilbara mines'],[31.42,-104.76,'Van Horn pad']]}}];
+const HCC={map:'#5fe3ff',site:'#ffb547',dark:'#3a4258'};
+const hcEl=document.getElementById('ov-hc');let hcOn=false,hcSel=null,hcPins=[],hcOpenI=-1;
+function hcPinObjs(b){return b==='moon'&&hcOn?hcPins.map((v,i)=>({kind:'hc',p:[v[0],v[1],v[2],'HC'+i+v[2]],lat:v[0],lng:v[1],name:v[2],extra:hcSel?hcSel.ins.n+': '+hcSel.ch.n:''})):[]}
+function hcLeg(){if(!hcOn||!hcSel)return '';const c=hcSel.ch;return '<div class="hcl"><b>Hidden channel: '+esc(c.n)+'</b><div class="u">'+esc(hcSel.ins.n)+', sold as "'+esc(hcSel.ins.p)+'". '+esc(c.d)+'</div></div>'}
+function hcStats(){let all=0,map=0,site=0,dark=0,used=0;for(const I of HC)for(const c of I.c){all++;c.s==='map'?map++:c.s==='site'?site++:dark++;if(c.u)used++}return{all,map,site,dark,used,hidden:all-HC.length}}
+function hcDraw(){const S=hcStats();let x='<button class="hx" aria-label="Close hidden channels">×</button><p class="eyebrow">Hidden value in NASA Moon data</p><h3>21 datasets, each known for one thing</h3>'+
+ '<div class="big"><div><b>'+HC.length+'</b><small>headline uses NASA is known for</small></div><div><b style="color:#5fe3ff">'+S.hidden+'</b><small>more channels in the same data</small></div><div><b style="color:var(--amber)">'+S.used+'</b><small>of '+S.all+' used by Umbra today</small></div></div>'+
+ '<div class="seg"><i style="width:'+S.map/S.all*100+'%;background:'+HCC.map+'"></i><i style="width:'+S.site/S.all*100+'%;background:'+HCC.site+'"></i><i style="width:'+S.dark/S.all*100+'%;background:'+HCC.dark+'"></i></div>'+
+ '<div class="key"><span style="--c:'+HCC.map+'">'+S.map+' on this globe as NASA maps</span><span style="--c:'+HCC.site+'">'+S.site+' pinned where measured</span><span style="--c:'+HCC.dark+'">'+S.dark+' still dark: no public map yet</span></div>';
+ HC.forEach((I,i)=>{const op=i===hcOpenI;x+='<button class="ins" data-i="'+i+'" aria-expanded="'+op+'"><b>'+esc(I.n)+'</b> <span class="pr">sold as "'+esc(I.p)+'" · 1 + '+(I.c.length-1)+' hidden</span><div class="dots">'+I.c.map(c=>'<i style="background:'+HCC[c.s]+'"></i>').join('')+'</div></button>';
+  if(op){x+='<div class="chs"><p class="pr" style="margin:4px 0;color:var(--dim);font-size:11.5px">'+esc(I.y)+'</p>'+I.c.map((c,j)=>{const on=hcSel&&hcSel.ins===I&&hcSel.ch===c;return '<button class="ch" data-j="'+j+'" aria-pressed="'+on+'"><i style="background:'+HCC[c.s]+'"></i><span>'+esc(c.n)+(j===0?' <span class="tag">headline</span>':'')+(c.u?' <span class="tag" style="color:var(--amber)">in Umbra</span>':'')+'<small>'+esc(c.d)+(c.s==='dark'?' <em>Not on a public map yet.</em>':'')+'</small></span></button>'}).join('')+
+   '<div class="em"><b>Earth mirror</b>'+esc(I.e.t)+'<br>'+I.e.p.map((p,k)=>'<button data-k="'+k+'">See '+esc(p[2])+' on Earth</button>').join('')+'</div><p class="src"><b>Source.</b> '+esc(I.n)+': NASA mission data and published mission results.</p></div>'}});
+ x+='<p class="fine">Channels from NASA mission results (LRO, Lunar Prospector, LCROSS, GRAIL, LADEE, SOFIA, Apollo, CLPS). Pins mark where a channel was measured or seen; positions of named features are approximate. Blue channels switch the globe to the matching NASA layer.</p>';
+ hcEl.innerHTML=x;
+ hcEl.querySelector('.hx').onclick=()=>hcToggle(false);
+ hcEl.querySelectorAll('.ins').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;hcOpenI=hcOpenI===i?-1:i;hcDraw();if(hcOpenI===i)hcPick(HC[i],HC[i].c[0])});
+ hcEl.querySelectorAll('.ch').forEach(b=>b.onclick=()=>hcPick(HC[hcOpenI],HC[hcOpenI].c[+b.dataset.j]));
+ hcEl.querySelectorAll('.em button').forEach(b=>b.onclick=()=>hcEarth(HC[hcOpenI],+b.dataset.k));
+ const o=hcEl.querySelector('.ins[aria-expanded=true]');if(o)o.scrollIntoView({block:'nearest'})}
+function hcPick(I,c){hcSel={ins:I,ch:c};hcPins=c.P||[];setPins();
+ if(c.L&&c.L!==ovLayer){const sci=SCI.moon.find(x=>x.k===c.L);if(sci&&!TEX)loadTex().then(()=>{if(hcSel&&hcSel.ch===c)setLayer(c.L)});else setLayer(c.L)}else legend();
+ if(big){if(hcPins.length){big.ringsData(hcPins.map(p=>[p[0],p[1]]));const p=hcPins[0];big.pointOfView({lat:p[0]<-80?-70:p[0]>80?70:p[0],lng:p[1],altitude:hcPins.length>2?1.9:1.4},1200);big.controls().autoRotate=false}
+  else if(!c.L){big.ringsData([]);big.controls().autoRotate=true}}
+ hcEl.querySelectorAll('.ch').forEach(b=>b.setAttribute('aria-pressed',HC[hcOpenI]&&HC[hcOpenI].c[+b.dataset.j]===c))}
+function hcEarth(I,k){const p=I.e.p[k];closeOv();setTimeout(()=>{const s=I.e.trip&&sites.find(o=>o.name.startsWith(I.e.trip));
+ if(s&&Math.abs(s.lat-p[0])<6&&Math.abs(s.lon-p[1])<6){select(s);return}
+ ctl.autoRotate=false;earth.ringsData([{lat:p[0],lon:p[1]}]).pointOfView({lat:p[0],lng:p[1],altitude:narrow()?1.6:1.25},1600);
+ const hero=document.getElementById('hero');if(hero)hero.style.opacity=narrow()?1:.18;
+ hcToast(I.n+' on Earth: '+p[2])},60)}
+function hcToast(t){let d=document.getElementById('hc-toast');if(!d){d=document.createElement('div');d.id='hc-toast';d.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:30;padding:9px 16px;border-radius:99px;background:rgba(6,10,22,.92);border:1px solid #ffb547;font:600 13px system-ui,sans-serif;color:#fff;pointer-events:none;transition:opacity .4s';document.body.appendChild(d)}
+ d.textContent=t;d.style.opacity=1;clearTimeout(d._t);d._t=setTimeout(()=>{d.style.opacity=0},4500)}
+function hcToggle(on){hcOn=on&&bigBody==='moon';hcEl.hidden=!hcOn;ov.classList.toggle('hcv',hcOn);if(hcOn){hcDraw();loadTex()}else{hcSel=null;hcPins=[];if(big)big.ringsData([])}setPins();drawLyr();legend()}
+document.getElementById('hc-btn').onclick=()=>{openOv('moon');setTimeout(()=>hcToggle(true),50)};
+function fitR(){const l=document.getElementById('ov-l');rEl.style.maxHeight=Math.max(220,innerHeight-80-(narrow()?120:l.offsetHeight+40))+'px'}
+// places: examples from the tests, landing sites, Umbra siting hubs
+const LAND={moon:[["Apollo 11",0.674,23.473],["Apollo 12",-3.012,-23.422],["Apollo 14",-3.645,-17.471],["Apollo 15",26.132,3.634],["Apollo 16",-8.973,15.5],["Apollo 17",20.191,30.772],["Luna 9",7.08,-64.37],["Luna 16",-0.513,56.364],["Luna 17",38.24,-35],["Luna 21",25.85,30.45],["Luna 24",12.714,62.213],["Surveyor 1",-2.47,-43.34],["Chang'e 3",44.12,-19.51],["Chang'e 4",-45.444,177.588],["Chang'e 5",43.06,-51.92],["Chang'e 6",-41.64,-153.99],["Chandrayaan-3",-69.37,32.32],["SLIM",-13.32,25.25],["IM-1 Odysseus",-80.13,1.44],["Blue Ghost 1",18.56,61.81]],
+ mars:[["Viking 1",22.27,-47.95],["Viking 2",47.64,-134.29],["Pathfinder",19.13,-33.22],["Spirit",-14.57,175.47],["Opportunity",-1.95,-5.53],["Phoenix",68.22,-125.75],["Curiosity",-4.59,137.44],["InSight",4.5,135.62],["Perseverance",18.44,77.45],["Zhurong",25.07,109.93]]};
+function setPins(){if(!big)return;const b=bigBody,I=INFO[b];
+ const ex=Object.entries(I.places).map(([k,v])=>{const p=v.slice();p[3]=k;return{kind:'ex',p,lat:v[0],lng:v[1],name:v[2]}});
+ const land=ovShow.land?LAND[b].map(v=>({kind:'land',p:[v[1],v[2],v[0],'L'+v[0]],lat:v[1],lng:v[2],name:v[0],extra:'Landing site'})):[];
+ const hubs=ovShow.hub?(b==='moon'?SI.moon.concat(SI.pole):SI.mars).map(h=>{const lo=h.lon>180?h.lon-360:h.lon;return{kind:'hub',p:[h.lat,lo,h.n,'H'+h.n],lat:h.lat,lng:lo,name:h.n,extra:'Umbra hub: '+h.h.join(', ')}}):[];
+ const SL=SCI[b].find(x=>x.k===ovLayer),epi=SL&&SL.stack&&TEX?stkRun(b).epi.map(e=>({kind:'epi',p:[e.lat,e.lon,'Epicenter '+e.r,'E'+e.r],lat:e.lat,lng:e.lon,name:'Epicenter '+e.r,extra:'All '+stkRun(b).act+' filters line up over '+f0(e.a)+' km² here'})):[];
+ ovPins=ex.concat(land,hubs,hcPinObjs(b),epi);big.htmlElementsData(ovPins)}
+function bigFly(p,extra){big.ringsData([p]).pointOfView({lat:p[0]<-80?-70:p[0],lng:p[1],altitude:p[0]<-80?.9:1.3},1400);big.controls().autoRotate=false;
+ ovPins.forEach(x=>x.el&&x.el.classList.toggle('sel',x.p[3]===p[3]));ov.querySelectorAll('.places button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===p[3]));
+ readout(bigBody,p[0],p[1],p[2],extra)}
+function openOv(body){const I=INFO[body];ovOpen=body;lastFocus=document.activeElement;ov.className='show '+body;requestAnimationFrame(()=>ov.classList.add('on'));
+ document.getElementById('ov-e').textContent=I.e;document.getElementById('ov-t').textContent=I.t;document.getElementById('ov-s').textContent=I.s;rEl.hidden=true;
+ ovG.innerHTML='';big=Globe()(ovG).width(innerWidth).height(innerHeight).backgroundColor('rgba(0,0,0,0)').showAtmosphere(body==='mars').atmosphereColor('#ff9a6b').atmosphereAltitude(.15)
+  .ringLat(d=>d[0]).ringLng(d=>d[1]).ringColor(()=>t=>'rgba('+I.col+','+(1-t)+')').ringMaxRadius(8).ringPropagationSpeed(3).ringRepeatPeriod(1000).ringsData([])
+  .htmlLat('lat').htmlLng('lng').htmlAltitude(.005).htmlElement(x=>{const d=document.createElement('div');d.className='ppin '+x.kind;d.innerHTML='<i></i><label>'+esc(x.name)+'</label>';d.title=x.name+(x.extra?' · '+x.extra:'');d.onclick=e=>{e.stopPropagation();bigFly(x.p,x.extra)};x.el=d;return d})
+  .onGlobeClick(({lat,lng})=>readout(bigBody,lat,lng));
+ const c=big.controls();c.autoRotate=true;c.autoRotateSpeed=.4;c.enableDamping=true;c.addEventListener('start',()=>{c.autoRotate=false});
+ bigBody=body;if(!SCI[body].find(x=>x.k===ovLayer))ovLayer=layer;if(SCI.moon.concat(SCI.mars).some(x=>x.k===ovLayer)&&!SCI[body].find(x=>x.k===ovLayer))ovLayer=layer;
+ setPins();bigSkin();loadTex();
+ const pl=document.getElementById('ov-p');pl.innerHTML='';ovPins.filter(x=>x.kind==='ex').forEach(x=>{const b=document.createElement('button');b.dataset.k=x.p[3];b.textContent=x.name;b.onclick=()=>bigFly(x.p);pl.appendChild(b)});
+ const t=TGT[body];const hit=t&&ovPins.find(x=>x.lat===t[0]&&x.lng===t[1]);
+ if(hit)bigFly(hit.p);else big.pointOfView({lat:body==='moon'?-35:15,lng:body==='moon'?20:-60,altitude:2.1});
+ (function oc(){if(ovOpen!==body||!big)return;const cam=big.camera().position;for(const x of ovPins){if(!x.el)continue;const q=big.getCoords(x.lat,x.lng,0);const v=(q.x*cam.x+q.y*cam.y+q.z*cam.z)>1.02e4;x.el.style.opacity=v?1:0;x.el.style.pointerEvents=v?'auto':'none'}requestAnimationFrame(oc)})();
+ document.getElementById('ov-close').focus()}
+function closeOv(){hcOn=false;hcSel=null;hcPins=[];hcEl.hidden=true;ov.classList.remove('hcv');ov.classList.remove('on');ovOpen=null;setTimeout(()=>{if(!ovOpen){ov.className='';if(big){big._destructor&&big._destructor();big=null;ovG.innerHTML=''}}},450);lastFocus&&lastFocus.focus()}
+document.querySelectorAll('.xp').forEach(b=>b.onclick=()=>openOv(b.dataset.b));
+document.getElementById('g-moon').addEventListener('dblclick',()=>openOv('moon'));document.getElementById('g-mars').addEventListener('dblclick',()=>openOv('mars'));
+document.getElementById('ov-close').onclick=closeOv;
+setTimeout(loadTex,4000);
+addEventListener('resize',()=>{if(big)big.width(innerWidth).height(innerHeight)});
+for(const G of [moonG,marsG]){const c=G.controls();c.addEventListener('start',()=>{c.autoRotate=false})}
+el.addEventListener('pointerdown',()=>{ctl.autoRotate=false});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!cmpEl.hidden){closeCmp();return}if(e.key==='Escape'&&ovOpen){closeOv();return}if(e.key==='Escape'&&cur){cur=null;earth.ringsData([]).pointOfView({altitude:2.2},1200);ctl.autoRotate=true;document.getElementById('hero').style.opacity=1;for(const o of sites){o.btn.setAttribute('aria-pressed','false');o.el&&o.el.classList.remove('sel')}showTest(null);curTest=null;markTests();plotSpots(null)}});
+// ---------- Preferences ----------
+const PREF_KEY='umbra.prefs';
+const prefs={intro:true,story:true};try{Object.assign(prefs,JSON.parse(localStorage.getItem(PREF_KEY)||'{}'))}catch(e){}
+const qs=new URLSearchParams(location.search);if(qs.get('intro')==='0')prefs.intro=false;if(qs.get('tour')==='0')prefs.story=false;
+function savePrefs(k){try{const s=JSON.parse(localStorage.getItem(PREF_KEY)||'{}');s[k]=prefs[k];localStorage.setItem(PREF_KEY,JSON.stringify(s))}catch(e){}}
+const setBtn=document.getElementById('set-btn'),setP=document.getElementById('settings');
+const tIntro=document.getElementById('pref-intro'),tStory=document.getElementById('pref-story');
+tIntro.checked=prefs.intro;tStory.checked=prefs.story;
+tIntro.onchange=()=>{prefs.intro=tIntro.checked;savePrefs('intro')};
+tStory.onchange=()=>{prefs.story=tStory.checked;savePrefs('story');if(!prefs.story)endStory()};
+function toggleSet(open){setP.hidden=!open;setBtn.setAttribute('aria-expanded',open)}
+setBtn.onclick=e=>{e.stopPropagation();toggleSet(setP.hidden)};
+document.addEventListener('click',e=>{if(!setP.hidden&&!setP.contains(e.target))toggleSet(false)});
+document.getElementById('replay-intro').onclick=()=>{toggleSet(false);endStory();playIntro(true)};
+document.getElementById('restart-tour').onclick=()=>{toggleSet(false);showStep(0)};
+document.getElementById('tour-btn').onclick=()=>showStep(si>=0?si:0);
+
+// ---------- Guided questions ----------
+const hero=document.getElementById('hero'),story=document.getElementById('story'),EMPTY=det.innerHTML;
+const byName=n=>sites.find(s=>s.name===n);
+const nTests=Object.keys(D.tests).length,hit=Math.round(D.meteor.share_top25*100);
+function pulse(x){if(!x)return;x.classList.remove('pulse');void x.offsetWidth;x.classList.add('pulse')}
+function clearSel(){cur=null;for(const o of sites){o.btn.setAttribute('aria-pressed','false');o.el&&o.el.classList.remove('sel')}showTest(null);det.innerHTML=EMPTY;det.classList.add('on')}
+function wide(){earth.pointOfView({lat:18,lng:40,altitude:narrow()?2.6:2.2},1400);ctl.autoRotate=true}
+const tib=byName('Western Tibet')||sites[0],ata=byName('Atacama')||sites[1];
+const STEPS=[
+ {q:'What is NASA asking for?',
+  a:'Places on Earth where crews and robots can rehearse the Moon and Mars before they go. Not somewhere that looks right. Somewhere that behaves right.',
+  go(){clearSel();earth.ringsData([]);wide()}},
+ {q:'So what actually breaks a mission?',
+  a:'Not scenery. Sharp cold dust, two weeks of night, air too thin to cool a motor, ice locked in frozen ground. Umbra starts from those conditions, the way NASA orbiters measured them.',
+  go(){clearSel();earth.ringsData([]);wide();
+   aim(moonG,'w-moon','where-moon',MOON.pole,'LRO: the lunar south pole, where the base will go');
+   aim(marsG,'w-mars','where-mars',MARS.ice,'MGS and Odyssey: Arcadia Planitia ground ice');
+   pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
+ {q:'What did NASA measure up there?',
+  a:'LRO mapped the Moon\'s polar cold, buried ice, slopes and sunlight. Mars Global Surveyor and Mars Odyssey mapped Mars\'s thin air, dust and water. We turned that into '+nTests+' tests.',
+  acts:[['Explore the Moon',()=>openOv('moon')],['Explore Mars',()=>openOv('mars')]],
+  go(){pulse(document.getElementById('w-moon'));pulse(document.getElementById('w-mars'))}},
+ {q:'Where on Earth already passes those tests?',
+  a:'We scored every place on land for every test, then looked for spots that pass many at once. One trip, many systems tested. These are the best eight. Every small dot on the globe is one of the five best places for one of the 36 tests; white dots are known analog sites.',
+  go(){clearSel();earth.ringsData(sites).pointOfView({lat:20,lng:20,altitude:narrow()?2.9:2.5},1600);ctl.autoRotate=true;sites.forEach(s=>pulse(s.btn))}},
+ {q:'What makes western Tibet the Moon and Mars?',
+  a:tib.count+' tests in one trip: cold sharp dust, huge daily temperature swings, thin dry air and strong UV. Open any test on the right to see the NASA measurement behind it.',
+  go(){select(tib)}},
+ {q:'How do we know it works?',
+  a:'Nobody told it where the famous analog sites are, and it found them anyway: Atacama, the Dry Valleys, Lanzarote. In a blind check, '+hit+'% of NASA\'s catalogued meteorite finds fell in our top zones, against 25% by chance.',
+  go(){if(cur!==ata)select(ata)}},
+  {q:'How do the known analog sites compare?',
+   a:'Put any known site next to an Umbra trip and score both the same way. Haughton Crater, a long-running NASA analog, sits next to the Axel Heiberg area, and that trip passes more tests at once. The KEY rows show exactly what each side has that the other lacks.',
+   acts:[['Compare side by side',()=>openCmp(CM.known.findIndex(k=>k[0]==='Haughton Crater'),sites.findIndex(s=>s.name==='Axel Heiberg area'))]],
+   go(){clearSel();const k=CM.known.find(k=>k[0]==='Haughton Crater'),s=sites.find(s=>s.name==='Axel Heiberg area');earth.ringsData([s,{lat:k[1],lon:k[2]}]).pointOfView({lat:79,lng:-80,altitude:narrow()?1.9:1.5},1600)}},
+ {q:'What can Earth never copy?',
+  a:'Vacuum, low gravity and space radiation. Every test says where Earth falls short, so a team knows what still needs a lab or a chamber.',
+  go(){if(cur!==ata)select(ata);setTimeout(()=>{const g=det.querySelector('.test[aria-expanded=true] .x p:last-child');if(g){g.classList.remove('flash');void g.offsetWidth;g.classList.add('flash');g.scrollIntoView({block:'nearest',behavior:'smooth'})}},350)}},
+ {q:'Your turn. Where would you send the first crew?',
+  a:'Spin the globe, pick a trip, open a test. Or bring your own data to Umbra Live and see where it lands.',
+  acts:[['Explore freely',()=>endStory()],['Open Umbra Live',()=>{location.href='live.html'}]],
+  go(){earth.ringsData(cur?[cur]:[])}}
+];
+let si=-1;
+const sqN=story.querySelector('.sq-n'),sqQ=story.querySelector('.sq-q'),sqA=story.querySelector('.sq-a'),sqActs=story.querySelector('.sq-acts'),sqDots=story.querySelector('.sq-dots');
+const sqBack=document.getElementById('sq-back'),sqNext=document.getElementById('sq-next');
+sqDots.innerHTML=STEPS.map(()=>'<i></i>').join('');
+function showStep(i){si=Math.max(0,Math.min(STEPS.length-1,i));const S=STEPS[si];
+ story.hidden=false;document.body.classList.add('touring');
+ sqN.textContent='Question '+(si+1)+' of '+STEPS.length;sqQ.textContent=S.q;sqA.textContent=S.a;
+ sqActs.innerHTML='';(S.acts||[]).forEach(([t,fn])=>{const b=document.createElement('button');b.className='chip';b.textContent=t;b.onclick=fn;sqActs.appendChild(b)});
+ [...sqDots.children].forEach((d,k)=>{d.className=k===si?'on':k<si?'done':''});
+ sqBack.disabled=si===0;sqNext.textContent=si===STEPS.length-1?'Start exploring':'Next question';
+ story.classList.remove('in');void story.offsetWidth;story.classList.add('in');
+ S.go&&S.go()}
+function endStory(){if(story.hidden)return;story.hidden=true;document.body.classList.remove('touring');si=-1;hero.style.opacity=cur&&!narrow()?.18:1}
+sqNext.onclick=()=>{if(si===STEPS.length-1)endStory();else showStep(si+1)};sqBack.onclick=()=>showStep(si-1);
+document.getElementById('sq-end').onclick=()=>endStory();
+addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!setP.hidden){toggleSet(false);setBtn.focus();return}
+ if(story.hidden||ovOpen||!intro.hidden||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(e.key==='ArrowRight'){showStep(si+1)}else if(e.key==='ArrowLeft'){showStep(si-1)}});
+
+// ---------- Entrance: the solar system ----------
+const intro=document.getElementById('intro');let introStop=null;
+function afterIntro(){document.body.classList.remove('intro-on');if(prefs.story)showStep(0)}
+function playIntro(replay){
+ if(!window.THREE){afterIntro();return}
+ intro.hidden=false;intro.classList.remove('out','going');
+ const cv=document.getElementById('intro-cv'),lab=document.getElementById('intro-labels');lab.innerHTML='';
+ let R;try{R=new THREE.WebGLRenderer({canvas:cv,antialias:true})}catch(e){intro.hidden=true;afterIntro();return}
+ R.setPixelRatio(Math.min(devicePixelRatio||1,2));
+ const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.1,6000);
+ function size(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}size();addEventListener('resize',size);
+ // stars
+ const N=2600,pos=new Float32Array(N*3);for(let i=0;i<N;i++){const u=Math.random()*2-1,t=Math.random()*Math.PI*2,r=1800+Math.random()*900,s=Math.sqrt(1-u*u);pos[i*3]=r*s*Math.cos(t);pos[i*3+1]=r*u;pos[i*3+2]=r*s*Math.sin(t)}
+ const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+ scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xd5ddff,size:1.6,sizeAttenuation:false})));
+ // sun
+ const gc=document.createElement('canvas');gc.width=gc.height=256;const gx=gc.getContext('2d'),gr=gx.createRadialGradient(128,128,0,128,128,128);
+ gr.addColorStop(0,'rgba(255,236,190,1)');gr.addColorStop(.18,'rgba(255,196,100,.75)');gr.addColorStop(.45,'rgba(255,140,40,.18)');gr.addColorStop(1,'rgba(255,120,20,0)');gx.fillStyle=gr;gx.fillRect(0,0,256,256);
+ scene.add(new THREE.Mesh(new THREE.SphereGeometry(11,48,48),new THREE.MeshBasicMaterial({color:0xffe0a0})));
+ const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(gc),blending:THREE.AdditiveBlending,depthWrite:false,transparent:true}));glow.scale.set(95,95,1);scene.add(glow);
+ scene.add(new THREE.PointLight(0xfff3e0,1.6,0));scene.add(new THREE.AmbientLight(0x3a4a70,.28));
+ const loader=new THREE.TextureLoader();loader.setCrossOrigin('anonymous');
+ function orbit(dist,op){const pts=[];for(let i=0;i<=200;i++){const a=i/200*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*dist,0,Math.sin(a)*dist))}
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0x9fb0d8,transparent:true,opacity:op})))}
+ function planet(r,dist,speed,color,phase,op){const mesh=new THREE.Mesh(new THREE.SphereGeometry(r,64,64),new THREE.MeshPhongMaterial({color,shininess:6}));
+  const piv=new THREE.Object3D();piv.rotation.y=phase;scene.add(piv);mesh.position.x=dist;piv.add(mesh);orbit(dist,op||.14);return{mesh,piv,speed,dist}}
+ function skinP(p,url){loader.load(url,t=>{p.mesh.material.map=t;p.mesh.material.color.set(0xffffff);p.mesh.material.needsUpdate=true})}
+ const P={mercury:planet(1.3,24,1.6,0x9a8f86,1.1),venus:planet(2.5,38,1.2,0xd9b57a,2.6),
+  earth:planet(5.2,58,1,0x3b6ea8,4.75,.32),mars:planet(3.8,86,.72,0xb5532e,2.3,.32),jupiter:planet(7.5,128,.35,0xc9a27e,3.4)};
+ skinP(P.earth,GIBS);trek('mars','color').then(u=>skinP(P.mars,u));
+ const jc=document.createElement('canvas');jc.width=512;jc.height=256;const jx=jc.getContext('2d');
+ for(let y=0;y<256;y+=8){const v=170+Math.sin(y*.13)*40+Math.random()*20|0;jx.fillStyle='rgb('+(v+30)+','+(v-5)+','+(v-45)+')';jx.fillRect(0,y,512,8)}
+ P.jupiter.mesh.material.map=new THREE.CanvasTexture(jc);P.jupiter.mesh.material.color.set(0xffffff);
+ const moonPiv=new THREE.Object3D();moonPiv.position.x=P.earth.dist;P.earth.piv.add(moonPiv);
+ const moon=new THREE.Mesh(new THREE.SphereGeometry(1.5,48,48),new THREE.MeshPhongMaterial({color:0x999999,shininess:2}));moon.position.x=10;moonPiv.add(moon);
+ trek('moon','color').then(u=>skinP({mesh:moon},u));
+ const L=[['Earth','e',P.earth.mesh,7.5],['Moon','m',moon,3],['Mars','r',P.mars.mesh,6]].map(([t,c,m,o])=>{const s=document.createElement('span');s.className=c;s.textContent=t;lab.appendChild(s);return{s,m,o}});
+ const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const ep=new THREE.Vector3(),tmp=new THREE.Vector3(),look=new THREE.Vector3(0,-42,0),lk=new THREE.Vector3();
+ let alive=true,go=null,last=0,ang=-.35,raf=0;
+ function frame(now){if(!alive)return;const dt=last?Math.min(.05,(now-last)/1000):0;last=now;const k=reduce?0:1,sp=go?.15:1;
+  for(const p of Object.values(P)){p.piv.rotation.y+=dt*.07*p.speed*k*sp;p.mesh.rotation.y+=dt*.35*k}
+  moonPiv.rotation.y+=dt*.5*k*sp;P.earth.mesh.getWorldPosition(ep);
+  if(!go){ang+=dt*.025*k;cam.position.set(Math.sin(ang)*215,105,Math.cos(ang)*215);cam.lookAt(look)}
+  else{const u=Math.min(1,(now-go.t)/go.d),e=u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+   tmp.copy(go.from).sub(ep).normalize().multiplyScalar(10).add(ep);
+   cam.position.lerpVectors(go.from,tmp,e);lk.lerpVectors(look,ep,Math.min(1,e*1.6));cam.lookAt(lk);
+   if(u>.62&&!intro.classList.contains('out'))intro.classList.add('out');
+   if(u>=1){finish();return}}
+  const W=innerWidth,H=innerHeight;for(const l of L){l.m.getWorldPosition(tmp);tmp.y-=l.o;tmp.project(cam);l.s.style.transform='translate('+((tmp.x+1)/2*W-l.s.offsetWidth/2)+'px,'+((1-tmp.y)/2*H)+'px)';l.s.style.visibility=tmp.z<1?'visible':'hidden'}
+  R.render(scene,cam);raf=requestAnimationFrame(frame)}
+ raf=requestAnimationFrame(frame);
+ function finish(){if(!alive)return;alive=false;cancelAnimationFrame(raf);removeEventListener('resize',size);
+  setTimeout(()=>{intro.hidden=true;intro.classList.remove('out','going');scene.traverse(o=>{o.geometry&&o.geometry.dispose();o.material&&(o.material.map&&o.material.map.dispose(),o.material.dispose())});R.dispose()},intro.classList.contains('out')?900:0);
+  introStop=null;afterIntro();setTimeout(()=>sqNext&&!story.hidden&&sqNext.focus(),950)}
+ function dive(){if(go||!alive)return;intro.classList.add('going');
+  if(reduce){intro.classList.add('out');finish();return}
+  go={t:performance.now(),d:2600,from:cam.position.clone()}}
+ function skip(){if(!alive)return;intro.classList.add('going','out');finish()}
+ introStop=skip;
+ document.getElementById('intro-go').onclick=dive;document.getElementById('intro-skip').onclick=skip;
+ setTimeout(()=>document.getElementById('intro-go').focus(),50)}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&introStop&&!intro.hidden)introStop()});
+if(prefs.intro)playIntro();else afterIntro();
+})();
+</script>
+</body></html>

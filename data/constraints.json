@@ -1,0 +1,3383 @@
+{
+ "constraints": {
+  "seal_dust": {
+   "title": "Sharp, dry dust that is also cold",
+   "world": "Moon",
+   "stage": "Mines and roads",
+   "why": "Regolith grinds seals, joints and bearings; cold stiffens them.",
+   "gap": "Earth wind rounds some grains; no electrostatic cling from sunlight.",
+   "conf": "Medium",
+   "moon": "Diviner: dust at the poles sits under 126 K on average, far colder than any Earth dust test.",
+   "scale": "Mineral",
+   "top": [
+    {
+     "lat": 37.58,
+     "lon": 94.75,
+     "score": 28.8,
+     "country": "China"
+    },
+    {
+     "lat": 33.92,
+     "lon": 83.08,
+     "score": 28.7,
+     "country": "China"
+    },
+    {
+     "lat": 41.75,
+     "lon": 91.75,
+     "score": 21.3,
+     "country": "China"
+    },
+    {
+     "lat": 37.58,
+     "lon": 89.08,
+     "score": 20.3,
+     "country": "China"
+    },
+    {
+     "lat": 40.25,
+     "lon": 103.42,
+     "score": 19.6,
+     "country": "China"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 3.9,
+     "pct": 93.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.1,
+     "pct": 28.2
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 8.7,
+     "pct": 98.2
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 7.5,
+     "pct": 97.7
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 9.3,
+     "pct": 98.3
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 5.5,
+     "pct": 96.3
+    }
+   ],
+   "cells_above_50pct_of_max": 3682
+  },
+  "low_sun": {
+   "title": "Low sun and black shadows",
+   "world": "Moon",
+   "stage": "Mobility and navigation",
+   "why": "Cameras, lidar and eyes face glare beside total darkness.",
+   "gap": "Earth air scatters light into shadows; they never go fully black.",
+   "conf": "Medium",
+   "moon": "LOLA: 11% of ground within 5 degrees of the pole is in permanent shadow, so robots drive in and out of total darkness.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": 66.58,
+     "lon": -35.58,
+     "score": 15.8,
+     "country": "Greenland"
+    },
+    {
+     "lat": 64.92,
+     "lon": -131.08,
+     "score": 15.8,
+     "country": "Canada"
+    },
+    {
+     "lat": 63.42,
+     "lon": -146.42,
+     "score": 13.0,
+     "country": "United States of America"
+    },
+    {
+     "lat": 66.58,
+     "lon": 127.08,
+     "score": 12.8,
+     "country": "Russia"
+    },
+    {
+     "lat": 65.58,
+     "lon": 138.75,
+     "score": 11.2,
+     "country": "Russia"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 1.2,
+     "pct": 88.5
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 1.0,
+     "pct": 86.8
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 792
+  },
+  "deep_cold": {
+   "title": "Deep cold",
+   "world": "Moon",
+   "stage": "Mines and processing",
+   "why": "Shadowed crater floors freeze machines and hold the ice.",
+   "gap": "Best ice-free ground covers about 26% of the gap; the rest needs a chamber.",
+   "conf": "High",
+   "moon": "Diviner: coldest crater floors never pass 27 K (-246 C) even at noon in summer. 99% of ground south of 80S averages colder than Earth's record low air (184 K).",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": 71.58,
+     "lon": 135.08,
+     "score": 24.1,
+     "country": "Russia"
+    },
+    {
+     "lat": -66.58,
+     "lon": 93.25,
+     "score": 23.1,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 65.42,
+     "lon": 135.42,
+     "score": 23.0,
+     "country": "Russia"
+    },
+    {
+     "lat": 62.92,
+     "lon": 144.25,
+     "score": 22.7,
+     "country": "Russia"
+    },
+    {
+     "lat": 82.25,
+     "lon": -86.08,
+     "score": 22.4,
+     "country": "Canada"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 20.6,
+     "pct": 98.3
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 3.7,
+     "pct": 37.2
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 2.9,
+     "pct": 32.6
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 8.1,
+     "pct": 51.2
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 8.3,
+     "pct": 51.7
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 9.5,
+     "pct": 54.8
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 14.9,
+     "pct": 73.3
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 7.9,
+     "pct": 50.8
+    }
+   ],
+   "cells_above_50pct_of_max": 210605
+  },
+  "lunar_night": {
+   "title": "Two weeks of night",
+   "world": "Moon",
+   "stage": "Power",
+   "why": "Landers must ride out 14 days of dark and cold on stored power.",
+   "gap": "Earth air and wind move heat; the Moon only radiates it away.",
+   "conf": "High",
+   "moon": "Diviner: half the ground south of 80S averages under 126 K (-148 C) across the year.",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": 71.58,
+     "lon": 134.92,
+     "score": 39.8,
+     "country": "Russia"
+    },
+    {
+     "lat": 82.25,
+     "lon": -86.08,
+     "score": 39.4,
+     "country": "Canada"
+    },
+    {
+     "lat": -73.42,
+     "lon": 164.58,
+     "score": 36.3,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 79.42,
+     "lon": -105.42,
+     "score": 35.0,
+     "country": "Canada"
+    },
+    {
+     "lat": 77.92,
+     "lon": -88.08,
+     "score": 32.0,
+     "country": "Canada"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 6.3,
+     "pct": 99.4
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 1999
+  },
+  "thermal_swing": {
+   "title": "Big daily temperature swings",
+   "world": "Moon & Mars",
+   "stage": "All hardware",
+   "why": "Repeated hot-cold cycles crack joints, solder and seals over years.",
+   "gap": "MODIS: Earth's ground swings reach about 31 C from day to night; Mars about 80 C; the Moon far more.",
+   "conf": "High",
+   "moon": "Diviner: summer highs south of 80S run from 187 K to 286 K, while yearly averages sit near 126 K.",
+   "scale": "Air",
+   "top": [
+    {
+     "lat": 37.42,
+     "lon": 92.25,
+     "score": 61.5,
+     "country": "China"
+    },
+    {
+     "lat": 29.75,
+     "lon": 56.92,
+     "score": 58.6,
+     "country": "Iran"
+    },
+    {
+     "lat": -25.58,
+     "lon": -69.75,
+     "score": 55.3,
+     "country": "Chile"
+    },
+    {
+     "lat": 29.92,
+     "lon": 64.75,
+     "score": 52.2,
+     "country": "Afghanistan"
+    },
+    {
+     "lat": 21.08,
+     "lon": 16.75,
+     "score": 48.3,
+     "country": "Chad"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 37.8,
+     "pct": 99.8
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 32.0,
+     "pct": 99.4
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 32.0,
+     "pct": 99.4
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 14.1,
+     "pct": 93.1
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 14.7,
+     "pct": 93.6
+    }
+   ],
+   "cells_above_50pct_of_max": 3747
+  },
+  "thin_air": {
+   "title": "Thin, dry air and strong UV",
+   "world": "Mars",
+   "stage": "Habitats and life support",
+   "why": "Low pressure and UV drive equipment cooling, materials ageing and crew health.",
+   "gap": "Earth's highest ground keeps about half its air; Mars has under 1%.",
+   "conf": "High",
+   "mars": "MOLA terrain: half of Mars has under 624 Pa of air; even the deepest basin has 1258 Pa. Earth's highest bare ground still has about 81 times the median Mars pressure.",
+   "scale": "Air",
+   "top": [
+    {
+     "lat": 34.58,
+     "lon": 84.75,
+     "score": 54.8,
+     "country": "China"
+    },
+    {
+     "lat": 34.92,
+     "lon": 79.58,
+     "score": 46.7,
+     "country": "China"
+    },
+    {
+     "lat": -23.08,
+     "lon": -66.42,
+     "score": 28.5,
+     "country": "Argentina"
+    },
+    {
+     "lat": 36.42,
+     "lon": 92.42,
+     "score": 23.7,
+     "country": "China"
+    },
+    {
+     "lat": 29.25,
+     "lon": 89.25,
+     "score": 17.5,
+     "country": "China"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 12.0,
+     "pct": 99.6
+    }
+   ],
+   "cells_above_50pct_of_max": 824
+  },
+  "pad_rock": {
+   "title": "Rocky, flat ground to build landing pads",
+   "world": "Moon",
+   "stage": "Port (landing pads)",
+   "why": "Engine blast sprays loose regolith; pads must be built from local rock on flat ground.",
+   "gap": "Rocket plume in vacuum spreads farther than in air; gravity 1/6.",
+   "conf": "Medium",
+   "moon": "LOLA 40 m slopes: the sunniest ground (where a base and pad would go) has a median slope of 5 degrees, and 84% is under 10. Test sites should be that flat.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": 21.25,
+     "lon": 31.25,
+     "score": 94.2,
+     "country": "Sudan"
+    },
+    {
+     "lat": 19.92,
+     "lon": 19.58,
+     "score": 90.6,
+     "country": "Chad"
+    },
+    {
+     "lat": 24.42,
+     "lon": 25.25,
+     "score": 89.9,
+     "country": "Egypt"
+    },
+    {
+     "lat": 24.42,
+     "lon": -4.08,
+     "score": 89.8,
+     "country": "Mali"
+    },
+    {
+     "lat": 21.75,
+     "lon": 12.42,
+     "score": 89.4,
+     "country": "Niger"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 8.5,
+     "pct": 88.9
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 11.1,
+     "pct": 90.1
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 5.0,
+     "pct": 86.8
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 9.5,
+     "pct": 89.4
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 11.3,
+     "pct": 90.1
+    }
+   ],
+   "cells_above_50pct_of_max": 11975
+  },
+  "dry_permafrost": {
+   "title": "Ice locked in dry frozen ground",
+   "world": "Moon & Mars",
+   "stage": "Mines",
+   "why": "Ice cemented into soil is the water and fuel source, and fights drills.",
+   "gap": "Earth ground ice is warmer and younger than lunar cold-trap ice.",
+   "conf": "Medium",
+   "moon": "Diviner: ice is stable within 1 m of the surface on 38% of ground south of 80S. Where it is buried, the median dry cover is 8 cm (90% under 49 cm). That is the depth a drill test must match.",
+   "scale": "Underground",
+   "top": [
+    {
+     "lat": -77.42,
+     "lon": 163.92,
+     "score": 50.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 82.08,
+     "lon": -69.75,
+     "score": 47.0,
+     "country": "Canada"
+    },
+    {
+     "lat": 82.25,
+     "lon": -36.58,
+     "score": 45.0,
+     "country": "Greenland"
+    },
+    {
+     "lat": 80.25,
+     "lon": -88.75,
+     "score": 43.5,
+     "country": "Canada"
+    },
+    {
+     "lat": 82.08,
+     "lon": -52.75,
+     "score": 36.6,
+     "country": "Greenland"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 1165
+  },
+  "featureless": {
+   "title": "Flat, featureless ground",
+   "world": "Moon & Mars",
+   "stage": "Mobility and navigation",
+   "why": "Robots lose track of distance travelled when nothing in view changes.",
+   "gap": "Earth light and haze still give visual cues the Moon lacks. Ice sheets are even flatter but are ice, not ground.",
+   "conf": "Medium",
+   "moon": "LOLA 40 m slopes: median 9 degrees near the pole; 20% of ground is steeper than 15 degrees, so long featureless runs are rarer there than on the maria.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": 22.92,
+     "lon": -1.42,
+     "score": 93.9,
+     "country": "Algeria"
+    },
+    {
+     "lat": 19.75,
+     "lon": 12.25,
+     "score": 93.6,
+     "country": "Niger"
+    },
+    {
+     "lat": 20.08,
+     "lon": 33.08,
+     "score": 93.5,
+     "country": "Sudan"
+    },
+    {
+     "lat": 22.75,
+     "lon": -6.75,
+     "score": 93.4,
+     "country": "Mauritania"
+    },
+    {
+     "lat": 19.92,
+     "lon": 26.25,
+     "score": 92.4,
+     "country": "Sudan"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 26.9,
+     "pct": 93.1
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 2.8,
+     "pct": 87.1
+    }
+   ],
+   "cells_above_50pct_of_max": 33099
+  },
+  "no_compass": {
+   "title": "No usable compass",
+   "world": "Moon & Mars",
+   "stage": "Mobility and navigation",
+   "why": "Neither world has a global magnetic field to steer by.",
+   "gap": "Field near the magnetic pole is weak, not absent, and it moves each year.",
+   "conf": "High",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": 80.08,
+     "lon": 99.08,
+     "score": 97.5,
+     "country": "Russia"
+    },
+    {
+     "lat": 80.25,
+     "lon": -104.42,
+     "score": 93.0,
+     "country": "Open ocean/ice"
+    },
+    {
+     "lat": -66.42,
+     "lon": 137.75,
+     "score": 92.3,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 82.08,
+     "lon": -88.08,
+     "score": 89.2,
+     "country": "Canada"
+    },
+    {
+     "lat": 76.08,
+     "lon": -100.08,
+     "score": 81.9,
+     "country": "Canada"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 75.6,
+     "pct": 99.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 30.8,
+     "pct": 93.9
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 29731
+  },
+  "power_ridge": {
+   "title": "Ridges with sun that never sets",
+   "world": "Moon",
+   "stage": "Power",
+   "why": "Solar farms on crater rims that see the sun most of the time.",
+   "gap": "Earth's midnight sun lasts weeks to months; cloud still interrupts it.",
+   "conf": "Medium",
+   "moon": "LOLA: the sunniest spot within 5 degrees of the south pole is lit 88% of the time, but only 0.8 km2 is lit more than 70%. Earth's midnight sun gives 50% at most over a year.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": 76.25,
+     "lon": -62.25,
+     "score": 45.5,
+     "country": "Greenland"
+    },
+    {
+     "lat": -73.92,
+     "lon": 165.42,
+     "score": 41.2,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 72.08,
+     "lon": -28.58,
+     "score": 39.8,
+     "country": "Greenland"
+    },
+    {
+     "lat": 82.58,
+     "lon": -67.25,
+     "score": 36.4,
+     "country": "Canada"
+    },
+    {
+     "lat": 75.58,
+     "lon": -83.25,
+     "score": 35.5,
+     "country": "Canada"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 2.1,
+     "pct": 96.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 17.0,
+     "pct": 99.8
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 10.8,
+     "pct": 99.4
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 590
+  },
+  "sun_ice_edge": {
+   "title": "Sunlit ridge next to frozen ground",
+   "world": "Moon",
+   "stage": "Power + mines",
+   "why": "The best base sites sit on the edge: power on the rim, ice in the crater below.",
+   "gap": "Our Earth grid is 18 km; the lunar commute is under 1 km, so pick the exact spot locally.",
+   "conf": "Low",
+   "moon": "LOLA: from ground lit over 70% of the time, permanent shadow is a median 350 m away (90% within 0.9 km). The engine now requires sun and frozen ground in the same 18 km cell.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": -77.75,
+     "lon": 166.75,
+     "score": 40.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 82.08,
+     "lon": -69.75,
+     "score": 38.9,
+     "country": "Canada"
+    },
+    {
+     "lat": -73.42,
+     "lon": 164.58,
+     "score": 34.2,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 81.92,
+     "lon": -29.08,
+     "score": 29.4,
+     "country": "Greenland"
+    },
+    {
+     "lat": 79.42,
+     "lon": -91.25,
+     "score": 23.9,
+     "country": "Canada"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 206
+  },
+  "mars_hyperarid": {
+   "title": "Cold, hyperarid, sterile ground",
+   "world": "Mars",
+   "stage": "Habitats and food",
+   "why": "Mars soil is bone dry with oxidizing salts that hurt crops and life detection.",
+   "gap": "Earth deserts still have trace life and liquid fog; no global perchlorate map was used.",
+   "conf": "Medium",
+   "mars": "Odyssey gamma-ray map: even the dry low latitudes hold a median 4% water by weight, locked in salts and minerals (1.6 to 7.4%). The Earth test is getting water out of bone-dry, salty soil.",
+   "scale": "Life",
+   "top": [
+    {
+     "lat": -77.25,
+     "lon": 163.58,
+     "score": 17.3,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 35.75,
+     "lon": 84.58,
+     "score": 16.2,
+     "country": "China"
+    },
+    {
+     "lat": 38.92,
+     "lon": 92.58,
+     "score": 10.9,
+     "country": "China"
+    },
+    {
+     "lat": 34.92,
+     "lon": 79.58,
+     "score": 7.3,
+     "country": "China"
+    },
+    {
+     "lat": -22.92,
+     "lon": -67.92,
+     "score": 2.9,
+     "country": "Chile"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 160
+  },
+  "radiation": {
+   "title": "Highest natural cosmic-ray exposure",
+   "world": "Moon & Mars",
+   "stage": "All hardware",
+   "why": "Space radiation flips bits and wears electronics; Earth's thinnest shielding is high ground near the magnetic poles.",
+   "gap": "Earth's air and field still block most of it; a lunar surface dose is far higher.",
+   "conf": "Medium",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": -80.25,
+     "lon": 80.08,
+     "score": 77.7,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 42.25,
+     "lon": 80.25,
+     "score": 75.2,
+     "country": "Kazakhstan"
+    },
+    {
+     "lat": -84.08,
+     "lon": 167.25,
+     "score": 73.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -81.08,
+     "lon": 63.92,
+     "score": 71.7,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -76.42,
+     "lon": 96.08,
+     "score": 71.1,
+     "country": "Antarctica"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 2.4,
+     "pct": 73.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 13.6,
+     "pct": 77.4
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 22.2,
+     "pct": 80.2
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 16.7,
+     "pct": 78.4
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 20.7,
+     "pct": 79.7
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 5.0,
+     "pct": 74.3
+    }
+   ],
+   "cells_above_50pct_of_max": 97046
+  },
+  "radiative_cold": {
+   "title": "Heat lost straight to the sky",
+   "world": "Moon",
+   "stage": "Power",
+   "why": "With no air, hardware cools only by radiating to space; radiators and night heaters are sized for that.",
+   "gap": "Earth air still carries heat by convection, unlike the Moon.",
+   "conf": "Medium",
+   "scale": "Air",
+   "top": [
+    {
+     "lat": 34.58,
+     "lon": 82.75,
+     "score": 95.6,
+     "country": "China"
+    },
+    {
+     "lat": -25.58,
+     "lon": -67.92,
+     "score": 91.0,
+     "country": "Argentina"
+    },
+    {
+     "lat": 36.92,
+     "lon": 88.75,
+     "score": 79.4,
+     "country": "China"
+    },
+    {
+     "lat": 35.75,
+     "lon": 77.75,
+     "score": 79.3,
+     "country": "China"
+    },
+    {
+     "lat": 38.42,
+     "lon": 95.08,
+     "score": 68.1,
+     "country": "China"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.6,
+     "pct": 95.6
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 5.3,
+     "pct": 97.3
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 2.7,
+     "pct": 96.7
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 5.0,
+     "pct": 97.2
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 11.0,
+     "pct": 97.9
+    }
+   ],
+   "cells_above_50pct_of_max": 3314
+  },
+  "dust_devils": {
+   "title": "Dry, fine dust lifted by heat: static and dust devils",
+   "world": "Mars",
+   "stage": "Mobility and navigation",
+   "why": "Mars dust devils and charged dust coat solar panels and optics; robots must clean or ride it out.",
+   "gap": "Earth dust devils are smaller and wetter than Mars's.",
+   "conf": "Low",
+   "mars": "TES albedo: 25% of Mars is bright, dust-covered ground that devils and storms can lift.",
+   "scale": "Air",
+   "top": [
+    {
+     "lat": 37.25,
+     "lon": 93.92,
+     "score": 23.6,
+     "country": "China"
+    },
+    {
+     "lat": 35.08,
+     "lon": 80.25,
+     "score": 22.0,
+     "country": "China"
+    },
+    {
+     "lat": 20.75,
+     "lon": 17.75,
+     "score": 18.7,
+     "country": "Chad"
+    },
+    {
+     "lat": 41.42,
+     "lon": 94.25,
+     "score": 16.2,
+     "country": "China"
+    },
+    {
+     "lat": 23.42,
+     "lon": 7.42,
+     "score": 16.1,
+     "country": "Algeria"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 2.0,
+     "pct": 96.7
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 2.3,
+     "pct": 97.1
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 2.3,
+     "pct": 97.1
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.5,
+     "pct": 93.9
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 452
+  },
+  "soft_sand": {
+   "title": "Soft sand that traps wheels",
+   "world": "Mars",
+   "stage": "Mobility and navigation",
+   "why": "Spirit ended its drive stuck in soft sand; rovers need to detect and escape it.",
+   "gap": "Earth gravity presses wheels harder into the sand than Mars does.",
+   "conf": "Medium",
+   "mars": "TES thermal inertia: 70% of Mars between 60S and 60N is sand or crusted soil, and 22% is loose dust. Spirit died in soft soil under a crust.",
+   "scale": "Terrain",
+   "top": [
+    {
+     "lat": 22.42,
+     "lon": 28.75,
+     "score": 49.9,
+     "country": "Egypt"
+    },
+    {
+     "lat": 24.08,
+     "lon": 53.42,
+     "score": 40.2,
+     "country": "United Arab Emirates"
+    },
+    {
+     "lat": -23.92,
+     "lon": 15.08,
+     "score": 35.2,
+     "country": "Namibia"
+    },
+    {
+     "lat": -28.42,
+     "lon": 17.92,
+     "score": 33.1,
+     "country": "Namibia"
+    },
+    {
+     "lat": 27.58,
+     "lon": -113.75,
+     "score": 31.2,
+     "country": "Mexico"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 139
+  },
+  "dust_storm": {
+   "title": "Windy, dusty plains",
+   "world": "Mars",
+   "stage": "Power",
+   "why": "Dust storms cut solar power for weeks and sandblast hardware.",
+   "gap": "Martian storms can wrap the whole planet; Earth's are regional.",
+   "conf": "Low",
+   "mars": "TES albedo: 25% of the planet is dust-mantled, the source for regional and global storms.",
+   "scale": "Air",
+   "top": [
+    {
+     "lat": 22.58,
+     "lon": -16.25,
+     "score": 35.8,
+     "country": "Morocco"
+    },
+    {
+     "lat": 14.25,
+     "lon": 47.92,
+     "score": 29.3,
+     "country": "Yemen"
+    },
+    {
+     "lat": 26.25,
+     "lon": -9.08,
+     "score": 25.1,
+     "country": "Western Sahara"
+    },
+    {
+     "lat": 28.75,
+     "lon": 48.42,
+     "score": 24.0,
+     "country": "Kuwait"
+    },
+    {
+     "lat": 27.25,
+     "lon": 43.92,
+     "score": 20.9,
+     "country": "Saudi Arabia"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 11.5,
+     "pct": 98.9
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 694
+  },
+  "dust_mantle": {
+   "title": "Deep loose dust, not sand",
+   "world": "Mars",
+   "stage": "Mobility and navigation",
+   "why": "Mars data shows a fifth of the planet is fine dust a rover sinks into, not dune sand. Wheels, drills and suits behave differently in each.",
+   "gap": "Earth dust is rarely more than a few cm deep outside dry lakebeds; Mars mantles can be metres thick.",
+   "conf": "Low",
+   "mars": "TES thermal inertia: 22% of Mars between 60S and 60N reads under 100, which means loose, fine dust. This test exists because the Mars data asked for it.",
+   "scale": "Mineral",
+   "top": [
+    {
+     "lat": 15.92,
+     "lon": 47.08,
+     "score": 26.1,
+     "country": "Yemen"
+    },
+    {
+     "lat": 19.58,
+     "lon": 18.25,
+     "score": 22.4,
+     "country": "Chad"
+    },
+    {
+     "lat": 20.42,
+     "lon": 49.42,
+     "score": 21.6,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": 21.75,
+     "lon": 25.08,
+     "score": 17.3,
+     "country": "Sudan"
+    },
+    {
+     "lat": 22.25,
+     "lon": 6.75,
+     "score": 16.7,
+     "country": "Algeria"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 439
+  },
+  "lava_tubes": {
+   "title": "Lava tubes and caves in young basalt",
+   "world": "Moon & Mars",
+   "stage": "Habitat",
+   "why": "Lava tubes could shelter crews from radiation, impacts and temperature swings. Robots must learn to find, enter and map them.",
+   "gap": "Earth tubes are younger, wetter and smaller; lunar tubes may be far wider in low gravity.",
+   "conf": "Medium",
+   "moon": "LRO cameras have mapped about 300 lunar pits, 16 of them in mare basalt; some open into voids that may be lava tubes (Wagner and Robinson).",
+   "mars": "Orbiter images show pit chains and skylight-like holes on the flanks of Mars's big shield volcanoes.",
+   "scale": "Underground",
+   "top": [
+    {
+     "lat": 26.08,
+     "lon": 40.08,
+     "score": 100.0,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": 14.42,
+     "lon": 44.75,
+     "score": 100.0,
+     "country": "Yemen"
+    },
+    {
+     "lat": 23.92,
+     "lon": 5.92,
+     "score": 100.0,
+     "country": "Algeria"
+    },
+    {
+     "lat": 28.42,
+     "lon": -13.92,
+     "score": 100.0,
+     "country": "Spain"
+    },
+    {
+     "lat": 15.42,
+     "lon": 26.42,
+     "score": 100.0,
+     "country": "Sudan"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.2,
+     "pct": 99.4
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 58.1,
+     "pct": 99.9
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 55.3,
+     "pct": 99.9
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 626
+  },
+  "karst_caves": {
+   "title": "Caves for robots without GPS or light",
+   "world": "Moon & Mars",
+   "stage": "Mobility and navigation",
+   "why": "Inside a cave a robot has no sun, no GPS and no radio link. It must navigate by what it senses itself.",
+   "gap": "These caves are dissolved limestone and salt, not lava; useful for the robot, not the geology.",
+   "conf": "Low",
+   "scale": "Underground",
+   "top": [
+    {
+     "lat": 32.75,
+     "lon": 48.08,
+     "score": 100.0,
+     "country": "Iran"
+    },
+    {
+     "lat": 31.58,
+     "lon": 35.25,
+     "score": 100.0,
+     "country": "Palestine"
+    },
+    {
+     "lat": 42.75,
+     "lon": 19.08,
+     "score": 100.0,
+     "country": "Montenegro"
+    },
+    {
+     "lat": 32.25,
+     "lon": -5.08,
+     "score": 100.0,
+     "country": "Morocco"
+    },
+    {
+     "lat": 36.42,
+     "lon": 82.75,
+     "score": 100.0,
+     "country": "China"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 75.0,
+     "pct": 99.5
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 82.6,
+     "pct": 99.6
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 54.2,
+     "pct": 99.1
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 18.1,
+     "pct": 97.2
+    }
+   ],
+   "cells_above_50pct_of_max": 5776
+  },
+  "mare_basalt": {
+   "title": "Dark basalt plains like the lunar maria",
+   "world": "Moon & Mars",
+   "stage": "Mines and roads",
+   "why": "The lunar maria and most of Mars's crust are basalt. Excavators, sintered pads and oxygen extraction should be tested on it.",
+   "gap": "Earth basalt is weathered and often soil-covered; lunar mare basalt is bone-dry and fresh under regolith.",
+   "conf": "Medium",
+   "moon": "The dark lunar maria are basalt lava plains; Apollo 11, 12, 15 and 17 sampled them.",
+   "mars": "TES and other orbiter spectrometers show much of Mars's dark surface is basaltic.",
+   "scale": "Rock",
+   "top": [
+    {
+     "lat": 22.58,
+     "lon": 41.25,
+     "score": 92.3,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": 25.75,
+     "lon": 17.42,
+     "score": 89.9,
+     "country": "Libya"
+    },
+    {
+     "lat": 30.92,
+     "lon": 39.25,
+     "score": 88.2,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": -26.25,
+     "lon": 18.58,
+     "score": 79.0,
+     "country": "Namibia"
+    },
+    {
+     "lat": 31.92,
+     "lon": -113.42,
+     "score": 74.9,
+     "country": "Mexico"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 3.8,
+     "pct": 99.6
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 3.8,
+     "pct": 99.6
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 423
+  },
+  "highland_rock": {
+   "title": "Pale gabbro-family rock like the lunar highlands",
+   "world": "Moon",
+   "stage": "Mines and roads",
+   "why": "The bright lunar highlands are anorthosite. The closest mapped class on Earth is gabbro and related deep-cooled rock.",
+   "gap": "The global map lumps anorthosite with gabbro; true anorthosite massifs need a finer map.",
+   "conf": "Low",
+   "moon": "Apollo 16 returned highland anorthosite; 69 meteorites in NASA's catalogue are classed lunar anorthosite.",
+   "scale": "Rock",
+   "top": [
+    {
+     "lat": 23.75,
+     "lon": -7.25,
+     "score": 92.3,
+     "country": "Mauritania"
+    },
+    {
+     "lat": 26.75,
+     "lon": 59.08,
+     "score": 90.9,
+     "country": "Iran"
+    },
+    {
+     "lat": 33.08,
+     "lon": 53.08,
+     "score": 90.3,
+     "country": "Iran"
+    },
+    {
+     "lat": 30.58,
+     "lon": 68.08,
+     "score": 81.9,
+     "country": "Pakistan"
+    },
+    {
+     "lat": 35.75,
+     "lon": 59.25,
+     "score": 74.4,
+     "country": "Iran"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 89
+  },
+  "impact_rock": {
+   "title": "Impact-shocked rock",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Craters are the main landform on the Moon and Mars. Shocked rock and impact melt are what samples will mostly be.",
+   "gap": "Earth keeps only about 200 confirmed craters, most eroded or buried; the Moon and Mars keep millions.",
+   "conf": "Low",
+   "scale": "Rock",
+   "top": [
+    {
+     "lat": 29.75,
+     "lon": 39.25,
+     "score": 100.0,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": 24.58,
+     "lon": 23.92,
+     "score": 100.0,
+     "country": "Libya"
+    },
+    {
+     "lat": 17.58,
+     "lon": 22.08,
+     "score": 100.0,
+     "country": "Chad"
+    },
+    {
+     "lat": 27.58,
+     "lon": 5.25,
+     "score": 100.0,
+     "country": "Algeria"
+    },
+    {
+     "lat": 39.25,
+     "lon": 73.75,
+     "score": 100.0,
+     "country": "China"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 69.9,
+     "pct": 99.9
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 16.1,
+     "pct": 99.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 22.5,
+     "pct": 99.2
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 46.2,
+     "pct": 99.7
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 1701
+  },
+  "volcanic_glass": {
+   "title": "Volcanic ash and glass beads",
+   "world": "Moon & Mars",
+   "stage": "Mines and processing",
+   "why": "Apollo 17's orange soil was volcanic glass beads, a candidate feedstock for oxygen. Ash fields test handling and processing.",
+   "gap": "Earth ash weathers to clay within thousands of years; lunar glass beads are billions of years old.",
+   "conf": "Medium",
+   "scale": "Mineral",
+   "top": [
+    {
+     "lat": 30.25,
+     "lon": -114.92,
+     "score": 84.5,
+     "country": "Mexico"
+    },
+    {
+     "lat": -23.25,
+     "lon": -67.92,
+     "score": 66.4,
+     "country": "Chile"
+    },
+    {
+     "lat": -17.92,
+     "lon": -70.25,
+     "score": 50.0,
+     "country": "Peru"
+    },
+    {
+     "lat": 42.58,
+     "lon": 97.08,
+     "score": 49.3,
+     "country": "China"
+    },
+    {
+     "lat": 25.75,
+     "lon": -111.25,
+     "score": 45.5,
+     "country": "Mexico"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 60
+  },
+  "salt_biosig": {
+   "title": "Salt deposits that preserve traces of life",
+   "world": "Mars",
+   "stage": "Science",
+   "why": "Salt can trap and preserve organic molecules and microbes for very long times. It is a prime place to look for past life.",
+   "gap": "Earth salt flats hold living microbes today; Mars salt would hold only ancient traces, if any.",
+   "conf": "Medium",
+   "mars": "Mars Odyssey's THEMIS camera found about 640 chloride salt deposits across the ancient southern highlands (Osterloo et al. 2010).",
+   "scale": "Life",
+   "top": [
+    {
+     "lat": 18.25,
+     "lon": 50.75,
+     "score": 100.0,
+     "country": "Yemen"
+    },
+    {
+     "lat": 28.75,
+     "lon": 27.08,
+     "score": 100.0,
+     "country": "Egypt"
+    },
+    {
+     "lat": -21.25,
+     "lon": -69.75,
+     "score": 99.2,
+     "country": "Chile"
+    },
+    {
+     "lat": 23.58,
+     "lon": 52.25,
+     "score": 97.6,
+     "country": "United Arab Emirates"
+    },
+    {
+     "lat": 28.25,
+     "lon": 48.42,
+     "score": 92.8,
+     "country": "Saudi Arabia"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 756
+  },
+  "oxidant_soil": {
+   "title": "Soil that destroys organic molecules",
+   "world": "Mars",
+   "stage": "Science",
+   "why": "Mars soil chemistry and UV break down organics, so a life-detection instrument can miss what is there. Test it where the same happens.",
+   "gap": "Earth's ozone blocks the harshest UV; oxidants form more slowly here.",
+   "conf": "Low",
+   "mars": "NASA's Phoenix lander found perchlorate, a strong oxidant, in Mars soil in 2008.",
+   "scale": "Molecule",
+   "top": [
+    {
+     "lat": -23.25,
+     "lon": -68.75,
+     "score": 27.3,
+     "country": "Chile"
+    },
+    {
+     "lat": 21.25,
+     "lon": 18.42,
+     "score": 19.7,
+     "country": "Chad"
+    },
+    {
+     "lat": 38.75,
+     "lon": 92.75,
+     "score": 12.9,
+     "country": "China"
+    },
+    {
+     "lat": 16.75,
+     "lon": 44.42,
+     "score": 11.4,
+     "country": "Yemen"
+    },
+    {
+     "lat": 27.58,
+     "lon": 36.92,
+     "score": 8.3,
+     "country": "Saudi Arabia"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 15.6,
+     "pct": 100.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 92
+  },
+  "hydrothermal": {
+   "title": "Volcanic heat and water in dry land",
+   "world": "Mars",
+   "stage": "Science",
+   "why": "Hot springs build silica crusts that lock in traces of life. Spirit found silica-rich deposits on Mars that may have formed this way.",
+   "gap": "Earth springs are active and alive today; Mars deposits are billions of years old.",
+   "conf": "Low",
+   "scale": "Life",
+   "top": [
+    {
+     "lat": -23.58,
+     "lon": -68.92,
+     "score": 73.5,
+     "country": "Chile"
+    },
+    {
+     "lat": -17.25,
+     "lon": -71.08,
+     "score": 45.9,
+     "country": "Peru"
+    },
+    {
+     "lat": 21.42,
+     "lon": 16.58,
+     "score": 41.5,
+     "country": "Chad"
+    },
+    {
+     "lat": 15.75,
+     "lon": 44.92,
+     "score": 27.4,
+     "country": "Yemen"
+    },
+    {
+     "lat": 26.08,
+     "lon": 40.25,
+     "score": 25.2,
+     "country": "Saudi Arabia"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 23.2,
+     "pct": 100.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.3,
+     "pct": 99.3
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 122
+  },
+  "ancient_crust": {
+   "title": "Ancient exposed crust in dry land",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Most of the Moon's surface is over 3 billion years old. Earth's oldest exposed shields hold its earliest record.",
+   "gap": "Rock type is a proxy for age; the map does not date the rock.",
+   "conf": "Low",
+   "scale": "Time",
+   "top": [
+    {
+     "lat": 20.58,
+     "lon": 33.75,
+     "score": 97.0,
+     "country": "Sudan"
+    },
+    {
+     "lat": 23.58,
+     "lon": 41.75,
+     "score": 96.9,
+     "country": "Saudi Arabia"
+    },
+    {
+     "lat": 24.75,
+     "lon": -5.58,
+     "score": 94.1,
+     "country": "Mali"
+    },
+    {
+     "lat": 22.25,
+     "lon": 17.25,
+     "score": 93.9,
+     "country": "Chad"
+    },
+    {
+     "lat": 15.92,
+     "lon": 28.92,
+     "score": 91.9,
+     "country": "Sudan"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 3378
+  },
+  "seismic_quiet": {
+   "title": "Seismically quiet bedrock",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Seismometers read a planet's interior. They are tested best on solid rock far from earthquakes and people.",
+   "gap": "Earth's oceans and weather make background noise that the Moon does not have.",
+   "conf": "Medium",
+   "mars": "NASA's InSight seismometer recorded 1,319 marsquakes before the mission ended in 2022.",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": 54.92,
+     "lon": 131.25,
+     "score": 100.0,
+     "country": "Russia"
+    },
+    {
+     "lat": 1.25,
+     "lon": -57.58,
+     "score": 100.0,
+     "country": "Brazil"
+    },
+    {
+     "lat": 63.58,
+     "lon": 95.25,
+     "score": 100.0,
+     "country": "Russia"
+    },
+    {
+     "lat": 62.25,
+     "lon": 173.25,
+     "score": 100.0,
+     "country": "Russia"
+    },
+    {
+     "lat": -54.75,
+     "lon": -63.75,
+     "score": 100.0,
+     "country": "Argentina"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 1.7,
+     "pct": 78.6
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 11.3,
+     "pct": 86.1
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 6.9,
+     "pct": 83.1
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 18905
+  },
+  "magnetic_memory": {
+   "title": "Rock with strong fossil magnetism",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Mars and the Moon lost their global magnetic fields, but some rocks kept the old magnetism. It is a record of an ancient planetary core.",
+   "gap": "Earth still has an active field that dwarfs crustal anomalies; instruments must subtract it.",
+   "conf": "Medium",
+   "mars": "Mars Global Surveyor mapped strong crustal magnetic fields, mostly in the ancient southern highlands.",
+   "scale": "Planet",
+   "top": [
+    {
+     "lat": 35.42,
+     "lon": 77.42,
+     "score": 100.0,
+     "country": "Siachen Glacier"
+    },
+    {
+     "lat": 17.92,
+     "lon": 105.75,
+     "score": 100.0,
+     "country": "Vietnam"
+    },
+    {
+     "lat": -35.58,
+     "lon": -64.75,
+     "score": 100.0,
+     "country": "Argentina"
+    },
+    {
+     "lat": 9.25,
+     "lon": 25.92,
+     "score": 100.0,
+     "country": "South Sudan"
+    },
+    {
+     "lat": -35.58,
+     "lon": -71.42,
+     "score": 100.0,
+     "country": "Chile"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 57.5,
+     "pct": 94.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 23.2,
+     "pct": 91.8
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 6.7,
+     "pct": 87.5
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 26.1,
+     "pct": 92.2
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 50029
+  },
+  "radio_quiet": {
+   "title": "Far from people, signals and contamination",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Mars is minutes away by radio, so robots must decide alone; samples must stay free of Earth life. Test where people barely reach.",
+   "gap": "Distance to towns is a proxy; it does not measure radio noise directly.",
+   "conf": "Low",
+   "scale": "Reader",
+   "top": [
+    {
+     "lat": -84.92,
+     "lon": 75.75,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -86.42,
+     "lon": 29.75,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -84.92,
+     "lon": 56.92,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -75.25,
+     "lon": -128.25,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -79.42,
+     "lon": -151.92,
+     "score": 100.0,
+     "country": "Antarctica"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 27.5,
+     "pct": 72.6
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 21.6,
+     "pct": 69.8
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 3.1,
+     "pct": 49.5
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 4.0,
+     "pct": 51.5
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 6.5,
+     "pct": 55.8
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 163867
+  },
+  "dried_lakes": {
+   "title": "Dried ancient lake beds",
+   "world": "Mars",
+   "stage": "Science",
+   "why": "Mars had lakes and river deltas, such as Jezero crater where Perseverance landed. Dry lake beds on Earth keep the same kind of layered record.",
+   "gap": "Earth lake beds dried thousands of years ago; Mars's dried billions of years ago.",
+   "conf": "Medium",
+   "scale": "Water history",
+   "top": [
+    {
+     "lat": 22.25,
+     "lon": 9.25,
+     "score": 100.0,
+     "country": "Algeria"
+    },
+    {
+     "lat": 32.25,
+     "lon": 39.25,
+     "score": 100.0,
+     "country": "Jordan"
+    },
+    {
+     "lat": -23.25,
+     "lon": -68.42,
+     "score": 100.0,
+     "country": "Chile"
+    },
+    {
+     "lat": 40.42,
+     "lon": 90.25,
+     "score": 100.0,
+     "country": "China"
+    },
+    {
+     "lat": 28.92,
+     "lon": 15.25,
+     "score": 100.0,
+     "country": "Libya"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 42.3,
+     "pct": 99.9
+    }
+   ],
+   "cells_above_50pct_of_max": 775
+  },
+  "sand_ratio": {
+   "title": "Sand that moves like Mars sand (ratio match)",
+   "world": "Mars",
+   "stage": "Mobility and navigation",
+   "why": "On Mars, thin air means sand moves only in rare gusts. The match is not the windiest desert but sand seas where wind relative to the lift threshold is just as low.",
+   "gap": "Matches the wind-to-threshold ratio, not grain hop height; Mars grains fly higher and longer in low gravity.",
+   "conf": "Low",
+   "mars": "Lifting a 0.25 mm grain takes about 1.1 m/s friction speed on Mars vs 0.24 on Earth. With typical Mars winds the ratio is about 0.36; Earth's median is 0.48.",
+   "scale": "Ratio",
+   "top": [
+    {
+     "lat": -28.58,
+     "lon": 17.92,
+     "score": 66.1,
+     "country": "Namibia"
+    },
+    {
+     "lat": -23.75,
+     "lon": 15.08,
+     "score": 61.5,
+     "country": "Namibia"
+    },
+    {
+     "lat": 27.58,
+     "lon": -113.58,
+     "score": 58.2,
+     "country": "Mexico"
+    },
+    {
+     "lat": -14.42,
+     "lon": -75.58,
+     "score": 54.0,
+     "country": "Peru"
+    },
+    {
+     "lat": -17.75,
+     "lon": -70.75,
+     "score": 48.7,
+     "country": "Peru"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 8.0,
+     "pct": 99.4
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 2.8,
+     "pct": 98.6
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.9,
+     "pct": 97.7
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 2.9,
+     "pct": 98.7
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 398
+  },
+  "ice_ratio": {
+   "title": "Ground ice balanced like Mars ice (ratio match)",
+   "world": "Mars",
+   "stage": "Mines",
+   "why": "On Mars, ground ice lasts where the air's frost point equals the ground's mean temperature. The match is where the same balance holds, with almost no snow to resupply it.",
+   "gap": "Earth's balance also depends on summer melt and snow, which Mars lacks.",
+   "conf": "Low",
+   "mars": "Mars mid-latitude ground ice sits near this balance line, which is why it is found shallow there (Phoenix dug into it at 68N).",
+   "scale": "Ratio",
+   "top": [
+    {
+     "lat": -77.25,
+     "lon": 163.58,
+     "score": 98.3,
+     "country": "Antarctica"
+    },
+    {
+     "lat": 38.58,
+     "lon": 72.42,
+     "score": 47.8,
+     "country": "Tajikistan"
+    },
+    {
+     "lat": 74.42,
+     "lon": -25.92,
+     "score": 40.6,
+     "country": "Greenland"
+    },
+    {
+     "lat": 81.58,
+     "lon": -33.75,
+     "score": 39.9,
+     "country": "Greenland"
+    },
+    {
+     "lat": -67.75,
+     "lon": 67.42,
+     "score": 21.3,
+     "country": "Antarctica"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 96.4
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 18
+  },
+  "erasers_off": {
+   "title": "Earth's erasers switched off",
+   "world": "Moon & Mars",
+   "stage": "Science",
+   "why": "Water, life, earthquakes and people erase Earth's records. Where all four are weakest, Earth keeps records the way the Moon and Mars do.",
+   "gap": "Wind and ice also erase; not yet included.",
+   "conf": "Medium",
+   "moon": "Independent check with NASA's Meteorite Landings catalogue (31,085 finds on land, never given to the engine): 67% of finds lie in the top quarter of land where water, life and earthquakes are weakest (chance would give 25%). The median find sits at the 78th percentile.",
+   "mars": "Independent check with NASA's Meteorite Landings catalogue (31,085 finds on land, never given to the engine): 67% of finds lie in the top quarter of land where water, life and earthquakes are weakest (chance would give 25%). The median find sits at the 78th percentile.",
+   "scale": "Process",
+   "top": [
+    {
+     "lat": -80.25,
+     "lon": 85.42,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -78.08,
+     "lon": 114.58,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -81.25,
+     "lon": 69.08,
+     "score": 100.0,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -78.25,
+     "lon": 44.42,
+     "score": 99.7,
+     "country": "Antarctica"
+    },
+    {
+     "lat": -78.08,
+     "lon": 132.58,
+     "score": 99.7,
+     "country": "Antarctica"
+    }
+   ],
+   "known": [
+    {
+     "name": "Haughton Crater",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "McMurdo Dry Valleys",
+     "score": 74.5,
+     "pct": 78.3
+    },
+    {
+     "name": "Atacama (Yungay)",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Mauna Kea",
+     "score": 0.0,
+     "pct": 0.0
+    },
+    {
+     "name": "Black Point Lava Flow",
+     "score": 14.3,
+     "pct": 65.2
+    },
+    {
+     "name": "Meteor Crater",
+     "score": 4.0,
+     "pct": 60.1
+    },
+    {
+     "name": "Mars Desert Research Station",
+     "score": 21.1,
+     "pct": 67.2
+    },
+    {
+     "name": "Svalbard (Bockfjord)",
+     "score": 1.2,
+     "pct": 57.1
+    },
+    {
+     "name": "Salar de Uyuni",
+     "score": 0.0,
+     "pct": 0.0
+    }
+   ],
+   "cells_above_50pct_of_max": 216717
+  }
+ },
+ "earth_cant": [
+  {
+   "title": "Vacuum",
+   "world": "Moon & Mars",
+   "why": "Changes heat flow, outgassing, lubrication and dust behaviour.",
+   "instead": "Thermal-vacuum chambers"
+  },
+  {
+   "title": "Low gravity (1/6 g Moon, 3/8 g Mars)",
+   "world": "Moon & Mars",
+   "why": "Changes walking, digging, traction and how dust falls.",
+   "instead": "Parabolic flights, offloading rigs, neutral buoyancy"
+  },
+  {
+   "title": "Space radiation",
+   "world": "Moon & Mars",
+   "why": "Damages electronics and crews over years.",
+   "instead": "Particle-beam facilities"
+  },
+  {
+   "title": "Carbon dioxide geysers under seasonal ice",
+   "world": "Mars",
+   "why": "Spring gas jets near the Martian south pole.",
+   "instead": "Mars-condition chambers (already recreated at JPL)"
+  },
+  {
+   "title": "Superconducting cold for free",
+   "world": "Moon",
+   "why": "Crater cold could run superconducting power lines and maglevs; nowhere on Earth is cold enough.",
+   "instead": "Cryogenic labs"
+  }
+ ],
+ "moon_ref": {
+  "diviner": {
+   "region": "80S to pole",
+   "cells": 2261956,
+   "t_avg_K_pct": {
+    "p1": 41.7,
+    "p10": 67.1,
+    "p50": 125.5,
+    "p90": 157.7
+   },
+   "t_max_K_pct": {
+    "p1": 64.3,
+    "p10": 186.8,
+    "p50": 244.4,
+    "p90": 286.1,
+    "p99": 316.5
+   },
+   "coldest_max_K": 26.8,
+   "frac_max_below_110K": 0.04984933393929855,
+   "frac_avg_below_184K": 0.9933442560332738,
+   "frac_avg_below_216K": 1.0,
+   "ice_surface_frac": 0.007809612565407992,
+   "ice_within_1m_frac": 0.37678938051845395,
+   "ice_buried_depth_m_pct": {
+    "p10": 0.01,
+    "p50": 0.08,
+    "p90": 0.49
+   }
+  },
+  "sunlight": {
+   "region": "85S to pole",
+   "max_avg_sun_frac": 0.884440004825592,
+   "area_km2_sun_over_70pct": 0.8316,
+   "area_km2_sun_over_80pct": 0.0684,
+   "psr_frac": 0.11028047042592122,
+   "km_lit70_to_psr_pct": {
+    "p10": 0.13,
+    "p50": 0.35,
+    "p90": 0.94
+   }
+  },
+  "slope": {
+   "region": "85S to pole",
+   "baseline_m": 40,
+   "data_coverage": 0.339232479226473,
+   "median_deg": 8.699999809265137,
+   "frac_under_5": 0.2557072398438559,
+   "frac_under_10": 0.5735637923924689,
+   "frac_over_15": 0.20348208977829577,
+   "frac_over_25": 0.026200697333749225,
+   "sunlit70_median_deg": 5.300000190734863,
+   "sunlit70_frac_under_10": 0.8386075949367089
+  }
+ },
+ "mars_ref": {
+  "air": {
+   "pressure_Pa_pct": {
+    "p10": 482.0,
+    "p50": 624.0,
+    "p90": 915.0,
+    "max": 1258.0
+   },
+   "frac_above_700Pa": 0.3960971177610802,
+   "earth_best_ground_Pa": 50500,
+   "earth_to_mars_ratio_median": 81.0
+  },
+  "ground": {
+   "note": "thermal inertia, J m-2 K-1 s-1/2; under ~100 = loose dust, 150-400 = sand and crusted soil, over ~1000 = rock",
+   "ti_pct": {
+    "p10": 60.0,
+    "p50": 214.0,
+    "p90": 304.0
+   },
+   "frac_dust_under100": 0.21838209147514842,
+   "frac_sand_150_400": 0.7021733637990464,
+   "frac_rock_over1000": 4.788441054537343e-05,
+   "frac_bright_dusty_albedo_over_0_25": 0.24890360710367046
+  },
+  "water": {
+   "note": "Odyssey GRS water-equivalent wt%, top ~1 m, 5 deg bins",
+   "equator_30_median": 4.1,
+   "coverage": "about 57S to 57N; ice-rich ground poleward is outside this map",
+   "frac_over_5pct": 0.17094632474711494,
+   "min_wt_pct": 1.6,
+   "max_wt_pct": 7.4
+  },
+  "base_zone": {
+   "rule": "GRS water over 5 wt%, below the areoid (thicker air), thermal inertia 150+ (firm), within 50 deg of equator",
+   "frac_of_mars": 0.04338977361517593
+  }
+ },
+ "nasa_earth": {
+  "modis_land_share": 0.999190647148145,
+  "modis_years": "2018-2022",
+  "swing_p99_C": 30.97622779846329,
+  "coldest_night_C": -72.96999206542966,
+  "best_cold_cover": 0.33659840086255854,
+  "best_cold_cover_bare": 0.24070821484393687
+ },
+ "ratios": {
+  "sand": {
+   "mars": 0.36082509272650953,
+   "earth_median": 0.479259825971165
+  },
+  "mobility": {
+   "note": "NASA's Scarecrow test rover was stripped so it weighs on Earth what Curiosity weighs on Mars: the ratio lens already used for wheels."
+  }
+ },
+ "meteor_check": {
+  "n_found": 31085,
+  "median_pct": 77.97990973364371,
+  "share_top10": 0.008750201061605276,
+  "share_top25": 0.6659160366736369
+ }
+}

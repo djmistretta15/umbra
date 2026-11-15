@@ -1,0 +1,252 @@
+{
+ "method": "Rank each NASA layer across ice-free land; exposure test bed = geometric mean of UV, thermal cycling, dust, dryness.",
+ "earth_max": {
+  "uv_index": 3.380000114440918,
+  "swing_C": 32.059993743896484,
+  "dust_ugm3": 105.0
+ },
+ "combined_top": [
+  {
+   "lat": 23.92,
+   "lon": 15.25,
+   "score": 98.9,
+   "place": "near Tajarhi, Libya",
+   "km_to_place": 94.0,
+   "uv": 2.61,
+   "swing_C": 24.6,
+   "dust_ugm3": 105.0,
+   "rain_mm": 7.0
+  },
+  {
+   "lat": 22.75,
+   "lon": 18.25,
+   "score": 98.6,
+   "place": "near Zouar, Chad",
+   "km_to_place": 309.0,
+   "uv": 2.49,
+   "swing_C": 25.7,
+   "dust_ugm3": 105.0,
+   "rain_mm": 11.0
+  },
+  {
+   "lat": 20.92,
+   "lon": 22.75,
+   "score": 97.4,
+   "place": "near Al Jawf, Libya",
+   "km_to_place": 369.0,
+   "uv": 2.46,
+   "swing_C": 21.4,
+   "dust_ugm3": 105.0,
+   "rain_mm": 4.0
+  },
+  {
+   "lat": 25.58,
+   "lon": 12.75,
+   "score": 97.3,
+   "place": "near Marzuq, Libya",
+   "km_to_place": 120.0,
+   "uv": 2.46,
+   "swing_C": 20.8,
+   "dust_ugm3": 105.0,
+   "rain_mm": 22.0
+  },
+  {
+   "lat": 17.75,
+   "lon": 44.92,
+   "score": 96.7,
+   "place": "near Najran, Saudi Arabia",
+   "km_to_place": 87.0,
+   "uv": 2.3,
+   "swing_C": 24.8,
+   "dust_ugm3": 105.0,
+   "rain_mm": 18.0
+  },
+  {
+   "lat": 23.58,
+   "lon": 13.08,
+   "score": 96.6,
+   "place": "near Tajarhi, Libya",
+   "km_to_place": 166.0,
+   "uv": 2.79,
+   "swing_C": 19.7,
+   "dust_ugm3": 105.0,
+   "rain_mm": 11.0
+  },
+  {
+   "lat": 15.08,
+   "lon": 46.25,
+   "score": 96.6,
+   "place": "near 'Ataq, Yemen",
+   "km_to_place": 84.0,
+   "uv": 2.35,
+   "swing_C": 28.4,
+   "dust_ugm3": 102.6,
+   "rain_mm": 22.0
+  },
+  {
+   "lat": 26.75,
+   "lon": 6.25,
+   "score": 96.5,
+   "place": "near Illizi, Algeria",
+   "km_to_place": 222.0,
+   "uv": 2.19,
+   "swing_C": 25.9,
+   "dust_ugm3": 105.0,
+   "rain_mm": 29.0
+  }
+ ],
+ "fresh_glass_top": [
+  {
+   "lat": -23.58,
+   "lon": -68.58,
+   "score": 98.4,
+   "place": "near Toconao, Chile",
+   "km_to_place": 73.0,
+   "uv": 2.64,
+   "swing_C": 34.8,
+   "dust_ugm3": 8.6,
+   "rain_mm": 15.0
+  },
+  {
+   "lat": -19.42,
+   "lon": -69.92,
+   "score": 98.3,
+   "place": "near Cuya, Chile",
+   "km_to_place": 40.0,
+   "uv": 2.74,
+   "swing_C": 35.2,
+   "dust_ugm3": 8.3,
+   "rain_mm": 15.0
+  },
+  {
+   "lat": -21.42,
+   "lon": -69.42,
+   "score": 97.5,
+   "place": "near Lagunas, Chile",
+   "km_to_place": 55.0,
+   "uv": 2.63,
+   "swing_C": 34.1,
+   "dust_ugm3": 12.2,
+   "rain_mm": 22.0
+  },
+  {
+   "lat": -17.25,
+   "lon": -70.75,
+   "score": 93.7,
+   "place": "near Moquegua, Peru",
+   "km_to_place": 21.0,
+   "uv": 2.62,
+   "swing_C": 23.1,
+   "dust_ugm3": 6.6,
+   "rain_mm": 66.0
+  },
+  {
+   "lat": -16.42,
+   "lon": -72.92,
+   "score": 90.7,
+   "place": "near Caman\u00e1, Peru",
+   "km_to_place": 31.0,
+   "uv": 2.45,
+   "swing_C": 32.4,
+   "dust_ugm3": 6.0,
+   "rain_mm": 113.0
+  },
+  {
+   "lat": 15.08,
+   "lon": 43.42,
+   "score": 90.6,
+   "place": "near Al Hudaydah, Yemen",
+   "km_to_place": 59.0,
+   "uv": 2.24,
+   "swing_C": 12.0,
+   "dust_ugm3": 99.4,
+   "rain_mm": 66.0
+  },
+  {
+   "lat": -20.92,
+   "lon": -67.42,
+   "score": 85.9,
+   "place": "near Villa Martin, Bolivia",
+   "km_to_place": 42.0,
+   "uv": 2.4,
+   "swing_C": 32.4,
+   "dust_ugm3": 2.3,
+   "rain_mm": 197.0
+  },
+  {
+   "lat": -1.42,
+   "lon": -90.42,
+   "score": 84.1,
+   "place": "near Puerto Villamil, Ecuador",
+   "km_to_place": 86.0,
+   "uv": 2.41,
+   "swing_C": 13.1,
+   "dust_ugm3": 2.0,
+   "rain_mm": 230.0
+  }
+ ],
+ "uv_top": [
+  {
+   "lat": -23.92,
+   "lon": -67.92,
+   "score": 100.0,
+   "place": "near Toconao, Chile",
+   "km_to_place": 82.0,
+   "uv": 3.38,
+   "swing_C": 32.7,
+   "dust_ugm3": 4.6,
+   "rain_mm": 95.0
+  },
+  {
+   "lat": -26.25,
+   "lon": -67.25,
+   "score": 90.2,
+   "place": "near Cafayate, Argentina",
+   "km_to_place": 129.0,
+   "uv": 3.05,
+   "swing_C": 31.6,
+   "dust_ugm3": 2.2,
+   "rain_mm": 749.0
+  },
+  {
+   "lat": -20.08,
+   "lon": -65.58,
+   "score": 85.8,
+   "place": "near Potos\u00ed, Bolivia",
+   "km_to_place": 60.0,
+   "uv": 2.9,
+   "swing_C": 21.4,
+   "dust_ugm3": 2.3,
+   "rain_mm": 468.0
+  },
+  {
+   "lat": -15.92,
+   "lon": -70.25,
+   "score": 83.4,
+   "place": "near Puno, Peru",
+   "km_to_place": 25.0,
+   "uv": 2.82,
+   "swing_C": 23.4,
+   "dust_ugm3": 2.0,
+   "rain_mm": 420.0
+  },
+  {
+   "lat": 23.58,
+   "lon": 13.42,
+   "score": 82.5,
+   "place": "near Tajarhi, Libya",
+   "km_to_place": 138.0,
+   "uv": 2.79,
+   "swing_C": 19.9,
+   "dust_ugm3": 105.0,
+   "rain_mm": 7.0
+  }
+ ],
+ "sources": [
+  "NASA POWER ALLSKY_SFC_UV_INDEX",
+  "NASA POWER PRECTOTCORR",
+  "NASA MODIS Terra LST monthly (GIBS)",
+  "NASA MERRA-2 dust surface mass concentration monthly (GIBS)",
+  "Smithsonian GVP Holocene volcanoes"
+ ]
+}

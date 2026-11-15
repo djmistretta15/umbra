@@ -1,0 +1,89 @@
+{
+ "region": {
+  "box": [
+   33.5,
+   36.5,
+   78.0,
+   86.0
+  ],
+  "cell_km": 1.1,
+  "elev_median": 5109,
+  "share_above_4800": 0.8563708333333333,
+  "share_flat_under5": 0.6703875,
+  "ground_mean_C_median": -1.8849998474121321,
+  "swing_C_median": 23.910000610351556,
+  "coldest_night_C_min": -37.33000488281249,
+  "lst_coverage": 1.0
+ },
+ "sites": [
+  {
+   "lat": 34.745,
+   "lon": 82.165,
+   "elev_m": 5247,
+   "slope_deg": 1.3,
+   "ground_mean_C": -3.0,
+   "swing_C": 23.5,
+   "coldest_night_C": -27.7,
+   "hottest_day_C": 26.6,
+   "rock": "loose sediment",
+   "km_to_road": 19,
+   "nearest_lake": "Lumajangdong Co",
+   "km_to_lake": 95,
+   "score": 0.5,
+   "tests": {
+    "thin_air": 0.95,
+    "cold": 0.42,
+    "swing": 1.0,
+    "flat": 1.0,
+    "loose": 0.9,
+    "caves": 1.0
+   }
+  },
+  {
+   "lat": 34.735,
+   "lon": 79.885,
+   "elev_m": 5482,
+   "slope_deg": 3.4,
+   "ground_mean_C": -5.0,
+   "swing_C": 20.9,
+   "coldest_night_C": -27.4,
+   "hottest_day_C": 21.6,
+   "rock": "loose sediment",
+   "km_to_road": 15,
+   "nearest_lake": "Alesayqin Ha",
+   "km_to_lake": 55,
+   "score": 0.454,
+   "tests": {
+    "thin_air": 1.0,
+    "cold": 0.58,
+    "swing": 0.92,
+    "flat": 0.95,
+    "loose": 0.63,
+    "caves": 1.0
+   }
+  },
+  {
+   "lat": 34.645,
+   "lon": 80.785,
+   "elev_m": 5172,
+   "slope_deg": 0.8,
+   "ground_mean_C": -2.7,
+   "swing_C": 22.8,
+   "coldest_night_C": -26.9,
+   "hottest_day_C": 25.0,
+   "rock": "loose sediment",
+   "km_to_road": 1,
+   "nearest_lake": "Gozha Co",
+   "km_to_lake": 53,
+   "score": 0.428,
+   "tests": {
+    "thin_air": 0.87,
+    "cold": 0.39,
+    "swing": 1.0,
+    "flat": 1.0,
+    "loose": 1.0,
+    "caves": 0.83
+   }
+  }
+ ]
+}

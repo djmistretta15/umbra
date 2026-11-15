@@ -1,0 +1,539 @@
+{
+ "method": "Umbra: underpriced analogs. One place, many analog jobs, little attention.\n\nValue  = jobs: how many of Umbra's 43 analog layers a 2-degree block ranks in the top 3% on (same rule as the expedition portfolio),\n         plus how many of the challenge's 9 dimensions those jobs span.\nPrice  = attention: closeness to the analog sites already studied (Haughton, Dry Valleys, Atacama, Rio Tinto, Iceland and others).\nUnderpriced = jobs x (1 - attention), attention = exp(-distance / 400 km).\nOutput: underpriced.json, cons/underpriced.png",
+ "n_layers": 43,
+ "top_underpriced": [
+  {
+   "lat": 19.0,
+   "lon": 19.0,
+   "near": "Faya Largeau, Chad",
+   "jobs": 11,
+   "dimensions": 6,
+   "km_to_studied_site": 2921,
+   "attention": 0.0,
+   "underpriced": 11.0,
+   "layers": [
+    "dirty_panels",
+    "dust_devils",
+    "dust_mantle",
+    "dust_storm",
+    "featureless",
+    "impact_rock",
+    "magnetic_memory",
+    "oxidant_soil",
+    "pad_rock",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 23.0,
+   "lon": 41.0,
+   "near": "At Taif, Saudi Arabia",
+   "jobs": 10,
+   "dimensions": 5,
+   "km_to_studied_site": 3923,
+   "attention": 0.0,
+   "underpriced": 10.0,
+   "layers": [
+    "ancient_crust",
+    "dust_devils",
+    "featureless",
+    "lava_tubes",
+    "mare_basalt",
+    "oxygen_feed",
+    "pad_rock",
+    "plume_blast",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 35.0,
+   "lon": 81.0,
+   "near": "Hotan, China",
+   "jobs": 10,
+   "dimensions": 6,
+   "km_to_studied_site": 1110,
+   "attention": 0.06,
+   "underpriced": 9.4,
+   "layers": [
+    "dust_devils",
+    "karst_caves",
+    "magnetic_memory",
+    "mars_hyperarid",
+    "radiative_cold",
+    "radio_shadow",
+    "seal_dust",
+    "thermal_swing",
+    "thin_air",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 15.0,
+   "lon": 47.0,
+   "near": "'Ataq, Yemen",
+   "jobs": 8,
+   "dimensions": 4,
+   "km_to_studied_site": 5013,
+   "attention": 0.0,
+   "underpriced": 8.0,
+   "layers": [
+    "dirty_panels",
+    "dust_devils",
+    "dust_mantle",
+    "dust_storm",
+    "karst_caves",
+    "plume_blast",
+    "thermal_swing",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 21.0,
+   "lon": 33.0,
+   "near": "Wadi Halfa, Sudan",
+   "jobs": 8,
+   "dimensions": 6,
+   "km_to_studied_site": 3683,
+   "attention": 0.0,
+   "underpriced": 8.0,
+   "layers": [
+    "ancient_crust",
+    "dirty_panels",
+    "featureless",
+    "magnetic_memory",
+    "pad_rock",
+    "seismic_quiet",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 21.0,
+   "lon": 9.0,
+   "near": "Arlit, Niger",
+   "jobs": 8,
+   "dimensions": 5,
+   "km_to_studied_site": 1885,
+   "attention": 0.01,
+   "underpriced": 7.9,
+   "layers": [
+    "dirty_panels",
+    "dried_lakes",
+    "dust_devils",
+    "featureless",
+    "magnetic_memory",
+    "pad_rock",
+    "plume_blast",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 39.0,
+   "lon": 73.0,
+   "near": "Osh, Kyrgyzstan",
+   "jobs": 8,
+   "dimensions": 6,
+   "km_to_studied_site": 1750,
+   "attention": 0.01,
+   "underpriced": 7.9,
+   "layers": [
+    "ice_ratio",
+    "impact_rock",
+    "karst_caves",
+    "magnetic_memory",
+    "radiation",
+    "radio_shadow",
+    "seal_dust",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 21.0,
+   "lon": 25.0,
+   "near": "Al Jawf, Libya",
+   "jobs": 7,
+   "dimensions": 4,
+   "km_to_studied_site": 3354,
+   "attention": 0.0,
+   "underpriced": 7.0,
+   "layers": [
+    "dust_devils",
+    "dust_mantle",
+    "featureless",
+    "magnetic_memory",
+    "pad_rock",
+    "plume_blast",
+    "thermal_swing"
+   ]
+  },
+  {
+   "lat": 31.0,
+   "lon": 67.0,
+   "near": "Chaman, Pakistan",
+   "jobs": 7,
+   "dimensions": 4,
+   "km_to_studied_site": 2487,
+   "attention": 0.0,
+   "underpriced": 7.0,
+   "layers": [
+    "dust_devils",
+    "highland_rock",
+    "magnetic_memory",
+    "oxygen_feed",
+    "seal_dust",
+    "thermal_swing",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 41.0,
+   "lon": 81.0,
+   "near": "Aksu, China",
+   "jobs": 7,
+   "dimensions": 6,
+   "km_to_studied_site": 1103,
+   "attention": 0.06,
+   "underpriced": 6.6,
+   "layers": [
+    "ice_ratio",
+    "karst_caves",
+    "magnetic_memory",
+    "plume_blast",
+    "radiation",
+    "radio_shadow",
+    "seal_dust"
+   ]
+  },
+  {
+   "lat": 25.0,
+   "lon": -5.0,
+   "near": "Chegga, Mauritania",
+   "jobs": 9,
+   "dimensions": 5,
+   "km_to_studied_site": 447,
+   "attention": 0.33,
+   "underpriced": 6.1,
+   "layers": [
+    "ancient_crust",
+    "dust_storm",
+    "featureless",
+    "highland_rock",
+    "magnetic_memory",
+    "oxygen_feed",
+    "pad_rock",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": -25.0,
+   "lon": 17.0,
+   "near": "Maltah\u00f6he, Namibia",
+   "jobs": 6,
+   "dimensions": 4,
+   "km_to_studied_site": 6472,
+   "attention": 0.0,
+   "underpriced": 6.0,
+   "layers": [
+    "mare_basalt",
+    "oxygen_feed",
+    "pad_rock",
+    "sand_ratio",
+    "thermal_swing",
+    "walk_back"
+   ]
+  }
+ ],
+ "top_jobs": [
+  {
+   "lat": 19.0,
+   "lon": 19.0,
+   "near": "Faya Largeau, Chad",
+   "jobs": 11,
+   "dimensions": 6,
+   "km_to_studied_site": 2921,
+   "attention": 0.0,
+   "underpriced": 11.0,
+   "layers": [
+    "dirty_panels",
+    "dust_devils",
+    "dust_mantle",
+    "dust_storm",
+    "featureless",
+    "impact_rock",
+    "magnetic_memory",
+    "oxidant_soil",
+    "pad_rock",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 35.0,
+   "lon": 81.0,
+   "near": "Hotan, China",
+   "jobs": 10,
+   "dimensions": 6,
+   "km_to_studied_site": 1110,
+   "attention": 0.06,
+   "underpriced": 9.4,
+   "layers": [
+    "dust_devils",
+    "karst_caves",
+    "magnetic_memory",
+    "mars_hyperarid",
+    "radiative_cold",
+    "radio_shadow",
+    "seal_dust",
+    "thermal_swing",
+    "thin_air",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 23.0,
+   "lon": 41.0,
+   "near": "At Taif, Saudi Arabia",
+   "jobs": 10,
+   "dimensions": 5,
+   "km_to_studied_site": 3923,
+   "attention": 0.0,
+   "underpriced": 10.0,
+   "layers": [
+    "ancient_crust",
+    "dust_devils",
+    "featureless",
+    "lava_tubes",
+    "mare_basalt",
+    "oxygen_feed",
+    "pad_rock",
+    "plume_blast",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": -23.0,
+   "lon": -69.0,
+   "near": "Calama, Chile",
+   "jobs": 10,
+   "dimensions": 5,
+   "km_to_studied_site": 152,
+   "attention": 0.68,
+   "underpriced": 3.2,
+   "layers": [
+    "dried_lakes",
+    "dust_storm",
+    "hydrothermal",
+    "oxidant_soil",
+    "plume_blast",
+    "salt_biosig",
+    "seal_dust",
+    "thermal_swing",
+    "volcanic_glass",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 25.0,
+   "lon": -5.0,
+   "near": "Chegga, Mauritania",
+   "jobs": 9,
+   "dimensions": 5,
+   "km_to_studied_site": 447,
+   "attention": 0.33,
+   "underpriced": 6.1,
+   "layers": [
+    "ancient_crust",
+    "dust_storm",
+    "featureless",
+    "highland_rock",
+    "magnetic_memory",
+    "oxygen_feed",
+    "pad_rock",
+    "thermal_swing",
+    "ringing_ground"
+   ]
+  },
+  {
+   "lat": 83.0,
+   "lon": -69.0,
+   "near": "Alert, Canada",
+   "jobs": 8,
+   "dimensions": 5,
+   "km_to_studied_site": 431,
+   "attention": 0.34,
+   "underpriced": 5.3,
+   "layers": [
+    "deep_cold",
+    "dry_permafrost",
+    "power_ridge",
+    "radio_shadow",
+    "seal_dust",
+    "seismic_quiet",
+    "sun_ice_edge",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 39.0,
+   "lon": 73.0,
+   "near": "Osh, Kyrgyzstan",
+   "jobs": 8,
+   "dimensions": 6,
+   "km_to_studied_site": 1750,
+   "attention": 0.01,
+   "underpriced": 7.9,
+   "layers": [
+    "ice_ratio",
+    "impact_rock",
+    "karst_caves",
+    "magnetic_memory",
+    "radiation",
+    "radio_shadow",
+    "seal_dust",
+    "walk_back"
+   ]
+  },
+  {
+   "lat": 39.0,
+   "lon": 93.0,
+   "near": "Dunhuang, China",
+   "jobs": 8,
+   "dimensions": 5,
+   "km_to_studied_site": 166,
+   "attention": 0.66,
+   "underpriced": 2.7,
+   "layers": [
+    "dust_devils",
+    "mars_hyperarid",
+    "oxidant_soil",
+    "plume_blast",
+    "radiation",
+    "seal_dust",
+    "thermal_swing",
+    "walk_back"
+   ]
+  }
+ ],
+ "studied_sites": [
+  {
+   "site": "Atacama (Yungay)",
+   "jobs": 6,
+   "dimensions": 4
+  },
+  {
+   "site": "Sahara (Tindouf / Morocco)",
+   "jobs": 6,
+   "dimensions": 5
+  },
+  {
+   "site": "Qaidam Basin",
+   "jobs": 5,
+   "dimensions": 3
+  },
+  {
+   "site": "Death Valley",
+   "jobs": 3,
+   "dimensions": 3
+  },
+  {
+   "site": "Haughton Crater",
+   "jobs": 2,
+   "dimensions": 2
+  },
+  {
+   "site": "Black Point Lava Flow",
+   "jobs": 2,
+   "dimensions": 2
+  },
+  {
+   "site": "Meteor Crater",
+   "jobs": 2,
+   "dimensions": 2
+  },
+  {
+   "site": "Salar de Uyuni",
+   "jobs": 2,
+   "dimensions": 2
+  },
+  {
+   "site": "Eureka, Ellesmere",
+   "jobs": 2,
+   "dimensions": 1
+  },
+  {
+   "site": "McMurdo Dry Valleys",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Mars Desert Research Station",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Lanzarote",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Iceland (Holuhraun)",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Pilbara",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Sudbury",
+   "jobs": 1,
+   "dimensions": 1
+  },
+  {
+   "site": "Mauna Kea / HI-SEAS",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Svalbard (AMASE)",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Concordia Station",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Rio Tinto",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Kilauea",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Ries Crater",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "Craters of the Moon",
+   "jobs": 0,
+   "dimensions": 0
+  },
+  {
+   "site": "White Sands",
+   "jobs": 0,
+   "dimensions": 0
+  }
+ ],
+ "median_jobs_land": 1.0
+}

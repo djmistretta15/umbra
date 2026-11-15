@@ -1,0 +1,37 @@
+{
+ "air": {
+  "pressure_Pa_pct": {
+   "p10": 482.0,
+   "p50": 624.0,
+   "p90": 915.0,
+   "max": 1258.0
+  },
+  "frac_above_700Pa": 0.3960971177610802,
+  "earth_best_ground_Pa": 50500,
+  "earth_to_mars_ratio_median": 81.0
+ },
+ "ground": {
+  "note": "thermal inertia, J m-2 K-1 s-1/2; under ~100 = loose dust, 150-400 = sand and crusted soil, over ~1000 = rock",
+  "ti_pct": {
+   "p10": 60.0,
+   "p50": 214.0,
+   "p90": 304.0
+  },
+  "frac_dust_under100": 0.21838209147514842,
+  "frac_sand_150_400": 0.7021733637990464,
+  "frac_rock_over1000": 4.788441054537343e-05,
+  "frac_bright_dusty_albedo_over_0_25": 0.24890360710367046
+ },
+ "water": {
+  "note": "Odyssey GRS water-equivalent wt%, top ~1 m, 5 deg bins",
+  "equator_30_median": 4.1,
+  "coverage": "about 57S to 57N; ice-rich ground poleward is outside this map",
+  "frac_over_5pct": 0.17094632474711494,
+  "min_wt_pct": 1.6,
+  "max_wt_pct": 7.4
+ },
+ "base_zone": {
+  "rule": "GRS water over 5 wt%, below the areoid (thicker air), thermal inertia 150+ (firm), within 50 deg of equator",
+  "frac_of_mars": 0.04338977361517593
+ }
+}

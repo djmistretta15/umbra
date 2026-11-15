@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umbra Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b16;--deep:#0d1426;--panel:#111a30;--line:#24304d;--text:#e8ecf4;--muted:#9aa6bd;--amber:#ffb547;--blue:#6aa6ff;--green:#5fd39a;--red:#ff8a65;
+--display:"Space Grotesk",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--body)}
+.wrap{max-width:1320px;margin:0 auto;padding:22px 18px 48px;display:grid;gap:16px}
+h1{font:700 30px/1.15 var(--display);margin:0} h2{font:700 19px/1.2 var(--display);margin:0} h3{font:600 15px var(--body);margin:0}
+.sub{color:var(--muted);margin:4px 0 0;max-width:900px}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin:0}
+button{font:500 14px var(--body);color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+button:hover{border-color:var(--amber)} button.primary{background:var(--amber);color:#1a1200;border-color:var(--amber);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+#drop{border:2px dashed #3a4a70;border-radius:14px;background:var(--deep);padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;transition:.15s}
+#drop.over{border-color:var(--amber);background:#1a1a10}
+#drop p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:270px 1fr 360px;gap:14px;align-items:start}
+@media(max-width:1150px){.grid{grid-template-columns:1fr}}
+.card{background:var(--deep);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px}
+#layers{list-style:none;margin:0;padding:0;display:grid;gap:2px;max-height:640px;overflow:auto}
+#layers li{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:7px;font-size:13.5px}
+#layers li.sel{background:#1c2846} #layers li:hover{background:#16203a}
+#layers li .nm{flex:1;cursor:pointer} #layers li .w{font:400 11px var(--mono);color:var(--muted)}
+#layers li.new .nm{color:var(--amber)} #layers li.meas .nm{color:#5ad1ff} #layers li.filter .nm{color:var(--green)}
+.tabs{display:flex;gap:6px} .tabs button.on{border-color:var(--amber);color:var(--amber)}
+canvas{width:100%;height:auto;border-radius:10px;background:#0a1222;image-rendering:pixelated;cursor:crosshair;display:block}
+.legend{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.bar{height:10px;flex:1;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:13.5px} th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:500;font-size:12px} td.n{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.pill{display:inline-block;font:500 11px var(--mono);padding:2px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.why{color:var(--muted);margin:0;font-size:14px} .tgt{margin:0;font-size:13.5px} .tgt b{color:var(--blue)} .tgt b.r{color:var(--red)}
+#log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px} #log li{border-left:3px solid var(--amber);padding:2px 0 2px 10px}
+#log li.ok{border-color:var(--green)} #log li.err{border-color:var(--red)}
+#cellinfo{font-size:13px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+.modal.on{display:flex}
+.dlg{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;max-width:520px;width:100%;display:grid;gap:12px}
+label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+input[type=text],select{font:14px var(--body);color:var(--text);background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:8px}
+.radio{display:flex;gap:14px;flex-wrap:wrap;color:var(--text);font-size:14px} .radio label{display:flex;gap:6px;align-items:center;color:var(--text);font-size:14px}
+.small{font-size:12.5px;color:var(--muted);margin:0}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.spin{color:var(--amber);font:500 13px var(--mono)}
+.st{display:inline-block;font:600 11px var(--mono);padding:2px 7px;border-radius:99px}
+.st.s{background:#163a28;color:var(--green)} .st.p{background:#3a3012;color:var(--amber)} .st.w{background:#2a1c1c;color:var(--red)}
+#tour{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);max-width:560px;width:calc(100% - 28px);background:var(--panel);border:1px solid var(--amber);border-radius:14px;padding:14px 16px;display:none;gap:10px;z-index:8;box-shadow:0 10px 40px #000a}
+#tour.on{display:grid} #tour p{margin:0} .hl{outline:3px solid var(--amber);outline-offset:4px;border-radius:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<p class="eyebrow">Umbra · Team Forced Futures · NASA Space Apps 2026</p>
+<h1>Umbra Live: bring your own data</h1>
+<div class="btns" style="margin:8px 0 2px"><button class="primary" id="tour-go">Take the 30-second tour</button></div>
+<p class="sub">The engine's tests run here in your browser. Drop in a new data layer and it becomes a new test or a filter on every test; drop in a list of sites and the engine scores them. Every map and list re-ranks on the spot.</p>
+</header>
+
+<section id="drop" aria-label="Drop a file">
+<div>
+<h2>Drop a file anywhere on this box</h2>
+<p><b>Data layer:</b> GeoTIFF in latitude/longitude, CSV with lat, lon and a value column, GeoJSON points, or ESRI ASCII grid (.asc).</p>
+<p><b>Site list:</b> CSV with name, lat, lon. Each site gets a percentile on every test.</p>
+<p><b>Find look-alikes:</b> click any spot on the map, or pick a Moon or Mars fingerprint, and the engine finds every place on Earth that matches it across all ticked layers, including the ones you dropped in.</p>
+</div>
+<div class="btns">
+<button class="primary" id="pick">Choose a file</button>
+<button id="s-sites">Try: sample site list</button>
+<button id="s-layer">Try: sample data layer (wind)</button>
+<input type="file" id="file" accept=".tif,.tiff,.csv,.txt,.json,.geojson,.asc" hidden>
+</div>
+</section>
+
+<div class="grid">
+<aside class="card">
+<h2>Tests</h2>
+<p class="small">Click a name to map it. Ticked layers count in the expedition view and in look-alike searches. Orbiter-view layers start unticked.</p>
+<ul id="layers"></ul>
+<div class="btns"><button id="all">Tick all</button><button id="none">Clear</button></div>
+</aside>
+
+<main class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+<h2 id="maptitle">Loading the engine…</h2>
+<div class="tabs" role="tablist"><button id="v-one" class="on" role="tab">One test</button><button id="v-exp" role="tab">Expedition overlap</button><button id="v-fp" role="tab">Find look-alikes</button><button id="v-under" role="tab">Underpriced</button><button id="v-sys" role="tab">Systems</button></div>
+</div>
+<canvas id="map" width="1440" height="720" aria-label="World map of the selected score"></canvas>
+<div class="legend"><span id="lg-lo">low</span><div class="bar" id="lgbar"></div><span id="lg-hi">most extreme</span></div>
+<div class="btns" id="fpbar"><select id="fp-preset" aria-label="Moon or Mars fingerprint"><option value="">Pick a Moon or Mars fingerprint…</option></select><button id="fp-here" disabled>Find places like the spot I clicked</button><button id="card-here" disabled>Report card for the spot I clicked</button></div>
+<p id="cellinfo">Click the map to see every test score at that spot.</p>
+<h3>What changed</h3>
+<ul id="log"></ul>
+</main>
+
+<aside class="card" id="detail"></aside>
+</div>
+
+<section class="card" id="sitesec" hidden>
+<h2>Your sites, scored on every test</h2>
+<p class="small">Percentile among Earth's land cells (higher = more extreme for that test). Sites are matched to the nearest 0.5° cell and its neighbours.</p>
+<div style="overflow:auto"><table id="sitetab"></table></div>
+<div class="btns"><button id="copy">Copy table</button><span id="copied" class="small"></span></div>
+</section>
+
+<footer>Layers: Umbra engine outputs at 0.5° (NASA MODIS land surface temperature, NASA POWER, WorldClim 2.1, SoilGrids 2.0, NASA POWER, IGRF, Natural Earth; Moon and Mars targets from NASA LRO, MGS and Odyssey data via the Planetary Data System). Look-alike layers: NASA POWER albedo, UV and rainfall, NASA MODIS land surface temperature, NASA MERRA-2 dust; Mars fingerprints follow MGS TES thermal inertia units (Putzig and Mellon 2007). Dropped files never leave your browser. Built with AI-assisted code.</footer>
+</div>
+
+<div id="tour" role="dialog" aria-live="polite"><p class="eyebrow" id="tour-n"></p><p id="tour-t"></p><div class="btns" style="justify-content:flex-end"><button id="tour-x">Close</button><button class="primary" id="tour-next">Next</button></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="dlgt">
+<div class="dlg">
+<h2 id="dlgt">Add a data layer</h2>
+<p class="small" id="dlginfo"></p>
+<label>Name<input type="text" id="d-name"></label>
+<label id="d-colwrap">Value column<select id="d-col"></select></label>
+<div><p class="small" style="margin-bottom:4px">Which end is more extreme (more like the Moon or Mars)?</p>
+<div class="radio"><label><input type="radio" name="dir" value="hi" checked> Higher values</label><label><input type="radio" name="dir" value="lo"> Lower values</label></div></div>
+<div><p class="small" style="margin-bottom:4px">How should the engine use it?</p>
+<div class="radio"><label><input type="radio" name="role" value="test" checked> As a new test</label><label><input type="radio" name="role" value="filter"> As a filter on every test (access, permits, logistics)</label></div></div>
+<div class="btns" style="justify-content:flex-end"><button id="d-cancel">Cancel</button><button class="primary" id="d-ok">Run the engine</button></div>
+</div>
+</div>
+
+<script>/*DATA*/</script>
+<script>
+"use strict";
+const M = window.UMBRA_META, H = M.H, W = M.W, N = H * W;
+let L = [];            // layers: {key,title,raw:Uint8Array(0-254,255 nan),on,kind,info}
+let FILTERS = [];      // Float32Array factors 0..1
+let LAND, CID, view = "one", cur = 0, SITES = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const latOf = i => 90 - (i + .5) * .5, lonOf = j => -180 + (j + .5) * .5;
+const ll = (la, lo) => `${Math.abs(la).toFixed(1)}°${la >= 0 ? "N" : "S"}, ${Math.abs(lo).toFixed(1)}°${lo >= 0 ? "E" : "W"}`;
+function log(msg, cls = "") { const li = document.createElement("li"); li.className = cls; li.innerHTML = msg; $("log").prepend(li); }
+
+// ---------- colour ----------
+const STOPS = [[13,8,135],[84,2,163],[139,10,165],[185,50,137],[219,92,104],[244,136,73],[254,188,43],[240,249,33]];
+const LUT = new Uint8Array(256 * 3);
+for (let v = 0; v < 256; v++) { const t = v / 255 * (STOPS.length - 1), a = Math.floor(t), b = Math.min(a + 1, STOPS.length - 1), f = t - a;
+  for (let c = 0; c < 3; c++) LUT[v * 3 + c] = Math.round(STOPS[a][c] * (1 - f) + STOPS[b][c] * f); }
+$("lgbar").style.background = `linear-gradient(90deg,${STOPS.map(s => `rgb(${s})`).join(",")})`;
+
+// ---------- load ----------
+async function load() {
+  const bin = Uint8Array.from(atob(window.UMBRA_BLOB), c => c.charCodeAt(0));
+  const buf = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
+  const u8 = new Uint8Array(buf); let o = 0;
+  M.keys.forEach(k => { const c = M.cons[k]; L.push({ key: k, title: c.title, raw: u8.slice(o, o + N), on: true, kind: "engine", info: c }); o += N; });
+  LAND = u8.slice(o, o + N); o += N;
+  CID = new Uint16Array(u8.slice(o, o + 2 * N).buffer); o += 2 * N;
+  (M.extra || []).forEach(k => { const raw = u8.slice(o, o + N); o += N;
+    const op = (M.ops || []).find(x => x.key === k);
+    if (op) L.push({ key: k, title: op.title, raw, on: false, kind: "new", info: op });
+    else if (k === "ringing_ground") L.push({ key: k, title: M.ringing.title, raw, on: false, kind: "new", info: M.ringing });
+    else { const m = M.measures.find(x => x.key === k); L.push({ key: k, title: m.title, raw, on: false, kind: "measure", info: { world: "Orbiter view", why: `What an orbiting instrument records, ranked across Earth's ice-free land (0 = lowest, 100 = highest). Source: ${m.source}. Use it in look-alike searches.` } }); } });
+  (M.masks || []).forEach(k => { const nb = Math.ceil(N / 8), pk = u8.slice(o, o + nb); o += nb; const m = new Uint8Array(N);
+    for (let p = 0; p < N; p++) m[p] = (pk[p >> 3] >> (7 - (p & 7))) & 1; const l = L.find(x => x.key === k); if (l) l.mask = m; });
+  (M.presets || []).forEach((p, k) => { const o2 = document.createElement("option"); o2.value = k; o2.textContent = p.name; $("fp-preset").appendChild(o2); });
+  renderList(); select(0);
+  log(`Engine loaded: ${L.length} layers over ${LAND.reduce((a, b) => a + b, 0).toLocaleString()} land cells.`, "ok");
+}
+
+// ---------- effective scores (filters applied) ----------
+function eff(l) {
+  if (!FILTERS.length) return l.raw;
+  if (l._eff && l._effN === FILTERS.length) return l._eff;
+  const out = new Uint8Array(N);
+  for (let p = 0; p < N; p++) { let v = l.raw[p]; if (v === 255) { out[p] = 255; continue; }
+    let f = 1; for (const F of FILTERS) f *= F[p]; out[p] = Math.round(v * f); }
+  l._eff = out; l._effN = FILTERS.length; return out;
+}
+function sorted(a) { const v = []; for (let p = 0; p < N; p++) if (a[p] !== 255 && LAND[p]) v.push(a[p]); return Float64Array.from(v).sort(); }
+function pctOf(sv, x) { let lo = 0, hi = sv.length; while (lo < hi) { const m = (lo + hi) >> 1; if (sv[m] < x) lo = m + 1; else hi = m; } return 100 * lo / sv.length; }
+function country(p) { let c = CID[p]; if (!c) { const i = Math.floor(p / W), j = p % W;
+  outer: for (let r = 1; r < 8; r++) for (let di = -r; di <= r; di++) for (let dj = -r; dj <= r; dj++) { const ii = i + di, jj = (j + dj + W) % W; if (ii >= 0 && ii < H && CID[ii * W + jj]) { c = CID[ii * W + jj]; break outer; } } }
+  return c ? M.names[c - 1] : "Open ocean or ice"; }
+function topN(a, n = 5, sep = 4) {
+  const idx = []; for (let p = 0; p < N; p++) if (a[p] !== 255 && a[p] > 0 && LAND[p]) idx.push(p);
+  idx.sort((x, y) => a[y] - a[x]); const out = [];
+  for (const p of idx) { const la = latOf(Math.floor(p / W)), lo = lonOf(p % W);
+    if (out.every(o => Math.abs(la - o.la) > sep || Math.abs(lo - o.lo) > sep / Math.max(Math.cos(la * Math.PI / 180), .25))) out.push({ p, la, lo, v: a[p] });
+    if (out.length >= n) break; }
+  return out;
+}
+function cellMax(a, la, lo) { const i = Math.min(H - 1, Math.max(0, Math.floor((90 - la) * 2))), j = ((Math.floor((lo + 180) * 2) % W) + W) % W; let m = -1;
+  for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { const ii = i + di, jj = (j + dj + W) % W; if (ii < 0 || ii >= H) continue; const v = a[ii * W + jj]; if (v !== 255 && v > m) m = v; }
+  return m; }
+
+// ---------- expedition overlap ----------
+function overlap() {   // same rule as the engine: cells in the top 3% (of scored cells) for several tests at once, shown on 2-degree blocks
+  const BH = H / 4, BW = W / 4, hits = new Uint8Array(N), act = L.filter(l => l.on), masks = [];
+  for (const l of act) {
+    if (l.mask && !FILTERS.length) { const m = l.mask; for (let p = 0; p < N; p++) if (m[p]) hits[p]++; masks.push(m); continue; }
+    const a = eff(l), pos = []; for (let p = 0; p < N; p++) if (LAND[p] && a[p] !== 255 && a[p] > 0) pos.push(a[p]);
+    if (!pos.length) { masks.push(null); continue; } const sv = Float64Array.from(pos).sort(), th = sv[Math.floor(sv.length * .97)];
+    const m = new Uint8Array(N); for (let p = 0; p < N; p++) if (LAND[p] && a[p] !== 255 && a[p] > 0 && a[p] >= th) { m[p] = 1; hits[p]++; } masks.push(m); }
+  const cnt = new Uint8Array(BH * BW);
+  for (let p = 0; p < N; p++) { const b = Math.floor(Math.floor(p / W) / 4) * BW + Math.floor((p % W) / 4); if (hits[p] > cnt[b]) cnt[b] = hits[p]; }
+  const uni = new Uint8Array(BH * BW);   // tests in the top 3% anywhere inside each block (the engine's headline count)
+  for (const m of masks) { if (!m) continue; const seen = new Uint8Array(BH * BW); for (let p = 0; p < N; p++) if (m[p]) seen[Math.floor(Math.floor(p / W) / 4) * BW + Math.floor((p % W) / 4)] = 1; for (let b = 0; b < uni.length; b++) uni[b] += seen[b]; }
+  const order = [...cnt.keys()].filter(b => uni[b] >= 2).sort((x, y) => uni[y] - uni[x] || cnt[y] - cnt[x]), list = [];
+  for (const b of order) { const la = 90 - (Math.floor(b / BW) + .5) * 2, lo = -180 + (b % BW + .5) * 2;
+    if (list.some(t => Math.abs(t.la - la) < 6 && Math.abs(t.lo - lo) < 12)) continue;
+    const i0 = Math.floor(b / BW) * 4, j0 = (b % BW) * 4, tests = [];
+    act.forEach((l, k) => { const m = masks[k]; if (!m) return; for (let di = 0; di < 4; di++) for (let dj = 0; dj < 4; dj++) if (m[(i0 + di) * W + j0 + dj]) { if (!tests.includes(l.title)) tests.push(l.title); } });
+    list.push({ b, n: tests.length, peak: cnt[b], la, lo, tests }); if (list.length >= 40) break; }
+  list.sort((x, y) => y.n - x.n || y.peak - x.peak);   // engine headline: most tests inside one 2-degree block
+  return { cnt, list: list.slice(0, 12), BW };
+}
+
+// ---------- look-alike search (fingerprint) ----------
+let FP = null, LASTP = -1;      // FP: {name, t: [[layerIndex, targetRank]]}
+function fpScore() {
+  const out = new Uint8Array(N).fill(255), A = FP.t.map(([k, t]) => [eff(L[k]), t]);
+  for (let p = 0; p < N; p++) { if (!LAND[p]) continue; let d = 0, n = 0;
+    for (const [a, t] of A) { const v = a[p]; if (v === 255) continue; d += (v - t) * (v - t); n++; }
+    if (n < Math.max(1, A.length * .75)) continue;
+    const sim = 1 - Math.sqrt(d / n) / 254; out[p] = Math.round(254 * Math.max(0, (sim - .5) / .5)); }
+  return out;
+}
+function fpFromCell(p) {
+  const t = []; L.forEach((l, k) => { if (!l.on) return; const v = eff(l)[p]; if (v !== 255) t.push([k, v]); });
+  return { name: `places like ${country(p)}, ${ll(latOf(Math.floor(p / W)), lonOf(p % W))}`, t, from: p };
+}
+function fpFromPreset(i) {
+  const pr = M.presets[i], t = [];
+  Object.entries(pr.t).forEach(([key, v]) => { const k = L.findIndex(l => l.key === key); if (k >= 0) { t.push([k, v]); } });
+  return { name: pr.name, t };
+}
+function runFP(fp) { FP = fp; view = "fp"; tabs(); refresh(); log(`Look-alike search: <b>${esc(fp.name)}</b> across ${fp.t.length} layers.`, "ok"); }
+$("fp-preset").onchange = e => { if (e.target.value !== "") runFP(fpFromPreset(+e.target.value)); };
+$("fp-here").onclick = () => { if (LASTP >= 0) runFP(fpFromCell(LASTP)); };
+
+// ---------- jobs per block, underpriced, report cards, systems ----------
+const DIM = { "Geology and minerals": ["mare_basalt", "highland_rock", "impact_rock", "volcanic_glass", "ancient_crust", "magnetic_memory", "oxygen_feed"],
+  "Terrain and landing": ["pad_rock", "featureless", "walk_back", "radio_shadow", "plume_blast"],
+  "Temperature and light": ["deep_cold", "thermal_swing", "low_sun", "lunar_night", "power_ridge", "radiative_cold", "dark_pocket", "sun_ice_edge"],
+  "Water and ice": ["dry_permafrost", "ice_ratio"],
+  "Dust, wind and air": ["seal_dust", "dust_devils", "dust_storm", "soft_sand", "sand_ratio", "dust_mantle", "dirty_panels", "thin_air"],
+  "Life and biosignatures": ["mars_hyperarid", "salt_biosig", "oxidant_soil", "hydrothermal", "dried_lakes", "erasers_off"],
+  "Underground": ["lava_tubes", "karst_caves", "ringing_ground"],
+  "Fields and signals": ["no_compass", "radio_quiet", "seismic_quiet", "radiation"] };
+const L2D = {}; Object.entries(DIM).forEach(([d, ks]) => ks.forEach(k => L2D[k] = d));
+const SVC = new Map(); function svOf(l) { const key = l.key + ":" + FILTERS.length; if (!SVC.has(key)) SVC.set(key, sorted(eff(l))); return SVC.get(key); }
+let JB = null;
+function jobsBlocks() {   // union count of analog layers in Earth's top 3% inside each 2-degree block (same rule as the engine)
+  const sig = L.length + ":" + FILTERS.length + ":" + L.filter(l => l.kind === "dropped" && l.on).length; if (JB && JB.sig === sig) return JB;
+  const BH = H / 4, BW = W / 4, jobs = new Uint8Array(BH * BW), hits = [], use = L.filter(l => l.kind !== "measure" && (l.kind !== "dropped" || l.on));
+  for (const l of use) { const blk = new Uint8Array(BH * BW);
+    if (l.mask && !FILTERS.length) { for (let p = 0; p < N; p++) if (l.mask[p]) blk[Math.floor(Math.floor(p / W) / 4) * BW + Math.floor((p % W) / 4)] = 1; }
+    else { const a = eff(l), pos = []; for (let p = 0; p < N; p++) if (LAND[p] && a[p] !== 255 && a[p] > 0) pos.push(a[p]);
+    if (!pos.length) continue; const sv = Float64Array.from(pos).sort(), th = Math.max(1, sv[Math.floor(sv.length * .97)]);
+    for (let p = 0; p < N; p++) if (LAND[p] && a[p] !== 255 && a[p] >= th) blk[Math.floor(Math.floor(p / W) / 4) * BW + Math.floor((p % W) / 4)] = 1; }
+    for (let b = 0; b < blk.length; b++) jobs[b] += blk[b]; hits.push({ l, blk }); }
+  const att = new Float32Array(BH * BW), dist = new Float32Array(BH * BW), R = Math.PI / 180;
+  for (let b = 0; b < att.length; b++) { const la = 90 - (Math.floor(b / BW) + .5) * 2, lo = -180 + (b % BW + .5) * 2; let d = 1e9;
+    for (const [, kl, ko] of M.known) { const c = Math.sin(la * R) * Math.sin(kl * R) + Math.cos(la * R) * Math.cos(kl * R) * Math.cos((lo - ko) * R); d = Math.min(d, 6371 * Math.acos(Math.max(-1, Math.min(1, c)))); }
+    dist[b] = d; att[b] = Math.exp(-d / 400); }
+  const under = Float32Array.from(jobs, (j, b) => j * (1 - att[b]));
+  JB = { sig, BW, jobs, hits, att, dist, under, n: use.length }; return JB;
+}
+function blockOf(p) { return Math.floor(Math.floor(p / W) / 4) * (W / 4) + Math.floor((p % W) / 4); }
+function blockList(arr, n) { const BW = W / 4, idx = [...arr.keys()].filter(b => arr[b] > 0).sort((x, y) => arr[y] - arr[x]), out = [];
+  for (const b of idx) { const la = 90 - (Math.floor(b / BW) + .5) * 2, lo = -180 + (b % BW + .5) * 2;
+    if (out.some(t => Math.abs(t.la - la) < 5 && Math.abs(t.lo - lo) < 7)) continue; out.push({ b, la, lo }); if (out.length >= n) break; }
+  return out; }
+function centerP(la, lo) { return Math.min(H - 1, Math.floor((90 - la) * 2)) * W + ((Math.floor((lo + 180) * 2) % W) + W) % W; }
+
+let CARDP = -1;
+function cardData(p) {
+  const jb = jobsBlocks(), b = blockOf(p), la = latOf(Math.floor(p / W)), lo = lonOf(p % W);
+  const jobs = jb.hits.filter(h => h.blk[b]).map(h => h.l);
+  const rows = Object.keys(DIM).concat(L.some(l => l.kind === "dropped") ? ["Your data"] : []).map(d => {
+    const ls = L.filter(l => (d === "Your data" ? l.kind === "dropped" : L2D[l.key] === d));
+    let best = null; for (const l of ls) { const v = cellMax(eff(l), la, lo); if (v < 0) continue; const pc = pctOf(svOf(l), v); if (!best || pc > best.pc) best = { l, pc }; }
+    const st = !best ? "w" : best.pc >= 90 ? "s" : best.pc >= 70 ? "p" : "w";
+    return { d, best, st }; });
+  return { p, la, lo, place: country(p), jobs, rows, strong: rows.filter(r => r.st === "s").length, partial: rows.filter(r => r.st === "p").length, jb, b };
+}
+function cardMarkdown(c) {
+  const lab = { s: "Strong", p: "Partial", w: "Weak" };
+  return [`# Umbra analog report card: ${c.place}, ${ll(c.la, c.lo)}`, "",
+    `Analog jobs in this 2 degree block: ${c.jobs.length} of ${c.jb.n} layers (top 3% on Earth).`, `Distance to nearest studied analog site: ${Math.round(c.jb.dist[c.b]).toLocaleString()} km.`, "",
+    "| Dimension | Match | Best test | Percentile | What is different |", "|---|---|---|---|---|",
+    ...c.rows.map(r => `| ${r.d} | ${lab[r.st]} | ${r.best ? r.best.l.title : "none"} | ${r.best ? r.best.pc.toFixed(0) : "-"} | ${r.best && r.st !== "w" ? (r.best.l.info.gap || "") : ""} |`), "",
+    "Jobs: " + c.jobs.map(l => l.title).join("; "), "",
+    "What no place on Earth gives: " + M.cant.map(x => `${x.title} (use ${x.instead})`).join("; "), "",
+    "Generated by Umbra Live (Team Forced Futures, NASA Space Apps 2026). Percentiles are among Earth's land cells at 0.5 degrees."].join("\n");
+}
+function download(name, text) { const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "text/markdown" })), download: name }); document.body.appendChild(a); a.click(); a.remove(); }
+$("card-here").onclick = () => { if (LASTP >= 0) { CARDP = LASTP; view = "card"; tabs(); refresh(); } };
+
+const SYS = [
+ { name: "The air must balance", moon: "In a sealed base every breath of CO2 must be removed and every breath of oxygen made.", earth: "Nuclear submarines (sealed for months, oxygen split from water, CO2 scrubbed); refuge chambers in underground mines; Biosphere 2, whose oxygen fell when concrete and soil microbes absorbed it.", layer: "dust_storm", where: "Dusty, windy plains load air filters the way lunar dust will.", yes: "Control loops, scrubbers, failure modes.", no: "Dust that settles under gravity; vacuum outside the hull." },
+ { name: "Every drop circles back", moon: "Water is recycled almost completely, and on the Moon the same ice is also rocket fuel.", earth: "Plants that turn wastewater back into drinking water (Orange County, Singapore NEWater); Antarctic station grey-water recycling.", layer: "mars_hyperarid", where: "Hyperarid, sterile ground where no water can be topped up.", yes: "Membranes, monitoring, trust in recycled water.", no: "The trade-off between drinking water and propellant." },
+ { name: "Food grown with electricity", moon: "Farms compete on calories per watt, through two-week nights.", earth: "Vertical farms; DLR's EDEN ISS greenhouse at Antarctica's Neumayer III station.", layer: "lunar_night", where: "Places with long polar night, where food must be grown in the dark.", yes: "Yield per watt, lighting, crop choice.", no: "Partial gravity; radiation on seeds." },
+ { name: "Small ecosystems tip over", moon: "A sealed farm and air system can crash when one part drifts.", earth: "Biosphere 2; closed aquaculture and hydroponic systems.", layer: "erasers_off", where: "Remote ground with Earth's own life and weather switched down.", yes: "Monitoring and early warning.", no: "Full isolation from Earth." },
+ { name: "Germs with nowhere to go", moon: "Biofilm grows in water lines, and an outbreak in a sealed base reaches everyone.", earth: "Biofilm control in hospital water systems; outbreak playbooks on cruise ships, submarines and Antarctic winter-over crews.", layer: "deep_cold", where: "Winter-over cold sites where crews are sealed in for months.", yes: "Cleaning, detection, isolation.", no: "Germs that grow more aggressive in low gravity." },
+ { name: "Power is breath", moon: "If power fails, air, water and heat fail with it.", earth: "Hospitals and data centres with tiered backup power and load shedding.", layer: "power_ridge", where: "Ridges with near-constant sun, the lunar base's power sites.", yes: "Priorities, switching, load shedding.", no: "Fourteen-day nights with no grid to fall back on." },
+ { name: "Living sealed underground", moon: "Lava tubes shield crews from radiation, but everything must come in through one entrance.", earth: "SNOLAB, a clean-room laboratory 2 km down a working nickel mine in Sudbury, Canada, with all air and supplies coming down one shaft.", layer: "lava_tubes", where: "Young basalt fields with lava tubes, like Saudi Arabia's harrats.", yes: "Clean operations, shaft logistics, rock as radiation shield.", no: "Vacuum outside the walls." },
+];
+let SYSI = 0;
+
+// ---------- drawing ----------
+const cv = $("map"), cx = cv.getContext("2d");
+function draw() {
+  const img = cx.createImageData(W, H), d = img.data; let pins = [];
+  if (view === "under" || view === "card") {
+    const jb = jobsBlocks(), arr = view === "under" ? jb.under : jb.jobs; let mx = 0; for (const v of arr) mx = Math.max(mx, v); mx = Math.max(mx, 1);
+    for (let p = 0; p < N; p++) { const v = arr[blockOf(p)]; let r, g, bl;
+      if (!LAND[p]) { r = 10; g = 18; bl = 34; } else if (!v) { r = g = bl = 40; } else { const q = Math.round(40 + 214 * v / mx); r = LUT[q * 3]; g = LUT[q * 3 + 1]; bl = LUT[q * 3 + 2]; }
+      d[p * 4] = r; d[p * 4 + 1] = g; d[p * 4 + 2] = bl; d[p * 4 + 3] = 255; }
+    if (view === "under") pins = blockList(jb.under, 5).map((t, k) => ({ la: t.la, lo: t.lo, label: k + 1 }));
+    else if (CARDP >= 0) pins = [{ la: latOf(Math.floor(CARDP / W)), lo: lonOf(CARDP % W), label: "★" }];
+    $("lg-lo").textContent = view === "under" ? "low" : "1 job"; $("lg-hi").textContent = view === "under" ? "many jobs, little attention" : `${mx} jobs in one 2° block`;
+  } else if (view === "one" || view === "fp" || view === "sys") {
+    const a = view === "fp" ? fpScore() : view === "sys" ? eff(L[Math.max(0, L.findIndex(l => l.key === SYS[SYSI].layer))]) : eff(L[cur]);
+    for (let p = 0; p < N; p++) { const v = a[p]; let r, g, b;
+      if (v === 255 || !LAND[p]) { if (LAND[p]) { r = g = b = 46; } else { r = 10; g = 18; b = 34; } }
+      else { r = LUT[v * 3]; g = LUT[v * 3 + 1]; b = LUT[v * 3 + 2]; }
+      d[p * 4] = r; d[p * 4 + 1] = g; d[p * 4 + 2] = b; d[p * 4 + 3] = 255; }
+    pins = topN(a).map((t, k) => ({ la: t.la, lo: t.lo, label: k + 1 }));
+    $("lg-lo").textContent = view === "fp" ? "unlike" : "low"; $("lg-hi").textContent = view === "fp" ? "closest match" : view === "sys" ? "best stress-test ground" : "most extreme";
+  } else {
+    const ov = overlap(), mx = Math.max(1, ...ov.cnt);
+    for (let p = 0; p < N; p++) { const b = Math.floor(Math.floor(p / W) / 4) * ov.BW + Math.floor((p % W) / 4), c = ov.cnt[b]; let r, g, bl;
+      if (!LAND[p]) { r = 10; g = 18; bl = 34; } else if (!c) { r = g = bl = 40; } else { const v = Math.round(60 + 195 * c / mx); r = LUT[v * 3]; g = LUT[v * 3 + 1]; bl = LUT[v * 3 + 2]; }
+      d[p * 4] = r; d[p * 4 + 1] = g; d[p * 4 + 2] = bl; d[p * 4 + 3] = 255; }
+    pins = ov.list.slice(0, 5).map((t, k) => ({ la: t.la, lo: t.lo, label: k + 1 }));
+    $("lg-lo").textContent = "1 test"; $("lg-hi").textContent = `${mx} tests in one 2° block`;
+  }
+  const off = Object.assign(document.createElement('canvas'), { width: W, height: H }); off.getContext("2d").putImageData(img, 0, 0);
+  cx.imageSmoothingEnabled = false; cx.drawImage(off, 0, 0, cv.width, cv.height);
+  const sx = cv.width / 360, sy = cv.height / 180;
+  if (SITES) for (const s of SITES) { const x = (s.lon + 180) * sx, y = (90 - s.lat) * sy;
+    cx.save(); cx.translate(x, y); cx.rotate(Math.PI / 4); cx.fillStyle = "#5ad1ff"; cx.strokeStyle = "#071021"; cx.lineWidth = 2; cx.fillRect(-7, -7, 14, 14); cx.strokeRect(-7, -7, 14, 14); cx.restore(); }
+  for (const p of pins) { const x = (p.lo + 180) * sx, y = (90 - p.la) * sy;
+    cx.beginPath(); cx.arc(x, y, 15, 0, 7); cx.fillStyle = "#ffb547"; cx.fill(); cx.lineWidth = 3; cx.strokeStyle = "#071021"; cx.stroke();
+    cx.fillStyle = "#1a1200"; cx.font = "700 17px Inter, sans-serif"; cx.textAlign = "center"; cx.textBaseline = "middle"; cx.fillText(p.label, x, y + 1); }
+}
+
+// ---------- panels ----------
+function renderList() {
+  $("layers").innerHTML = L.map((l, k) => `<li class="${k === cur ? "sel" : ""} ${l.kind === "dropped" ? "new" : l.kind === "measure" ? "meas" : ""}"><input type="checkbox" data-k="${k}" ${l.on ? "checked" : ""} aria-label="Include ${esc(l.title)} in expedition view"><span class="nm" data-k="${k}">${k + 1}. ${esc(l.title)}</span><span class="w">${esc(l.info.world || "")}</span></li>`).join("")
+    + FILTERS.map((f, k) => `<li class="filter"><span class="nm">Filter: ${esc(f.name)}</span><span class="w">on all</span></li>`).join("");
+}
+$("layers").addEventListener("click", e => { const k = e.target.dataset.k; if (k === undefined) return;
+  if (e.target.type === "checkbox") { L[k].on = e.target.checked; if (view === "exp") refresh(); } else select(+k); });
+function select(k) { cur = k; view = "one"; tabs(); refresh(); }
+function tabs() { [["v-one", "one"], ["v-exp", "exp"], ["v-fp", "fp"], ["v-under", "under"], ["v-sys", "sys"]].forEach(([id, v]) => $(id).classList.toggle("on", view === v)); }
+function refresh() { renderList(); draw(); detail(); }
+function detail() {
+  if (view === "under") {
+    const jb = jobsBlocks(), top = blockList(jb.under, 8);
+    const studied = M.known.map(([nm, la, lo]) => ({ nm, j: jb.jobs[blockOf(centerP(la, lo))] })).sort((x, y) => y.j - x.j).slice(0, 6);
+    $("maptitle").textContent = "Underpriced analogs";
+    $("detail").innerHTML = `<h2>Many analog jobs, little attention</h2><p class="why">A place known for one use can quietly do many. For each 2° block the engine counts its <b>jobs</b>: how many of ${jb.n} analog layers it ranks in Earth's top 3% on. It then discounts blocks close to the analog sites already studied. Bright = value nobody has priced in. Drop in a layer and tick it: the ranking updates.</p>
+    <table><thead><tr><th>#</th><th>Region</th><th>Jobs</th><th>To studied site</th></tr></thead><tbody>${top.map((t, k) => `<tr><td class="n">${k + 1}</td><td>${esc(country(centerP(t.la, t.lo)))}<br><span class="small">${ll(t.la, t.lo)}</span></td><td class="n">${jb.jobs[t.b]}</td><td class="n">${Math.round(jb.dist[t.b]).toLocaleString()} km</td></tr>`).join("")}</tbody></table>
+    <h3>Studied sites, for comparison</h3><table><tbody>${studied.map(s => `<tr><td>${esc(s.nm)}</td><td class="n">${s.j} jobs</td></tr>`).join("")}</tbody></table>
+    <p class="small">Jobs are counted per 2° block, so they may sit in different spots inside it. Ice-covered ground is outside the engine. Click any block, then "Report card", to see its jobs.</p>`;
+    return;
+  }
+  if (view === "card") {
+    if (CARDP < 0) { $("detail").innerHTML = `<h2>Report card</h2><p class="why">Click a spot on the map, then press "Report card for the spot I clicked".</p>`; return; }
+    const c = cardData(CARDP), lab = { s: "Strong", p: "Partial", w: "Weak" }; $("maptitle").textContent = `Report card: ${c.place}`;
+    const tg = c.rows.filter(r => r.st === "s" && r.best && (r.best.l.info.moon || r.best.l.info.mars)).slice(0, 3);
+    $("detail").innerHTML = `<h2>${esc(c.place)}</h2><p class="small">${ll(c.la, c.lo)} · ${c.jobs.length} analog jobs in this 2° block · ${Math.round(c.jb.dist[c.b]).toLocaleString()} km from the nearest studied analog site</p>
+    <p class="why">What is similar, how similar, and what is different. Strong = Earth's top 10% for that dimension, partial = top 30%.</p>
+    <table><thead><tr><th>Dimension</th><th>Match</th><th>Best test (percentile)</th></tr></thead><tbody>${c.rows.map(r => `<tr><td>${esc(r.d)}</td><td><span class="st ${r.st}">${lab[r.st]}</span></td><td>${r.best ? `${esc(r.best.l.title)} <span class="n">${r.best.pc.toFixed(0)}</span>${r.st !== "w" && r.best.l.info.gap ? `<br><span class="small">Different: ${esc(r.best.l.info.gap)}</span>` : ""}` : "none"}</td></tr>`).join("")}</tbody></table>
+    ${tg.length ? `<h3>Moon and Mars targets it matches</h3>${tg.map(r => `<p class="tgt">${r.best.l.info.moon ? `<b>Moon:</b> ${esc(r.best.l.info.moon)}` : `<b class="r">Mars:</b> ${esc(r.best.l.info.mars)}`}</p>`).join("")}` : ""}
+    <h3>What no place on Earth gives</h3><p class="small">${M.cant.map(x => `<b>${esc(x.title)}</b>: use ${esc(x.instead)}`).join(" · ")}</p>
+    <div class="btns"><button id="card-dl" class="primary">Download this report card</button></div>`;
+    $("card-dl").onclick = () => download(`umbra-report-${c.la.toFixed(1)}_${c.lo.toFixed(1)}.md`, cardMarkdown(c));
+    return;
+  }
+  if (view === "sys") {
+    const s = SYS[SYSI], k = L.findIndex(l => l.key === s.layer), a = eff(L[k]);
+    $("maptitle").textContent = `Systems: ${s.name}`;
+    $("detail").innerHTML = `<h2>System analogs</h2><p class="why">Earth already runs pieces of the Moon's future. Pick a lunar bottleneck: see the Earth system living with it now, where to stress-test it in Moon-like conditions, and what does and does not transfer. Life support first.</p>
+    <label>Lunar bottleneck<select id="sys-pick">${SYS.map((x, i) => `<option value="${i}" ${i === SYSI ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select></label>
+    <p class="tgt"><b>On the Moon:</b> ${esc(s.moon)}</p><p class="tgt"><b class="r">Already living it on Earth:</b> ${esc(s.earth)}</p>
+    <h3>Stress-test it here (map: ${esc(L[k].title)})</h3><p class="small">${esc(s.where)}</p>
+    <table><tbody>${topN(a, 5).map((t, i) => `<tr><td class="n">${i + 1}</td><td>${esc(country(t.p))}<br><span class="small">${ll(t.la, t.lo)}</span></td></tr>`).join("")}</tbody></table>
+    <p class="small"><b style="color:var(--green)">Transfers:</b> ${esc(s.yes)}<br><b style="color:var(--amber)">Does not:</b> ${esc(s.no)}</p>`;
+    $("sys-pick").onchange = e => { SYSI = +e.target.value; refresh(); };
+    return;
+  }
+  if (view === "fp") {
+    if (!FP) { $("maptitle").textContent = "Find look-alikes"; $("detail").innerHTML = `<h2>Find look-alikes</h2><p class="why">Pick a Moon or Mars fingerprint above the map, or click any spot and press "Find places like the spot I clicked". The engine compares every land cell with that fingerprint across all ticked layers.</p>`; return; }
+    const a = fpScore(), sv = sorted(a); $("maptitle").textContent = `Look-alikes: ${FP.name}`;
+    const known = (M.known.concat(SITES ? SITES.map(s => [s.name, s.lat, s.lon]) : [])).map(([nm, la, lo]) => ({ nm, v: cellMax(a, la, lo) })).filter(k => k.v >= 0).sort((x, y) => y.v - x.v).slice(0, 8);
+    $("detail").innerHTML = `<h2>${esc(FP.name)}</h2><p class="why">Every land cell is compared with this fingerprint on ${FP.t.length} layers. Match = how close its ranks are on all of them at once (100 = identical). Drop in a new layer and tick it, click a spot, and the new layer joins the fingerprint: the engine does the matching, not a person.</p>
+    <h3>Fingerprint</h3><table><tbody>${FP.t.map(([k, t]) => `<tr><td>${esc(L[k].title)}</td><td class="n">${Math.round(t / 2.54)}</td></tr>`).join("")}</tbody></table>
+    <h3>Closest matches on Earth</h3><table><thead><tr><th>#</th><th>Region</th><th>Match</th></tr></thead><tbody>${topN(a, 8).map((t, k) => `<tr><td class="n">${k + 1}</td><td>${esc(country(t.p))}<br><span class="small">${ll(t.la, t.lo)}</span></td><td class="n">${Math.round(50 + t.v / 5.08)}</td></tr>`).join("")}</tbody></table>
+    <h3>Known and dropped sites</h3><table><tbody>${known.map(k => `<tr><td>${esc(k.nm)}</td><td class="n">${Math.round(50 + k.v / 5.08)}</td></tr>`).join("")}</tbody></table>
+    <p class="small">Orbiter-view layers are ranks, not physical units, so a Mars fingerprint means "as bright and as loose, relative to its own planet". Moisture changes Earth's thermal readings, so fingerprints include dryness.</p>`;
+    return;
+  }
+  if (view === "exp") {
+    const ov = overlap(); $("maptitle").textContent = `Expedition overlap: ${L.filter(l => l.on).length} tests`;
+    $("detail").innerHTML = `<h2>Best places to test many things at once</h2><p class="why">2° blocks where the most ticked tests are in Earth's top 3%.</p>
+    <table><thead><tr><th>#</th><th>Region</th><th>Tests</th></tr></thead><tbody>${ov.list.slice(0, 8).map((t, k) => { const p = Math.floor((90 - t.la) * 2) * W + Math.floor((t.lo + 180) * 2);
+      return `<tr><td class="n">${k + 1}</td><td>${esc(country(p))}<br><span class="small">${ll(t.la, t.lo)}</span></td><td><b>${t.n}</b>: ${esc(t.tests.join("; "))}</td></tr>`; }).join("")}</tbody></table>`;
+    return;
+  }
+  const l = L[cur], a = eff(l), sv = sorted(a), c = l.info;
+  $("maptitle").textContent = `${cur + 1}. ${l.title}`;
+  const known = (M.known.concat(SITES ? SITES.map(s => [s.name, s.lat, s.lon]) : [])).map(([nm, la, lo]) => ({ nm, p: pctOf(sv, cellMax(a, la, lo)) })).sort((x, y) => y.p - x.p);
+  $("detail").innerHTML = `<div class="btns">${c.world ? `<span class="pill">${esc(c.world)}</span>` : ""}${c.conf ? `<span class="pill">Confidence: ${esc(c.conf)}</span>` : ""}${l.kind === "dropped" ? `<span class="pill" style="color:var(--amber)">your data</span>` : ""}</div>
+  <h2>${esc(l.title)}</h2>${c.why ? `<p class="why">${esc(c.why)}</p>` : ""}
+  ${c.moon ? `<p class="tgt"><b>Moon target (LRO):</b> ${esc(c.moon)}</p>` : ""}${c.mars ? `<p class="tgt"><b class="r">Mars target (orbiters):</b> ${esc(c.mars)}</p>` : ""}
+  <h3>Earth's top regions${FILTERS.length ? " (after filters)" : ""}</h3>
+  <table><thead><tr><th>#</th><th>Region</th><th>Score</th></tr></thead><tbody>${topN(a).map((t, k) => `<tr><td class="n">${k + 1}</td><td>${esc(country(t.p))}<br><span class="small">${ll(t.la, t.lo)}</span></td><td class="n">${Math.round(t.v / 2.54)}</td></tr>`).join("") || `<tr><td colspan=3>No land cells scored.</td></tr>`}</tbody></table>
+  <h3>Known and dropped sites</h3>
+  <table><tbody>${known.map(k => `<tr><td>${esc(k.nm)}</td><td class="n">${k.p.toFixed(0)}th pct</td></tr>`).join("")}</tbody></table>
+  ${c.gap ? `<p class="small"><b style="color:var(--amber)">Will not carry over:</b> ${esc(c.gap)}</p>` : ""}`;
+}
+$("v-one").onclick = () => { view = "one"; tabs(); refresh(); };
+$("v-exp").onclick = () => { view = "exp"; tabs(); refresh(); };
+$("v-fp").onclick = () => { view = "fp"; tabs(); refresh(); };
+$("v-under").onclick = () => { view = "under"; tabs(); refresh(); };
+$("v-sys").onclick = () => { view = "sys"; tabs(); refresh(); };
+$("all").onclick = () => { L.forEach(l => l.on = true); refresh(); };
+$("none").onclick = () => { L.forEach(l => l.on = false); refresh(); };
+cv.addEventListener("click", e => {
+  const r = cv.getBoundingClientRect(), j = Math.floor((e.clientX - r.left) / r.width * W), i = Math.floor((e.clientY - r.top) / r.height * H), p = i * W + j;
+  if (!LAND[p]) { $("cellinfo").textContent = `${ll(latOf(i), lonOf(j))}: ocean.`; $("fp-here").disabled = true; $("card-here").disabled = true; return; }
+  LASTP = p; $("fp-here").disabled = false; $("card-here").disabled = false;
+  const s = L.map(l => { const a = eff(l); return { t: l.title, v: a[p] === 255 ? -1 : a[p] }; }).filter(x => x.v >= 0).sort((x, y) => y.v - x.v).slice(0, 5);
+  $("cellinfo").innerHTML = `<b style="color:var(--text)">${esc(country(p))}, ${ll(latOf(i), lonOf(j))}</b>: ${s.map(x => `${esc(x.t)} ${Math.round(x.v / 2.54)}`).join(" · ")}`;
+});
+
+// ---------- 30-second tour ----------
+const TOUR = [
+ ["Each test scores every land cell on Earth against measured Moon or Mars data. This one is Diviner's polar cold.", () => { const k = L.findIndex(l => l.key === "deep_cold"); select(Math.max(0, k)); }],
+ ["Expedition overlap: one trip that tests many systems. The top block covers the most tests at once.", () => { view = "exp"; tabs(); refresh(); }],
+ ["Find look-alikes: pick a Mars fingerprint and the engine ranks every place on Earth by how closely it matches.", () => { $("fp-preset").value = "0"; runFP(fpFromPreset(0)); }],
+ ["Underpriced analogs: places doing many analog jobs that almost nobody studies.", () => { view = "under"; tabs(); refresh(); }],
+ ["Report card: what is similar, how similar, and what is different, here for northern Chad. Download it with one click.", () => { CARDP = centerP(19.0, 19.0); LASTP = CARDP; $("card-here").disabled = false; view = "card"; tabs(); refresh(); }],
+ ["Systems: Earth already runs pieces of the Moon's future, starting with life support.", () => { SYSI = 0; view = "sys"; tabs(); refresh(); }],
+ ["Now bring your own NASA data: drop a file here and it joins every view, every ranking and every report card.", () => { $("drop").classList.add("hl"); $("drop").scrollIntoView({ behavior: "smooth", block: "center" }); }],
+];
+let TI = -1;
+function tourStep() { $("drop").classList.remove("hl"); if (TI >= TOUR.length) { $("tour").classList.remove("on"); return; }
+  $("tour-n").textContent = `Step ${TI + 1} of ${TOUR.length}`; $("tour-t").textContent = TOUR[TI][0]; $("tour-next").textContent = TI === TOUR.length - 1 ? "Finish" : "Next";
+  TOUR[TI][1](); if (TI < TOUR.length - 1) $("map").scrollIntoView({ behavior: "smooth", block: "center" }); }
+$("tour-go").onclick = () => { TI = 0; $("tour").classList.add("on"); tourStep(); };
+$("tour-next").onclick = () => { TI++; tourStep(); };
+$("tour-x").onclick = () => { TI = TOUR.length; tourStep(); };
+
+// ---------- sites ----------
+function scoreSites() {
+  const SV = L.map(l => sorted(eff(l)));
+  const rows = SITES.map(s => { const pc = L.map((l, k) => pctOf(SV[k], cellMax(eff(l), s.lat, s.lon)));
+    const best = pc.map((v, k) => ({ v, k })).sort((x, y) => y.v - x.v).slice(0, 3);
+    return { s, pc, best, n90: pc.filter(v => v >= 90).length }; }).sort((a, b) => b.n90 - a.n90);
+  $("sitesec").hidden = false;
+  $("sitetab").innerHTML = `<thead><tr><th>Site</th><th>Location</th><th>Tests in top 10%</th><th>Strongest tests</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.s.name)}</td><td class="n">${ll(r.s.lat, r.s.lon)}</td><td class="n">${r.n90} of ${L.length}</td><td>${r.best.map(b => `${esc(L[b.k].title)} <span class="n">(${b.v.toFixed(0)}th)</span>`).join("; ")}</td></tr>`).join("")}</tbody>`;
+  $("sitetab").dataset.tsv = ["site\tlat\tlon\t" + L.map(l => l.title).join("\t"), ...rows.map(r => `${r.s.name}\t${r.s.lat}\t${r.s.lon}\t${r.pc.map(v => v.toFixed(0)).join("\t")}`)].join("\n");
+  const b = rows[0]; log(`Scored ${rows.length} sites. Strongest: <b>${esc(b.s.name)}</b>, top 10% on ${b.n90} tests.`, "ok");
+}
+$("copy").onclick = async () => { try { await navigator.clipboard.writeText($("sitetab").dataset.tsv); $("copied").textContent = "Copied. Paste into a spreadsheet."; } catch { $("copied").textContent = "Copy was blocked here."; } };
+
+// ---------- parsing ----------
+function parseCSV(text) {
+  const lines = text.replace(/\r/g, "").split("\n").filter(x => x.trim()); const delim = [",", ";", "\t"].sort((a, b) => lines[0].split(b).length - lines[0].split(a).length)[0];
+  const hdr = lines[0].split(delim).map(h => h.trim().replace(/^"|"$/g, "")); const rows = lines.slice(1).map(l => l.split(delim).map(x => x.trim().replace(/^"|"$/g, "")));
+  return { hdr, rows };
+}
+const find = (hdr, re) => hdr.findIndex(h => re.test(h.toLowerCase()));
+function accumulate(pts) {   // pts: [lat,lon,val]
+  const sum = new Float64Array(N), cnt = new Uint32Array(N);
+  for (const [la, lo, v] of pts) { if (!isFinite(v) || la < -90 || la > 90) continue; const i = Math.min(H - 1, Math.floor((90 - la) * 2)), j = ((Math.floor((((lo + 540) % 360) - 180 + 180) * 2)) % W + W) % W;
+    sum[i * W + j] += v; cnt[i * W + j]++; }
+  const out = new Float32Array(N).fill(NaN); for (let p = 0; p < N; p++) if (cnt[p]) out[p] = sum[p] / cnt[p];
+  return out;
+}
+function fillGaps(a, r = 2) {  // fill empty land cells from neighbours (sparse points)
+  const out = a.slice();
+  for (let i = 0; i < H; i++) for (let j = 0; j < W; j++) { const p = i * W + j; if (!LAND[p] || isFinite(a[p])) continue; let s = 0, n = 0;
+    for (let di = -r; di <= r; di++) for (let dj = -r; dj <= r; dj++) { const ii = i + di; if (ii < 0 || ii >= H) continue; const v = a[ii * W + (j + dj + W) % W]; if (isFinite(v)) { s += v; n++; } }
+    if (n) out[p] = s / n; }
+  return out;
+}
+async function loadGeoTIFF(buf) {
+  if (!window.GeoTIFF) await new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/geotiff@2.1.3/dist-browser/geotiff.js"; s.onload = res; s.onerror = () => rej(new Error("Could not load the GeoTIFF reader.")); document.head.appendChild(s); });
+  const tif = await GeoTIFF.fromArrayBuffer(buf), im = await tif.getImage();
+  const [x0, y0, x1, y1] = im.getBoundingBox();
+  if (x0 < -181 || x1 > 361 || y0 < -91 || y1 > 91) throw new Error("This GeoTIFF is not in latitude/longitude degrees (EPSG:4326). Reproject it first.");
+  const w0 = im.getWidth(), h0 = im.getHeight(), sc = Math.min(1, 2880 / w0, 1440 / h0), w = Math.max(1, Math.round(w0 * sc)), h = Math.max(1, Math.round(h0 * sc));
+  const [band] = await im.readRasters({ width: w, height: h, samples: [0] }); const nd = im.getGDALNoData();
+  const dx = (x1 - x0) / w, dy = (y1 - y0) / h, pts = [];
+  for (let r = 0; r < h; r++) for (let c = 0; c < w; c++) { const v = band[r * w + c]; if (v === nd || !isFinite(v) || v <= -9998) continue; pts.push([y1 - (r + .5) * dy, x0 + (c + .5) * dx, v]); }
+  let g = accumulate(pts);
+  if (dx > .5 || dy > .5) g = fillGaps(g, Math.ceil(Math.max(dx, dy) / .5));
+  return { grid: g, info: `${w0} × ${h0} pixels, ${x0.toFixed(1)} to ${x1.toFixed(1)} lon, ${y0.toFixed(1)} to ${y1.toFixed(1)} lat` };
+}
+function loadASC(text) {
+  const t = text.split(/\s+/); const hd = {}; let k = 0;
+  while (isNaN(parseFloat(t[k])) || /^[a-z]/i.test(t[k])) { hd[t[k].toLowerCase()] = parseFloat(t[k + 1]); k += 2; if (k > 20) break; }
+  const nc = hd.ncols, nr = hd.nrows, cs = hd.cellsize, x0 = hd.xllcorner ?? hd.xllcenter - cs / 2, y0 = hd.yllcorner ?? hd.yllcenter - cs / 2, nd = hd.nodata_value ?? -9999, pts = [];
+  for (let r = 0; r < nr; r++) for (let c = 0; c < nc; c++) { const v = parseFloat(t[k++]); if (v === nd || !isFinite(v)) continue; pts.push([y0 + (nr - r - .5) * cs, x0 + (c + .5) * cs, v]); }
+  let g = accumulate(pts); if (cs > .5) g = fillGaps(g, Math.ceil(cs / .5));
+  return { grid: g, info: `${nc} × ${nr} grid, ${cs}° cells` };
+}
+
+// ---------- handle a file ----------
+let PENDING = null;
+async function handle(name, buf) {
+  const low = name.toLowerCase();
+  const rd = document.createElement("li"); rd.innerHTML = `<span class="spin">Reading ${esc(name)}…</span>`; $("log").prepend(rd);
+  setTimeout(() => rd.remove(), 1500);
+  try {
+    if (/\.tiff?$/.test(low)) { const r = await loadGeoTIFF(buf); return ask({ name, grid: r.grid, info: r.info }); }
+    const text = new TextDecoder().decode(buf);
+    if (/\.asc$/.test(low)) { const r = loadASC(text); return ask({ name, grid: r.grid, info: r.info }); }
+    if (/\.(geo)?json$/.test(low)) {
+      const gj = JSON.parse(text), feats = (gj.features || []).filter(f => f.geometry && f.geometry.type === "Point");
+      if (!feats.length) throw new Error("GeoJSON needs Point features. For areas, use a GeoTIFF.");
+      const props = Object.keys(feats[0].properties || {}), num = props.filter(p => typeof feats[0].properties[p] === "number");
+      const nm = props.find(p => /name|site|title/i.test(p));
+      if (!num.length && nm) return sites(feats.map(f => ({ name: String(f.properties[nm]), lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] })), name);
+      return ask({ name, cols: num, build: col => fillGaps(accumulate(feats.map(f => [f.geometry.coordinates[1], f.geometry.coordinates[0], +f.properties[col]]))), info: `${feats.length} points` });
+    }
+    const { hdr, rows } = parseCSV(text), ila = find(hdr, /^(lat|latitude|y)$/), ilo = find(hdr, /^(lon|long|lng|longitude|x)$/);
+    if (ila < 0 || ilo < 0) throw new Error("The CSV needs lat and lon columns.");
+    const num = hdr.map((h, k) => k).filter(k => k !== ila && k !== ilo && rows.slice(0, 50).every(r => r[k] === "" || isFinite(+r[k])));
+    const inm = find(hdr, /name|site|station|title|label/);
+    if (!num.length || (inm >= 0 && rows.length < 2000)) {
+      if (inm < 0 && !num.length) throw new Error("No value column and no name column found.");
+      if (!num.length || confirmSites(rows.length)) return sites(rows.map(r => ({ name: inm >= 0 ? r[inm] : `${r[ila]}, ${r[ilo]}`, lat: +r[ila], lon: +r[ilo] })).filter(s => isFinite(s.lat) && isFinite(s.lon)), name);
+    }
+    return ask({ name, cols: num.map(k => hdr[k]), build: col => { const k = hdr.indexOf(col); return fillGaps(accumulate(rows.map(r => [+r[ila], +r[ilo], r[k] === "" ? NaN : +r[k]]))); }, info: `${rows.length.toLocaleString()} rows` });
+  } catch (e) { log(`Could not use ${esc(name)}: ${esc(e.message)}`, "err"); }
+}
+function confirmSites(n) { return n < 2000; }
+function sites(list, name) { SITES = (SITES || []).concat(list); scoreSites(); draw(); detail(); log(`Added ${list.length} sites from ${esc(name)}. They show as cyan diamonds.`, "ok"); }
+function ask(job) {
+  PENDING = job; $("d-name").value = job.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
+  $("dlginfo").textContent = `${job.name}: ${job.info}. It will be resampled to the engine's 0.5° grid and ranked across Earth's land.`;
+  $("d-colwrap").style.display = job.cols ? "grid" : "none"; if (job.cols) $("d-col").innerHTML = job.cols.map(c => `<option>${esc(c)}</option>`).join("");
+  $("modal").classList.add("on"); $("d-name").focus();
+}
+$("d-cancel").onclick = () => { $("modal").classList.remove("on"); PENDING = null; };
+$("d-ok").onclick = () => {
+  const job = PENDING; if (!job) return; $("modal").classList.remove("on");
+  const grid = job.grid || job.build($("d-col").value), dir = document.querySelector("input[name=dir]:checked").value, role = document.querySelector("input[name=role]:checked").value, nm = $("d-name").value || job.name;
+  // rank-normalise across land cells with data: the engine compares places with each other
+  const vals = []; for (let p = 0; p < N; p++) if (LAND[p] && isFinite(grid[p])) vals.push(grid[p]);
+  if (vals.length < 20) { log(`Too few land cells with data in ${esc(nm)} (${vals.length}).`, "err"); return; }
+  const sv = Float64Array.from(vals).sort(), raw = new Uint8Array(N).fill(255);
+  for (let p = 0; p < N; p++) if (LAND[p] && isFinite(grid[p])) { let q = pctOf(sv, grid[p]) / 100; if (dir === "lo") q = 1 - q; raw[p] = Math.round(q * 254); }
+  const before = overlap().list.slice(0, 3).map(t => `${t.la},${t.lo}`).join("|");
+  if (role === "filter") {
+    const F = new Float32Array(N); for (let p = 0; p < N; p++) F[p] = raw[p] === 255 ? 1 : raw[p] / 254; F.name = nm; FILTERS.push(F);
+    L.forEach(l => l._eff = null);
+    log(`Filter <b>${esc(nm)}</b> applied to all ${L.length} tests (${vals.length.toLocaleString()} land cells).`, "ok");
+  } else {
+    L.push({ key: "user" + L.length, title: nm, raw, on: true, kind: "dropped", info: { world: "Your data", why: `Added from ${job.name}. ${dir === "hi" ? "Higher" : "Lower"} values count as more extreme.` } });
+    const t = topN(raw)[0]; cur = L.length - 1;
+    log(`New test <b>${esc(nm)}</b> added (${vals.length.toLocaleString()} land cells). Most extreme: ${esc(country(t.p))}, ${ll(t.la, t.lo)}.`, "ok");
+  }
+  const ov = overlap(), after = ov.list.slice(0, 3).map(t => `${t.la},${t.lo}`).join("|"), b = ov.list[0];
+  if (b) log(before === after ? `Expedition leaderboard unchanged: ${esc(country(Math.floor((90 - b.la) * 2) * W + Math.floor((b.lo + 180) * 2)))} still covers ${b.n} tests.`
+    : `Expedition leaderboard moved. New leader: ${esc(country(Math.floor((90 - b.la) * 2) * W + Math.floor((b.lo + 180) * 2)))} (${ll(b.la, b.lo)}), ${b.n} tests.`, "ok");
+  if (SITES) scoreSites();
+  if (FP && FP.from !== undefined && role !== "filter") { FP = fpFromCell(FP.from); log(`Your layer joined the look-alike search for ${esc(FP.name)}.`, "ok"); }
+  view = "one"; tabs(); refresh(); PENDING = null;
+};
+
+// ---------- drop / pick / samples ----------
+const dz = $("drop");
+["dragenter", "dragover"].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); if (ev === "drop" || e.target === dz) dz.classList.remove("over"); }));
+document.addEventListener("drop", async e => { for (const f of e.dataTransfer.files) await handle(f.name, await f.arrayBuffer()); });
+$("pick").onclick = () => $("file").click();
+$("file").onchange = async e => { for (const f of e.target.files) await handle(f.name, await f.arrayBuffer()); e.target.value = ""; };
+$("s-sites").onclick = () => handle("sample_sites.csv", new TextEncoder().encode(SAMPLE_SITES).buffer);
+$("s-layer").onclick = () => handle("sample_wind_points.csv", new TextEncoder().encode(SAMPLE_WIND).buffer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("d-cancel").click(); });
+load().catch(e => log(`Engine failed to load: ${esc(e.message)}`, "err"));
+</script>
+</body>
+</html>

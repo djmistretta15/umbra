@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:02,000
+I'm Dan Mistretta, Team Forced Futures.
+
+2
+00:00:02,000 --> 00:00:05,000
+Challenge 10: find places on Earth to test for the Moon and Mars.
+
+3
+00:00:05,000 --> 00:00:10,000
+This is Umbra. Match the physics, not the scenery.
+
+4
+00:00:10,000 --> 00:00:15,000
+Real NASA lunar and Mars orbiter maps set 36 conditions. Umbra scores all of Earth for each one.
+
+5
+00:00:15,000 --> 00:00:20,000
+Drop in new data and it re-ranks live. It found ESA's Lanzarote lava tubes on its own.
+
+6
+00:00:20,000 --> 00:00:30,000
+Next: every Artemis and Mars team picks its field sites by the test it needs, from western Tibet to Eureka Sound.

@@ -1,0 +1,117 @@
+[
+ {
+  "lat": 19.0,
+  "lon": 19.0,
+  "count": 9,
+  "tests": [
+   "Big daily temperature swings",
+   "Rocky, flat ground to build landing pads",
+   "Flat, featureless ground",
+   "Dry, fine dust lifted by heat: static and dust devils",
+   "Windy, dusty plains",
+   "Deep loose dust, not sand",
+   "Impact-shocked rock",
+   "Soil that destroys organic molecules",
+   "Rock with strong fossil magnetism"
+  ]
+ },
+ {
+  "lat": -23.0,
+  "lon": -69.0,
+  "count": 8,
+  "tests": [
+   "Sharp, dry dust that is also cold",
+   "Big daily temperature swings",
+   "Windy, dusty plains",
+   "Volcanic ash and glass beads",
+   "Salt deposits that preserve traces of life",
+   "Soil that destroys organic molecules",
+   "Volcanic heat and water in dry land",
+   "Dried ancient lake beds"
+  ]
+ },
+ {
+  "lat": 35.0,
+  "lon": 85.0,
+  "count": 8,
+  "tests": [
+   "Sharp, dry dust that is also cold",
+   "Big daily temperature swings",
+   "Thin, dry air and strong UV",
+   "Cold, hyperarid, sterile ground",
+   "Heat lost straight to the sky",
+   "Dry, fine dust lifted by heat: static and dust devils",
+   "Caves for robots without GPS or light",
+   "Rock with strong fossil magnetism"
+  ]
+ },
+ {
+  "lat": -77.0,
+  "lon": 163.0,
+  "count": 7,
+  "tests": [
+   "Deep cold",
+   "Two weeks of night",
+   "Ice locked in dry frozen ground",
+   "Ridges with sun that never sets",
+   "Sunlit ridge next to frozen ground",
+   "Cold, hyperarid, sterile ground",
+   "Ground ice balanced like Mars ice (ratio match)"
+  ]
+ },
+ {
+  "lat": 23.0,
+  "lon": 41.0,
+  "count": 7,
+  "tests": [
+   "Big daily temperature swings",
+   "Rocky, flat ground to build landing pads",
+   "Flat, featureless ground",
+   "Dry, fine dust lifted by heat: static and dust devils",
+   "Lava tubes and caves in young basalt",
+   "Dark basalt plains like the lunar maria",
+   "Ancient exposed crust in dry land"
+  ]
+ },
+ {
+  "lat": 25.0,
+  "lon": -5.0,
+  "count": 7,
+  "tests": [
+   "Big daily temperature swings",
+   "Rocky, flat ground to build landing pads",
+   "Flat, featureless ground",
+   "Windy, dusty plains",
+   "Pale gabbro-family rock like the lunar highlands",
+   "Ancient exposed crust in dry land",
+   "Rock with strong fossil magnetism"
+  ]
+ },
+ {
+  "lat": 81.0,
+  "lon": -91.0,
+  "count": 7,
+  "tests": [
+   "Sharp, dry dust that is also cold",
+   "Deep cold",
+   "Two weeks of night",
+   "No usable compass",
+   "Ridges with sun that never sets",
+   "Seismically quiet bedrock",
+   "Rock with strong fossil magnetism"
+  ]
+ },
+ {
+  "lat": 39.0,
+  "lon": 73.0,
+  "count": 6,
+  "tests": [
+   "Sharp, dry dust that is also cold",
+   "Highest natural cosmic-ray exposure",
+   "Caves for robots without GPS or light",
+   "Impact-shocked rock",
+   "Rock with strong fossil magnetism",
+   "Ground ice balanced like Mars ice (ratio match)"
+  ]
+ }
+]

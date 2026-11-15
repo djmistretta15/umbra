@@ -1,0 +1,54 @@
+{
+ "diviner": {
+  "region": "80S to pole",
+  "cells": 2261956,
+  "t_avg_K_pct": {
+   "p1": 41.7,
+   "p10": 67.1,
+   "p50": 125.5,
+   "p90": 157.7
+  },
+  "t_max_K_pct": {
+   "p1": 64.3,
+   "p10": 186.8,
+   "p50": 244.4,
+   "p90": 286.1,
+   "p99": 316.5
+  },
+  "coldest_max_K": 26.8,
+  "frac_max_below_110K": 0.04984933393929855,
+  "frac_avg_below_184K": 0.9933442560332738,
+  "frac_avg_below_216K": 1.0,
+  "ice_surface_frac": 0.007809612565407992,
+  "ice_within_1m_frac": 0.37678938051845395,
+  "ice_buried_depth_m_pct": {
+   "p10": 0.01,
+   "p50": 0.08,
+   "p90": 0.49
+  }
+ },
+ "sunlight": {
+  "region": "85S to pole",
+  "max_avg_sun_frac": 0.884440004825592,
+  "area_km2_sun_over_70pct": 0.8316,
+  "area_km2_sun_over_80pct": 0.0684,
+  "psr_frac": 0.11028047042592122,
+  "km_lit70_to_psr_pct": {
+   "p10": 0.13,
+   "p50": 0.35,
+   "p90": 0.94
+  }
+ },
+ "slope": {
+  "region": "85S to pole",
+  "baseline_m": 40,
+  "data_coverage": 0.339232479226473,
+  "median_deg": 8.699999809265137,
+  "frac_under_5": 0.2557072398438559,
+  "frac_under_10": 0.5735637923924689,
+  "frac_over_15": 0.20348208977829577,
+  "frac_over_25": 0.026200697333749225,
+  "sunlit70_median_deg": 5.300000190734863,
+  "sunlit70_frac_under_10": 0.8386075949367089
+ }
+}

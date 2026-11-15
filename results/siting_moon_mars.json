@@ -1,0 +1,1183 @@
+{
+ "note": "Coarse 1 degree siting. Moon: LRO LOLA LDEM_16 slopes and tracks, Lunar Prospector GRS TiO2/FeO/Th, LROC pits. Mars: MGS MOLA MEGDR, MGS TES night thermal inertia, Mars Odyssey GRS water.",
+ "moon": {
+  "thresholds": {
+   "TiO2_p90": 2.05,
+   "FeO_p90": 12.9,
+   "Th_p90": 3.9
+  },
+  "studied": [
+   {
+    "name": "Apollo 11",
+    "lat": 0.67,
+    "lon": 23.47,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "comms",
+     "ilmenite",
+     "massdriver",
+     "iron"
+    ],
+    "beats_pct": 87
+   },
+   {
+    "name": "Apollo 12",
+    "lat": -3.01,
+    "lon": -23.42,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "beats_pct": 95
+   },
+   {
+    "name": "Apollo 14",
+    "lat": -3.65,
+    "lon": -17.47,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "beats_pct": 95
+   },
+   {
+    "name": "Apollo 15",
+    "lat": 26.13,
+    "lon": 3.63,
+    "hubN": 6,
+    "hub": [
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms",
+     "massdriver",
+     "landing"
+    ],
+    "beats_pct": 95
+   },
+   {
+    "name": "Apollo 16",
+    "lat": -8.97,
+    "lon": 15.5,
+    "hubN": 2,
+    "hub": [
+     "comms",
+     "landing"
+    ],
+    "beats_pct": 60
+   },
+   {
+    "name": "Apollo 17",
+    "lat": 20.19,
+    "lon": 30.77,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "ilmenite",
+     "iron",
+     "comms",
+     "massdriver"
+    ],
+    "beats_pct": 87
+   },
+   {
+    "name": "Marius Hills",
+    "lat": 14.1,
+    "lon": -56.8,
+    "hubN": 7,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "shelter",
+     "kreep"
+    ],
+    "beats_pct": 100
+   }
+  ],
+  "hubs": [
+   {
+    "lat": 17.5,
+    "lon": -57.5,
+    "hubN": 7,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "shelter",
+     "kreep"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.31280620101460954,
+    "track_km": 174,
+    "TiO2": 8.78,
+    "FeO": 26.2,
+    "Th": 4,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 10.5,
+    "lon": -52.5,
+    "hubN": 7,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "kreep",
+     "shelter"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 0.94921875,
+    "slope": 1.25231675588293,
+    "track_km": 121,
+    "TiO2": 6.33,
+    "FeO": 21.6,
+    "Th": 3.9,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -3.5,
+    "lon": -32.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 0.984375,
+    "slope": 0.8024445943592582,
+    "track_km": 182,
+    "TiO2": 8.32,
+    "FeO": 24.4,
+    "Th": 5.7,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -0.5,
+    "lon": -43.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2547797202205402,
+    "track_km": 182,
+    "TiO2": 6.17,
+    "FeO": 24.6,
+    "Th": 6.1,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 1.5,
+    "lon": -53.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "kreep"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.1150429828758206,
+    "track_km": 182,
+    "TiO2": 5.82,
+    "FeO": 22.4,
+    "Th": 3.7,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 1.5,
+    "lon": -1.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2963475819269661,
+    "track_km": 182,
+    "TiO2": 1.3,
+    "FeO": 13.5,
+    "Th": 5.9,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 6.5,
+    "lon": 33.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "shelter"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms",
+     "shelter"
+    ],
+    "flat": 1,
+    "slope": 0.48027230336447246,
+    "track_km": 181,
+    "TiO2": 7.2,
+    "FeO": 17.8,
+    "Th": 0.6,
+    "near": true,
+    "pit": "Mare Tranquillitatis pit"
+   },
+   {
+    "lat": 4.5,
+    "lon": -29.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2267879844584968,
+    "track_km": 181,
+    "TiO2": 5.1,
+    "FeO": 19.4,
+    "Th": 9.8,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -8.5,
+    "lon": -54.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "kreep",
+     "comms",
+     "ilmenite",
+     "iron"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "flat": 0.9296875,
+    "slope": 1.1022044380079024,
+    "track_km": 180,
+    "TiO2": 4.74,
+    "FeO": 15.5,
+    "Th": 3.5,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -8.5,
+    "lon": -25.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.17261591102942475,
+    "track_km": 180,
+    "TiO2": 3.26,
+    "FeO": 19.5,
+    "Th": 6.3,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 8.5,
+    "lon": -15.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.5111938801637734,
+    "track_km": 180,
+    "TiO2": 2.88,
+    "FeO": 20.5,
+    "Th": 8.5,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 12.5,
+    "lon": -43.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.15163914467120776,
+    "track_km": 178,
+    "TiO2": 7.4,
+    "FeO": 21,
+    "Th": 5.8,
+    "near": true,
+    "pit": null
+   }
+  ],
+  "massDrivers": [
+   {
+    "lat": -3.5,
+    "lon": -32.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 0.984375,
+    "slope": 0.8024445943592582,
+    "track_km": 182,
+    "TiO2": 8.32,
+    "FeO": 24.4,
+    "Th": 5.7,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -2.5,
+    "lon": 44.5,
+    "hubN": 5,
+    "hub": [
+     "massdriver",
+     "iron",
+     "comms",
+     "landing",
+     "ilmenite"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "flat": 0.984375,
+    "slope": 0.6860837370477384,
+    "track_km": 182,
+    "TiO2": 5.09,
+    "FeO": 15.5,
+    "Th": 1.4,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -2.5,
+    "lon": -41.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2609516494376294,
+    "track_km": 182,
+    "TiO2": 4.54,
+    "FeO": 23.7,
+    "Th": 4.8,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": -1.5,
+    "lon": -55.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.39496904776387964,
+    "track_km": 182,
+    "TiO2": 3.95,
+    "FeO": 20.8,
+    "Th": 2.7,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 0.5,
+    "lon": 52.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "iron",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.36127696999756154,
+    "track_km": 182,
+    "TiO2": 1.57,
+    "FeO": 16.8,
+    "Th": 1.2,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 1.5,
+    "lon": -1.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2963475819269661,
+    "track_km": 182,
+    "TiO2": 1.3,
+    "FeO": 13.5,
+    "Th": 5.9,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 2.5,
+    "lon": 34.5,
+    "hubN": 5,
+    "hub": [
+     "ilmenite",
+     "iron",
+     "comms",
+     "landing",
+     "massdriver"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.4355774362629745,
+    "track_km": 182,
+    "TiO2": 2.86,
+    "FeO": 11.6,
+    "Th": 1.2,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 4.5,
+    "lon": -61.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.3808236616823706,
+    "track_km": 181,
+    "TiO2": 3.6,
+    "FeO": 18.2,
+    "Th": 3.2,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 4.5,
+    "lon": -29.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.2267879844584968,
+    "track_km": 181,
+    "TiO2": 5.1,
+    "FeO": 19.4,
+    "Th": 9.8,
+    "near": true,
+    "pit": null
+   },
+   {
+    "lat": 5.5,
+    "lon": -46.5,
+    "hubN": 6,
+    "hub": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "here": [
+     "landing",
+     "massdriver",
+     "ilmenite",
+     "iron",
+     "kreep",
+     "comms"
+    ],
+    "flat": 1,
+    "slope": 0.212618942525296,
+    "track_km": 181,
+    "TiO2": 6.88,
+    "FeO": 25.1,
+    "Th": 4.9,
+    "near": true,
+    "pit": null
+   }
+  ],
+  "counts": {
+   "landing": 11155,
+   "massdriver": 4806,
+   "ilmenite": 6502,
+   "iron": 6566,
+   "kreep": 6650,
+   "comms": 29520,
+   "shelter": 95
+  }
+ },
+ "pole": {
+  "lines": 5058,
+  "samples": 5058,
+  "bits": 16,
+  "scale": 60,
+  "note": "parsed later"
+ },
+ "mars": {
+  "thresholds": {
+   "water_p80": 4.834
+  },
+  "hubs": [
+   {
+    "lat": -9.5,
+    "lon": 176.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.47,
+    "flat": 0.96,
+    "TI": 223,
+    "water": 7.398
+   },
+   {
+    "lat": -10.5,
+    "lon": -175.5,
+    "hubN": 5,
+    "hub": [
+     "firm",
+     "water",
+     "sun",
+     "launch",
+     "landing"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.96,
+    "flat": 0.78,
+    "TI": 202,
+    "water": 6.909
+   },
+   {
+    "lat": -3.5,
+    "lon": 170.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -3,
+    "flat": 1,
+    "TI": 237,
+    "water": 6.592
+   },
+   {
+    "lat": -1.5,
+    "lon": 178.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -2.37,
+    "flat": 0.97,
+    "TI": 153,
+    "water": 6.539
+   },
+   {
+    "lat": -14.5,
+    "lon": 165.5,
+    "hubN": 5,
+    "hub": [
+     "firm",
+     "water",
+     "sun",
+     "launch",
+     "landing"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.42,
+    "flat": 0.84,
+    "TI": 227,
+    "water": 6.424
+   },
+   {
+    "lat": 8.5,
+    "lon": 5.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "water",
+     "sun",
+     "launch",
+     "firm"
+    ],
+    "here": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.12,
+    "flat": 0.88,
+    "TI": 56,
+    "water": 6.335
+   },
+   {
+    "lat": 25.5,
+    "lon": -9.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -2.2,
+    "flat": 0.87,
+    "TI": 97,
+    "water": 6.217
+   },
+   {
+    "lat": 4.5,
+    "lon": 171.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -2.94,
+    "flat": 0.89,
+    "TI": 183,
+    "water": 6.089
+   },
+   {
+    "lat": -3.5,
+    "lon": -179.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.8,
+    "flat": 1,
+    "TI": 228,
+    "water": 6.057
+   },
+   {
+    "lat": -13.5,
+    "lon": -165.5,
+    "hubN": 5,
+    "hub": [
+     "firm",
+     "water",
+     "sun",
+     "launch",
+     "landing"
+    ],
+    "here": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.14,
+    "flat": 0.94,
+    "TI": 146,
+    "water": 5.99
+   },
+   {
+    "lat": -5.5,
+    "lon": -168.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "here": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -2.62,
+    "flat": 1,
+    "TI": 120,
+    "water": 5.931
+   },
+   {
+    "lat": 15.5,
+    "lon": -10.5,
+    "hubN": 5,
+    "hub": [
+     "landing",
+     "water",
+     "sun",
+     "launch",
+     "firm"
+    ],
+    "here": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "elev_km": -1.94,
+    "flat": 0.96,
+    "TI": 145,
+    "water": 5.867
+   }
+  ],
+  "studied2": [
+   {
+    "name": "Jezero (Perseverance)",
+    "lat": 18.4,
+    "lon": 77.5,
+    "hubN": 3,
+    "hub": [
+     "sun",
+     "landing",
+     "launch"
+    ],
+    "beats_pct": 34
+   },
+   {
+    "name": "Gale (Curiosity)",
+    "lat": -5.4,
+    "lon": 137.8,
+    "hubN": 5,
+    "hub": [
+     "firm",
+     "water",
+     "sun",
+     "launch",
+     "landing"
+    ],
+    "beats_pct": 96
+   },
+   {
+    "name": "Meridiani (Opportunity)",
+    "lat": -1.9,
+    "lon": -5.5,
+    "hubN": 4,
+    "hub": [
+     "landing",
+     "water",
+     "sun",
+     "launch"
+    ],
+    "beats_pct": 82
+   },
+   {
+    "name": "Arcadia Planitia ice",
+    "lat": 40,
+    "lon": -160,
+    "hubN": 4,
+    "hub": [
+     "landing",
+     "firm",
+     "water",
+     "launch"
+    ],
+    "beats_pct": 82
+   },
+   {
+    "name": "Deuteronilus Mensae",
+    "lat": 44,
+    "lon": 22,
+    "hubN": 3,
+    "hub": [
+     "firm",
+     "landing",
+     "launch"
+    ],
+    "beats_pct": 34
+   },
+   {
+    "name": "Protonilus Mensae",
+    "lat": 44,
+    "lon": 47,
+    "hubN": 2,
+    "hub": [
+     "landing",
+     "launch"
+    ],
+    "beats_pct": 7
+   },
+   {
+    "name": "Mawrth Vallis",
+    "lat": 24,
+    "lon": -19,
+    "hubN": 5,
+    "hub": [
+     "firm",
+     "sun",
+     "landing",
+     "launch",
+     "water"
+    ],
+    "beats_pct": 96
+   }
+  ],
+  "studied": [
+   {
+    "name": "Jezero (Perseverance)",
+    "lat": 18.4,
+    "lon": 77.5,
+    "deg_to_hub": 69,
+    "hubN_here": 3
+   },
+   {
+    "name": "Gale (Curiosity)",
+    "lat": -5.4,
+    "lon": 137.8,
+    "deg_to_hub": 29,
+    "hubN_here": 5
+   },
+   {
+    "name": "Meridiani (Opportunity)",
+    "lat": -1.9,
+    "lon": -5.5,
+    "deg_to_hub": 15.1,
+    "hubN_here": 4
+   },
+   {
+    "name": "Arcadia Planitia ice",
+    "lat": 40,
+    "lon": -160,
+    "deg_to_hub": 46,
+    "hubN_here": 4
+   },
+   {
+    "name": "Deuteronilus Mensae",
+    "lat": 44,
+    "lon": 22,
+    "deg_to_hub": 29.3,
+    "hubN_here": 3
+   },
+   {
+    "name": "Protonilus Mensae",
+    "lat": 44,
+    "lon": 47,
+    "deg_to_hub": 44.7,
+    "hubN_here": 2
+   },
+   {
+    "name": "Mawrth Vallis",
+    "lat": 24,
+    "lon": -19,
+    "deg_to_hub": 8.8,
+    "hubN_here": 5
+   }
+  ],
+  "counts": {
+   "landing": 25759,
+   "firm": 44714,
+   "water": 7550,
+   "sun": 21600,
+   "launch": 52531
+  }
+ }
+}
