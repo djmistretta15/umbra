@@ -1,11 +1,160 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Umbra</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umbra</title>
+<meta name="description" content="Umbra scores every place on Earth against measured Moon and Mars conditions from NASA data and finds single trips that test many systems at once.">
 <style>
-body{margin:0;background:#070b16;color:#e8ecf4;font:16px/1.5 system-ui,Segoe UI,sans-serif}
-.w{max-width:900px;margin:0 auto;padding:48px 20px;display:grid;gap:20px}
-h1{font-size:44px;margin:0}.e{color:#ffb547;font:600 13px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;margin:0}
-p{color:#9aa6bd;margin:0}a.c{display:block;background:#0d1426;border:1px solid #24304d;border-radius:12px;padding:18px 20px;color:#e8ecf4;text-decoration:none}
-a.c:hover{border-color:#ffb547}a.c b{font-size:20px}a.c span{display:block;color:#9aa6bd;margin-top:4px}
+:root{--bg:#070b16;--bg2:#0b1122;--card:#0d1426;--line:#1f2a45;--ink:#eef2fa;--dim:#9aa6bd;--faint:#6b7790;--amber:#ffb547;--moon:#b9c8ea;--mars:#ff7a4d;--known:#3fd17a;--mono:ui-monospace,Consolas,"Cascadia Mono",monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.eyebrow{font:600 12px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.15;margin:10px 0 12px;letter-spacing:-.01em}
+.lede{color:var(--dim);max-width:640px;margin:0}
+section{padding:88px 0;position:relative}
+
+/* hero */
+.hero{position:relative;min-height:calc(100vh - 56px);display:flex;align-items:center;padding:40px 0 56px;overflow:hidden}
+.stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:center;width:100%}
+.hero h1{font-size:clamp(38px,5.4vw,66px);line-height:1.02;letter-spacing:-.025em;margin:18px 0 18px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--amber),#ff8a5c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{color:var(--dim);font-size:18px;max-width:520px;margin:0 0 30px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:rgba(13,20,38,.7);transition:border-color .2s,background .2s,transform .2s}
+.btn:hover{border-color:var(--amber);transform:translateY(-1px)}
+.btn.p{background:var(--amber);color:#1a1205;border-color:var(--amber)}
+.btn.p:hover{background:#ffc566}
+.btn .ar{transition:transform .2s}.btn:hover .ar{transform:translateX(3px)}
+.stage{position:relative;height:min(640px,78vh);min-height:420px}
+#earth{position:absolute;inset:0}
+#earth canvas{outline:none}
+.fallback{position:absolute;left:50%;top:50%;width:70%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#3c6fb0,#12305e 55%,#060d1e 75%);box-shadow:0 0 80px rgba(143,183,255,.25)}
+.mini{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.mini canvas{width:100%;height:auto;border-radius:50%;display:block}
+.mini span{font:600 10.5px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);text-align:center;white-space:nowrap}
+.mini.moon{width:110px;right:2%;top:4%;animation:float 9s ease-in-out infinite}
+.mini.mars{width:84px;left:1%;top:10%;animation:float 11s ease-in-out infinite reverse}
+.mini.moon span b{color:var(--moon)}.mini.mars span b{color:var(--mars)}
+@keyframes float{50%{transform:translateY(-10px)}}
+.tripcard{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);width:min(420px,92%);background:rgba(8,12,24,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,181,71,.35);border-radius:14px;padding:12px 16px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center;transition:opacity .4s}
+.tripcard .n{grid-row:span 2;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:700 20px var(--mono);color:#1a1205;background:var(--amber);box-shadow:0 0 22px rgba(255,181,71,.5)}
+.tripcard b{font-size:16px}.tripcard small{color:var(--dim);font-size:12.5px}
+.tripcard .dots{grid-column:2;display:flex;gap:4px;flex-wrap:wrap}
+.d{width:9px;height:9px;border-radius:50%;display:inline-block}
+.d.m{background:var(--moon)}.d.r{background:var(--mars)}.d.b{background:var(--amber)}
+.scroll{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:1;font:600 11px var(--mono);letter-spacing:.14em;color:var(--faint);text-decoration:none;text-transform:uppercase}
+.scroll:hover{color:var(--ink)}
+
+/* stats */
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg2),var(--bg));padding:0}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.stat{padding:32px 22px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat .v{font:700 clamp(32px,3.6vw,44px)/1 system-ui,"Segoe UI",sans-serif;letter-spacing:-.02em}
+.stat .v small{font-size:.5em;color:var(--dim);font-weight:600;margin-left:4px}
+.stat p{color:var(--dim);font-size:14px;margin:10px 0 0}
+
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:40px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+.step::before{counter-increment:s;content:"0" counter(s);font:700 13px var(--mono);color:var(--amber);letter-spacing:.1em}
+.step h3{margin:10px 0 8px;font-size:20px}
+.step p{color:var(--dim);margin:0;font-size:15px}
+.step .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tag{font:12px var(--mono);color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.formula{margin-top:22px;display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;font:14px var(--mono);color:var(--dim);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.formula b{color:var(--ink);font-weight:600}.formula i{font-style:normal;color:var(--amber)}
+
+/* trips */
+.trips{display:grid;gap:10px;margin-top:36px}
+.trip{display:grid;grid-template-columns:44px minmax(0,220px) minmax(0,1fr) 20px;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;width:100%;transition:border-color .2s}
+.trip:hover,.trip[aria-expanded=true]{border-color:rgba(255,181,71,.6)}
+.trip .n{font:700 22px var(--mono);color:var(--amber);text-align:center}
+.trip b{display:block}.trip small{color:var(--dim);font-size:13px}
+.bar{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;max-width:520px}
+.bar i{height:12px;border-radius:3px;background:#162038}
+.bar i.m{background:var(--moon)}.bar i.r{background:var(--mars)}.bar i.b{background:var(--amber)}
+.trip .chev{color:var(--faint);transition:transform .2s}
+.trip[aria-expanded=true] .chev{transform:rotate(90deg)}
+.tests{display:none;grid-column:2/-1;flex-wrap:wrap;gap:6px;padding-top:4px}
+.trip[aria-expanded=true] .tests{display:flex}
+.tests span{font-size:13px;color:var(--ink);background:#111a31;border-radius:8px;padding:4px 10px;display:inline-flex;align-items:center;gap:7px}
+.key{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;color:var(--dim);font-size:13px}
+.key span{display:inline-flex;align-items:center;gap:7px}
+
+/* found */
+.found{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:36px}
+.col{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+.col h3{margin:0 0 6px;font-size:20px;display:flex;align-items:center;gap:10px}
+.col>p{color:var(--dim);margin:0 0 18px;font-size:15px}
+.col ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.col li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;font-size:15px}
+.col li small{display:block;color:var(--dim);font-size:13px}
+.col.new{border-color:rgba(255,181,71,.4);background:linear-gradient(160deg,#1a1408 0%,var(--card) 55%)}
+.pin{width:12px;height:12px;border-radius:50%;margin-top:5px}
+.pin.k{background:var(--known);box-shadow:0 0 10px rgba(63,209,122,.6)}
+.pin.u{background:var(--amber);box-shadow:0 0 10px rgba(255,181,71,.6)}
+.km{font:700 13px var(--mono);color:var(--amber)}
+
+/* explore */
+.cards{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:18px;margin-top:36px}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s;min-height:220px}
+.card:hover{border-color:var(--amber);transform:translateY(-2px)}
+.card .k{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.card h3{margin:8px 0 8px;font-size:22px}
+.card p{color:var(--dim);margin:0 0 16px;font-size:15px}
+.card ul{margin:0 0 18px;padding-left:18px;color:var(--dim);font-size:14px}
+.card .go{margin-top:auto;font-weight:600;color:var(--amber)}
+.card.main{background:linear-gradient(150deg,#1d1608,#0d1426 60%);border-color:rgba(255,181,71,.5)}
+.card.main .k{color:var(--amber)}
+.samples{margin-top:16px;color:var(--dim);font-size:14px}
+.samples a{color:var(--ink)}
+
+/* data */
+.data{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:36px}
+.data div{border-top:2px solid var(--line);padding-top:14px}
+.data h4{margin:0 0 10px;font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.data .mo h4{color:var(--moon)}.data .ma h4{color:var(--mars)}.data .ea h4{color:#7fb6ff}.data .ot h4{color:var(--faint)}
+.data .mo{border-color:var(--moon)}.data .ma{border-color:var(--mars)}.data .ea{border-color:#7fb6ff}
+.data ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:14px;color:var(--dim)}
+.data li b{color:var(--ink);font-weight:600}
+
+footer{border-top:1px solid var(--line);padding:36px 0 48px;color:var(--faint);font-size:13.5px}
+footer .wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:28px}
+footer b{color:var(--dim)}
+footer p{margin:0 0 8px}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:980px){
+ .hero .wrap{grid-template-columns:1fr}
+ .stage{height:460px;min-height:0}
+ .stats .wrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stat:nth-child(3){border-left:0;padding-left:0}
+ .stat{border-top:1px solid var(--line)}.stat:nth-child(-n+2){border-top:0}
+ .steps,.cards{grid-template-columns:1fr}
+ .data{grid-template-columns:repeat(2,minmax(0,1fr))}
+ footer .wrap{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+ .wrap{padding:0 16px}
+ section{padding:64px 0}
+ .hero{min-height:0;padding-top:28px}
+ .stage{height:380px}
+ .mini.moon{width:76px;right:6%}.mini.mars{width:60px;left:9%}.mini span{font-size:9px}
+ .found{grid-template-columns:1fr}
+ .trip{grid-template-columns:34px minmax(0,1fr) 16px;gap:10px}
+ .trip .bar{grid-column:2/3;grid-row:2}
+ .tests{grid-column:1/-1}
+ .stat{padding:22px 12px}
+ .data{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}.mini{animation:none}.reveal{opacity:1;transform:none;transition:none}
+}
 </style></head><body>
 <style id="u-nav-css">
 .u-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:22px;padding:14px 24px;background:rgba(4,6,13,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(160,180,220,.16);font:15px/1.5 system-ui,"Segoe UI",sans-serif}
@@ -15,13 +164,201 @@ a.c:hover{border-color:#ffb547}a.c b{font-size:20px}a.c span{display:block;color
 .u-nav .u-back{all:unset;cursor:pointer;font:600 13px ui-monospace,Consolas,monospace;color:#eef2fa;padding:6px 12px;border-radius:99px;border:1px solid #ffb547}
 .u-nav .u-back:hover,.u-nav .u-back:focus-visible{background:rgba(255,181,71,.12)}
 @media (max-width:620px){.u-nav{gap:12px;padding:12px 16px}.u-nav nav{gap:12px}.u-nav nav a{font-size:13px}.u-nav .u-back .u-k{display:none}}
-</style><header class="u-nav"><a class="u-brand" href="index.html">UMBRA</a><nav aria-label="Pages"><a href="globe.html">Atlas</a><a href="live.html">Live</a><a href="constraint-map.html">Constraint map</a></nav></header>
-<div class="w">
-<p class="e">Team Forced Futures · NASA Space Apps 2026</p>
-<h1>Umbra: match the physics, not the scenery</h1>
-<p>Real NASA Moon and Mars data set 36 conditions; Umbra scores all of Earth for each one.</p>
-<a class="c" href="globe.html" style="border-color:#ffb547;background:linear-gradient(120deg,#1a1408,#0d1426)"><b>Umbra Atlas: start here</b><span>Spin the Earth, pick a trip, and see the Moon or Mars condition it matches on real NASA globes.</span></a>
-<a class="c" href="live.html"><b>Umbra Live</b><span>The dashboard: pick a test, see where on Earth to run it, drag in your own data or site list.</span></a>
-<a class="c" href="constraint-map.html"><b>Constraint Map</b><span>The full write-up: three lenses, every test card, the western Tibet site profile, and the 51-dimension ledger.</span></a>
-<a class="c" href="samples/sample_sites.csv"><b>Sample files</b><span>In the samples folder: a site list and a wind layer (CSV and GeoTIFF) to drag into Umbra Live.</span></a>
-</div></body></html>
+</style><header class="u-nav"><a class="u-brand" href="index.html" aria-current="page">UMBRA</a><nav aria-label="Pages"><a href="globe.html">Atlas</a><a href="live.html">Live</a><a href="constraint-map.html">Constraint map</a></nav></header>
+
+<main>
+<section class="hero">
+ <canvas class="stars" id="stars" aria-hidden="true"></canvas>
+ <div class="wrap">
+  <div>
+   <p class="eyebrow">NASA Space Apps 2026 · Challenge 10 · Team Forced Futures</p>
+   <h1>Rehearse the Moon and Mars <em>on Earth first.</em></h1>
+   <p class="sub">Umbra lets NASA orbiter data set the conditions a base, a rover or a crew has to survive, then scores every 18 km of Earth's land against each one. It matches the physics, not the scenery.</p>
+   <div class="ctas">
+    <a class="btn p" href="globe.html">Open the Atlas <span class="ar">→</span></a>
+    <a class="btn" href="live.html">Try Umbra Live</a>
+    <a class="btn" href="constraint-map.html">Full results</a>
+   </div>
+  </div>
+  <div class="stage" aria-label="Earth globe showing Umbra's best expedition sites">
+   <div class="fallback" id="fb"></div>
+   <div id="earth"></div>
+   <div class="mini moon"><canvas id="moon" width="220" height="220"></canvas><span><b>Moon</b> · LRO WAC</span></div>
+   <div class="mini mars"><canvas id="mars" width="180" height="180"></canvas><span><b>Mars</b> · Viking MDIM</span></div>
+   <div class="tripcard" id="tc" aria-live="polite"></div>
+  </div>
+ </div>
+ <a class="scroll" href="#how">Scroll ↓</a>
+</section>
+
+<section class="stats" aria-label="Headline numbers">
+ <div class="wrap">
+  <div class="stat"><div class="v" data-n="36">36</div><p>Moon and Mars conditions, each one set by a NASA measurement</p></div>
+  <div class="stat"><div class="v">18<small>km</small></div><p>grid over all of Earth's land, scored 0 to 100 for every test</p></div>
+  <div class="stat"><div class="v" data-n="9">9</div><p>tests covered by one trip to northern Chad, the best single expedition</p></div>
+  <div class="stat"><div class="v"><span data-n="67">67</span>%</div><p>of 31,085 NASA-catalogued meteorite finds sit in Umbra's top quarter for "the record survives". Chance gives 25%.</p></div>
+ </div>
+</section>
+
+<section id="how">
+ <div class="wrap reveal">
+  <p class="eyebrow">How it works</p>
+  <h2>Start from what NASA measured, not what a place looks like.</h2>
+  <p class="lede">Red rock and grey dust make good photos. A drill, a seal or a battery cares about cold, dust, pressure and darkness. So Umbra starts with the numbers.</p>
+  <div class="steps">
+   <div class="step"><h3>Measure</h3><p>Each test begins with a real NASA reading of the Moon or Mars: how cold the polar craters get, how steep and dark the ground is, how thin the air is on Mars.</p><div class="tags"><span class="tag">LRO Diviner</span><span class="tag">LRO LOLA</span><span class="tag">MGS MOLA</span><span class="tag">MGS TES</span><span class="tag">Odyssey GRS</span></div></div>
+   <div class="step"><h3>Score Earth</h3><p>Every land cell gets 0 to 100 per test. Is the condition there? Does it last? And how much of the real thing can Earth not copy?</p><div class="tags"><span class="tag">MODIS Terra</span><span class="tag">NASA POWER</span><span class="tag">MERRA-2</span><span class="tag">NASA GIBS</span></div></div>
+   <div class="step"><h3>Bundle into trips</h3><p>Where many tests land in Earth's top 3% inside one 2° block, a single expedition can rehearse many systems at once. Those blocks become the trips.</p><div class="tags"><span class="tag">36 tests</span><span class="tag">top 3%</span><span class="tag">2° blocks</span></div></div>
+  </div>
+  <div class="formula">score = <b>100</b> × <i>present</i> × <i>lasting</i> × (1 − <i>what Earth can't copy</i>)</div>
+ </div>
+</section>
+
+<section id="trips" style="background:linear-gradient(180deg,var(--bg),var(--bg2) 40%,var(--bg))">
+ <div class="wrap reveal">
+  <p class="eyebrow">The best trips</p>
+  <h2>Eight places where one trip tests the most.</h2>
+  <p class="lede">Each bar segment is one test where the place ranks in Earth's top 3%. Open a trip to see which tests it covers, or explore them all in the Atlas.</p>
+  <div class="trips" id="trips-list"></div>
+  <div class="key"><span><i class="d m"></i>Moon test</span><span><i class="d r"></i>Mars test</span><span><i class="d b"></i>Both</span></div>
+ </div>
+</section>
+
+<section id="found">
+ <div class="wrap reveal">
+  <p class="eyebrow">Known vs found</p>
+  <h2>It finds the classics on its own, and places nobody has tried.</h2>
+  <p class="lede">The engine was never told where analog research happens. That makes the known sites a check on the method, and the new ones the point of it.</p>
+  <div class="found">
+   <div class="col">
+    <h3><i class="pin k"></i>Rediscovered</h3>
+    <p>Sites that space agencies and researchers already use, which Umbra picks out without being shown them.</p>
+    <ul>
+     <li><i class="pin k"></i><div>Lanzarote lava tubes<small>Canary Islands, Spain · ESA caving and geology training</small></div></li>
+     <li><i class="pin k"></i><div>Pinacate volcanic field<small>Sonora, Mexico · Apollo astronaut field training</small></div></li>
+     <li><i class="pin k"></i><div>Atacama Desert<small>Chile · Mars life-detection and rover tests</small></div></li>
+     <li><i class="pin k"></i><div>McMurdo Dry Valleys<small>Antarctica · cold, dry Mars analog</small></div></li>
+     <li><i class="pin k"></i><div>Qaidam Basin<small>Tibetan Plateau, China · salt and dust for Mars</small></div></li>
+     <li><i class="pin k"></i><div>Axel Heiberg Island<small>Nunavut, Canada · cold springs in permafrost</small></div></li>
+    </ul>
+   </div>
+   <div class="col new">
+    <h3><i class="pin u"></i>Underpriced</h3>
+    <p>Blocks that rank in Earth's top 3% on many of Umbra's 43 analog layers but sit far from any studied site.</p>
+    <ul>
+     <li><i class="pin u"></i><div>Northern Chad, near Faya Largeau<small>11 analog jobs · <span class="km">2,921 km</span> from any studied site</small></div></li>
+     <li><i class="pin u"></i><div>Saudi lava fields near At Taif<small>10 analog jobs · <span class="km">3,923 km</span> from any studied site</small></div></li>
+     <li><i class="pin u"></i><div>Kunlun foothills south of Hotan, China<small>10 analog jobs · <span class="km">1,110 km</span> from any studied site</small></div></li>
+     <li><i class="pin u"></i><div>Desert near Ataq, Yemen<small>8 analog jobs · <span class="km">5,013 km</span> from any studied site</small></div></li>
+    </ul>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="explore" style="background:linear-gradient(180deg,var(--bg),var(--bg2))">
+ <div class="wrap reveal">
+  <p class="eyebrow">Explore</p>
+  <h2>Three ways in.</h2>
+  <div class="cards">
+   <a class="card main" href="globe.html"><span class="k">Start here · Atlas</span><h3>Spin the three worlds</h3><p>Earth, Moon and Mars side by side on NASA imagery. Pick a trip and see the exact Moon or Mars condition each spot matches.</p><ul><li>All 36 tests and their five best places</li><li>NASA science layers you can combine</li><li>Compare known sites with Umbra's trips</li></ul><span class="go">Open the Atlas →</span></a>
+   <a class="card" href="live.html"><span class="k">Umbra Live</span><h3>Run it yourself</h3><p>Pick a test and see where on Earth to run it. Drag in your own data layer or a site list and it joins the scoring.</p><ul><li>Report cards for any spot</li><li>Look-alike finder</li><li>Underpriced and Systems tabs</li></ul><span class="go">Open Live →</span></a>
+   <a class="card" href="constraint-map.html"><span class="k">Constraint map</span><h3>Read every result</h3><p>The full write-up: every test card, what carries over and what does not, the western Tibet site profile and the full ledger of dimensions.</p><ul><li>Light-flow hubs at the lunar south pole</li><li>Exposure and operations analogs</li></ul><span class="go">Open the results →</span></a>
+  </div>
+  <p class="samples">Want to test Live? Grab <a href="samples/sample_sites.csv">a sample site list</a> or <a href="samples/sample_wind_points.csv">a wind layer</a> and drop it in.</p>
+ </div>
+</section>
+
+<section id="data">
+ <div class="wrap reveal">
+  <p class="eyebrow">Built on open data</p>
+  <h2>NASA measurements do the deciding.</h2>
+  <div class="data">
+   <div class="mo"><h4>Moon</h4><ul><li><b>LRO Diviner</b> polar temperature and ice depth</li><li><b>LRO LOLA</b> height, slope, sunlight, permanent shadow</li><li><b>LRO WAC</b> global mosaic</li><li><b>Lunar Prospector</b> gamma-ray iron, titanium, thorium</li></ul></div>
+   <div class="ma"><h4>Mars</h4><ul><li><b>MGS MOLA</b> height and surface pressure</li><li><b>MGS TES</b> thermal inertia and albedo</li><li><b>Mars Odyssey GRS</b> near-surface water</li><li><b>Viking MDIM 2.1</b> global mosaic</li></ul></div>
+   <div class="ea"><h4>Earth</h4><ul><li><b>MODIS Terra</b> day and night land temperature via NASA GIBS</li><li><b>NASA POWER</b> rainfall and UV</li><li><b>MERRA-2</b> dust</li><li><b>NASA Meteorite Landings</b> catalogue</li></ul></div>
+   <div class="ot"><h4>Also</h4><ul><li>USGS lithology and earthquakes</li><li>Smithsonian volcano database</li><li>Impact Earth crater database</li><li>NOAA EMAG2v3, SoilGrids, WorldClim, Natural Earth</li></ul></div>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap">
+  <div><p><b>Umbra</b> · Team Forced Futures</p><p>NASA Space Apps Challenge 2026, challenge 10: Earth locations that analog the permanent Moon base locations and Mars.</p></div>
+  <div><p><b>How AI was used.</b> We used Claude (Anthropic) as an AI assistant. It wrote the analysis code, made the maps and drafted page text under our direction. We chose the approach and the tests and checked the results. Every map is labelled as computed with AI-assisted code.</p><p>Imagery: NASA GIBS Blue Marble, NASA Moon Trek and Mars Trek. No NASA logos or mission branding are used.</p></div>
+ </div>
+</footer>
+
+<script>
+const TRIPS=[["Northern Chad","Borkou plains, Chad",19,19,[["Big daily temperature swings","b"],["Rocky, flat ground to build landing pads","m"],["Flat, featureless ground","b"],["Dry, fine dust lifted by heat: static and dust devils","r"],["Windy, dusty plains","r"],["Deep loose dust, not sand","r"],["Impact-shocked rock","b"],["Soil that destroys organic molecules","r"],["Rock with strong fossil magnetism","b"]]],["Atacama","Chile",-23,-69,[["Sharp, dry dust that is also cold","m"],["Big daily temperature swings","b"],["Windy, dusty plains","r"],["Volcanic ash and glass beads","b"],["Salt deposits that preserve traces of life","r"],["Soil that destroys organic molecules","r"],["Volcanic heat and water in dry land","r"],["Dried ancient lake beds","r"]]],["Western Tibet","Changtang plateau, China",35,85,[["Sharp, dry dust that is also cold","m"],["Big daily temperature swings","b"],["Thin, dry air and strong UV","r"],["Cold, hyperarid, sterile ground","r"],["Heat lost straight to the sky","m"],["Dry, fine dust lifted by heat: static and dust devils","r"],["Caves for robots without GPS or light","b"],["Rock with strong fossil magnetism","b"]]],["McMurdo Dry Valleys","Antarctica",-77,163,[["Deep cold","m"],["Two weeks of night","m"],["Ice locked in dry frozen ground","b"],["Ridges with sun that never sets","m"],["Sunlit ridge next to frozen ground","m"],["Cold, hyperarid, sterile ground","r"],["Ground ice balanced like Mars ice (ratio match)","r"]]],["Saudi lava fields","Harrat Khaybar, Saudi Arabia",23,41,[["Big daily temperature swings","b"],["Rocky, flat ground to build landing pads","m"],["Flat, featureless ground","b"],["Dry, fine dust lifted by heat: static and dust devils","r"],["Lava tubes and caves in young basalt","b"],["Dark basalt plains like the lunar maria","b"],["Ancient exposed crust in dry land","b"]]],["Erg Chech","Algerian Sahara",25,-5,[["Big daily temperature swings","b"],["Rocky, flat ground to build landing pads","m"],["Flat, featureless ground","b"],["Windy, dusty plains","r"],["Pale gabbro-family rock like the lunar highlands","m"],["Ancient exposed crust in dry land","b"],["Rock with strong fossil magnetism","b"]]],["Axel Heiberg area","Nunavut, Canada",81,-91,[["Sharp, dry dust that is also cold","m"],["Deep cold","m"],["Two weeks of night","m"],["No usable compass","b"],["Ridges with sun that never sets","m"],["Seismically quiet bedrock","b"],["Rock with strong fossil magnetism","b"]]],["Pamir and Lake Karakul","Tajikistan",39,73,[["Sharp, dry dust that is also cold","m"],["Highest natural cosmic-ray exposure","b"],["Caves for robots without GPS or light","b"],["Impact-shocked rock","b"],["Rock with strong fossil magnetism","b"],["Ground ice balanced like Mars ice (ratio match)","r"]]]];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// trips list
+(()=>{const box=document.getElementById('trips-list');
+ TRIPS.forEach((t,i)=>{const b=document.createElement('button');b.className='trip';b.setAttribute('aria-expanded','false');
+  const segs=t[4].map(x=>'<i class="'+x[1]+'"></i>').join('')+'<i></i>'.repeat(Math.max(0,9-t[4].length));
+  b.innerHTML='<span class="n">'+t[4].length+'</span><span><b>'+esc(t[0])+'</b><small>'+esc(t[1])+'</small></span><span class="bar" aria-label="'+t[4].length+' tests">'+segs+'</span><span class="chev" aria-hidden="true">›</span><span class="tests">'+t[4].map(x=>'<span><i class="d '+x[1]+'"></i>'+esc(x[0])+'</span>').join('')+'</span>';
+  b.onclick=()=>{b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');showTrip(i,true)};
+  box.appendChild(b)})})();
+
+// reveal on scroll
+(()=>{const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12}):null;
+ document.querySelectorAll('.reveal').forEach(el=>io?io.observe(el):el.classList.add('in'))})();
+
+// count-up
+(()=>{if(RM)return;const els=[...document.querySelectorAll('[data-n]')];const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;io.unobserve(e.target);const el=e.target,n=+el.dataset.n,t0=performance.now();
+ const f=t=>{const k=Math.min(1,(t-t0)/1100);el.textContent=Math.round(n*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}),{threshold:.5});els.forEach(e=>io.observe(e))})();
+
+// starfield
+(()=>{const c=document.getElementById('stars'),x=c.getContext('2d');let S=[];
+ function size(){const r=c.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);c.width=r.width*d;c.height=r.height*d;S=Array.from({length:Math.round(r.width*r.height/2600)},()=>[Math.random()*c.width,Math.random()*c.height,Math.random()*1.3*d+.2,Math.random()*6.28,Math.random()*.8+.2])}
+ function draw(t){x.clearRect(0,0,c.width,c.height);for(const s of S){x.globalAlpha=.25+.55*(.5+.5*Math.sin(s[3]+t/1000*s[4]));x.fillStyle='#cfd8ee';x.beginPath();x.arc(s[0],s[1],s[2],0,6.28);x.fill()}if(!RM)requestAnimationFrame(draw)}
+ size();addEventListener('resize',size);requestAnimationFrame(draw)})();
+
+// small spinning Moon and Mars, drawn from NASA Trek tiles
+function miniPlanet(id,layer,ext,base,tilt,speed){
+ const cv=document.getElementById(id),x=cv.getContext('2d'),N=cv.width,z=1,cols=4,rows=2;
+ const src=document.createElement('canvas');src.width=cols*256;src.height=rows*256;const sx=src.getContext('2d');sx.fillStyle=base;sx.fillRect(0,0,src.width,src.height);
+ const jobs=[];for(let r=0;r<rows;r++)for(let q=0;q<cols;q++)jobs.push(new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{sx.drawImage(im,q*256,r*256);res()};im.onerror=res;im.src='https://trek.nasa.gov/tiles/'+layer+'/1.0.0/default/default028mm/'+z+'/'+r+'/'+q+'.'+ext}));
+ Promise.all(jobs).then(()=>{let S;try{S=sx.getImageData(0,0,src.width,src.height).data}catch(e){return}
+  const W=src.width,H=src.height,img=x.createImageData(N,N),D=img.data,P=[],ct=Math.cos(tilt),st=Math.sin(tilt);
+  const L=[-.55,.45,.7],ln=Math.hypot(...L);
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){const u=(i+.5)/N*2-1,v=1-(j+.5)/N*2,r2=u*u+v*v;if(r2>1)continue;const w=Math.sqrt(1-r2);
+   const y=v*ct+w*st,zz=-v*st+w*ct;const lat=Math.asin(y),lon=Math.atan2(u,zz);
+   const sh=Math.max(.06,(u*L[0]+v*L[1]+w*L[2])/ln)*(.75+.25*w);const edge=Math.min(1,(1-Math.sqrt(r2))*N/2);
+   P.push((j*N+i)*4,Math.min(H-1,Math.floor((.5-lat/Math.PI)*H)),lon/(2*Math.PI)*W,sh,edge)}
+  let off=0;function frame(){off=(off+speed)%W;for(let k=0;k<P.length;k+=5){const row=P[k+1];let col=Math.floor(P[k+2]+off)%W;if(col<0)col+=W;const s=(row*W+col)*4,d=P[k],sh=P[k+3];D[d]=S[s]*sh;D[d+1]=S[s+1]*sh;D[d+2]=S[s+2]*sh;D[d+3]=255*P[k+4]}x.putImageData(img,0,0);if(!RM)requestAnimationFrame(frame)}
+  frame()})}
+miniPlanet('moon','Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02','jpg','#777',-.25,.35);
+miniPlanet('mars','Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m','jpg','#8a4a2e',.3,.5);
+
+// hero Earth
+let showTrip=()=>{};
+addEventListener('DOMContentLoaded',()=>{const tc=document.getElementById('tc');
+ function card(t){tc.innerHTML='<span class="n">'+t[4].length+'</span><b>'+esc(t[0])+'</b><small>'+esc(t[1])+' · '+t[4].length+' tests in one trip</small><span class="dots">'+t[4].map(x=>'<i class="d '+x[1]+'" title="'+esc(x[0])+'"></i>').join('')+'</span>'}
+ card(TRIPS[0]);
+ if(typeof Globe!=='function')return;
+ const el=document.getElementById('earth');
+ const GIBS='https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=BlueMarble_ShadedRelief_Bathymetry&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=2048&HEIGHT=1024&FORMAT=image/jpeg';
+ const pts=TRIPS.map((t,i)=>({i,lat:t[2],lng:t[3],n:t[4].length,name:t[0]}));
+ let g;try{g=Globe()(el).backgroundColor('rgba(0,0,0,0)').globeImageUrl(GIBS).showAtmosphere(true).atmosphereColor('#8fb7ff').atmosphereAltitude(.18)
+  .pointsData(pts).pointLat('lat').pointLng('lng').pointColor(()=> '#ffb547').pointAltitude(p=>.02+p.n*.012).pointRadius(.9).pointsMerge(false)
+  .pointLabel(p=>'<b>'+esc(p.name)+'</b><br>'+p.n+' tests in one trip').onPointClick(p=>{cur=p.i;showTrip(p.i,true)})
+  .ringsData([]).ringColor(()=>t=>'rgba(255,181,71,'+(1-t)+')').ringMaxRadius(6).ringPropagationSpeed(2.4).ringRepeatPeriod(900)
+  .labelsData(pts).labelLat('lat').labelLng('lng').labelText('name').labelSize(1.5).labelDotRadius(.45).labelColor(()=>'rgba(238,242,250,.9)').labelResolution(3).labelAltitude(.012)}
+ catch(e){console.warn(e);return}
+ document.getElementById('fb').style.display='none';
+ const fit=()=>{const r=el.parentElement.getBoundingClientRect();g.width(r.width).height(r.height)};fit();addEventListener('resize',fit);
+ const ctl=g.controls();ctl.enableZoom=false;ctl.autoRotate=!RM;ctl.autoRotateSpeed=.35;
+ let cur=0,user=false,timer=null;
+ showTrip=(i,fromUser)=>{const t=TRIPS[i];cur=i;card(t);g.ringsData([{lat:t[2],lng:t[3]}]);g.pointOfView({lat:Math.max(-60,Math.min(60,t[2]))-8,lng:t[3],altitude:2.1},fromUser&&!RM?1400:RM?0:1600);
+  if(fromUser){user=true;clearInterval(timer);timer=null}};
+ g.pointOfView({lat:12,lng:19,altitude:2.2},0);
+ setTimeout(()=>showTrip(0),600);
+ if(!RM)timer=setInterval(()=>{if(!user)showTrip((cur+1)%TRIPS.length)},4500);
+ el.addEventListener('pointerdown',()=>{user=true})});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.34.4/dist/globe.gl.min.js" defer></script>
+</body></html>
