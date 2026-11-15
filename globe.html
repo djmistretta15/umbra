@@ -345,11 +345,15 @@ if(!window.Globe){document.getElementById('loading').textContent='The 3D library
 
 // Imagery
 const GIBS='https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=BlueMarble_ShadedRelief_Bathymetry&CRS=EPSG:4326&BBOX=-90,-180,90,180&WIDTH=4096&HEIGHT=2048&FORMAT=image/jpeg';
-const TREK={moon:{color:['Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02','jpg'],relief:['Moon/EQ/LRO_LOLA_ClrShade_Global_128ppd_v04','png']},
- mars:{color:['Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m','jpg'],relief:['Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m','jpg']}};
+// [layer, tile type, deepest zoom the layer has]
+const TREK={moon:{color:['Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02','jpg',9],relief:['Moon/EQ/LRO_LOLA_ClrShade_Global_128ppd_v04','png',9],
+  feo:['Moon/EQ/Clem_UVVIS_FeO_Clr_Global_152ppd','png',2],tio2:['Moon/EQ/Clem_UVVIS_TiO2_Clr_Global_152ppd','png',2],
+  th:['Moon/EQ/LP_GRS_Th_Clr_Global_2ppd','png',1],h:['Moon/EQ/LP_NS_H_Clr_Global_2ppd','png',1],slope:['Moon/EQ/LRO_LOLA_ClrSlope_Global_16ppd','png',2]},
+ mars:{color:['Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m','jpg',9],relief:['Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m','jpg',9],
+  ti:['Mars/EQ/TES_Thermal_Inertia','png',1],alb:['Mars/EQ/Mars_MGS_TES_Albedo_mosaic_global_7410m','png',1]}};
 const texCache={};
-function trek(body,kind,z=2){const key=body+kind;if(texCache[key])return texCache[key];
- const [layer,ext]=TREK[body][kind],cols=2**(z+1),rows=2**z,c=document.createElement('canvas');c.width=cols*256;c.height=rows*256;const x=c.getContext('2d');
+function trek(body,kind,z=2){const [layer,ext,zm]=TREK[body][kind];z=Math.min(z,zm);const key=body+kind+z;if(texCache[key])return texCache[key];
+ const cols=2**(z+1),rows=2**z,c=document.createElement('canvas');c.width=cols*256;c.height=rows*256;const x=c.getContext('2d');
  x.fillStyle=body==='moon'?'#777':'#8a4a2e';x.fillRect(0,0,c.width,c.height);
  const jobs=[];for(let r=0;r<rows;r++)for(let q=0;q<cols;q++)jobs.push(new Promise(res=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{x.drawImage(im,q*256,r*256);res()};im.onerror=res;im.src=`https://trek.nasa.gov/tiles/${layer}/1.0.0/default/default028mm/${z}/${r}/${q}.${ext}`}));
  return texCache[key]=Promise.all(jobs).then(()=>c.toDataURL('image/jpeg',.9));}
@@ -513,25 +517,27 @@ const INFO={moon:{e:'Moon · LRO data',t:'The Moon',s:'Every Moon test in Umbra 
  mars:{e:'Mars · MGS and Odyssey data',t:'Mars',s:'Mars tests come from Mars Global Surveyor and Mars Odyssey measurements: air pressure, ground heat, dust and water.',places:MARS,col:'255,140,90'}};
 const ov=document.getElementById('ov'),ovG=document.getElementById('ov-g');let ovOpen=null,big=null,bigBody=null,ovLayer='color',lastFocus=null,ovPins=[],ovRelief=true;const ovShow={land:true,hub:true};
 // Science layers: built by code/build_globe_tex.mjs from NASA PDS rasters into tex/globe_tex.js (loaded on demand)
-const RAMP={magma:['#000004','#2c115f','#721f81','#b73779','#f1605d','#feb078','#fcfdbf'],viridis:['#440154','#3b528b','#21918c','#5ec962','#fde725'],cividis:['#00204d','#31446b','#666970','#958f78','#cbba69','#ffea46'],blues:['#081d58','#225ea8','#41b6c4','#c7e9b4','#ffffd9'],ice:['#e0f3ff','#7cc4f2','#2b7bd6','#1a3d8f','#0b1a47'],inferno:['#000004','#320a5e','#781c6d','#bc3754','#ed6925','#fbb61a','#fcffa4'],sun:['#140b34','#4b1d6b','#a33b5c','#e46e2f','#fdbd3a','#fff9c4']};
+const RAMP={magma:['#000004','#2c115f','#721f81','#b73779','#f1605d','#feb078','#fcfdbf'],viridis:['#440154','#3b528b','#21918c','#5ec962','#fde725'],cividis:['#00204d','#31446b','#666970','#958f78','#cbba69','#ffea46'],blues:['#081d58','#225ea8','#41b6c4','#c7e9b4','#ffffd9'],ice:['#e0f3ff','#7cc4f2','#2b7bd6','#1a3d8f','#0b1a47'],inferno:['#000004','#320a5e','#781c6d','#bc3754','#ed6925','#fbb61a','#fcffa4'],sun:['#140b34','#4b1d6b','#a33b5c','#e46e2f','#fdbd3a','#fff9c4'],rainbow:['#2b2bd6','#2aa8f0','#3ad19a','#f2e03a','#f08a24','#d8241e'],lpblue:['#ffffff','#a9aaf6','#1010e0'],tes:['#3b0a8c','#2b4fe0','#22c7e0','#3ad14a','#f2e03a','#e02020'],gray:['#1a1a1a','#ffffff']};
 const SCI={moon:[
- {k:'feo',n:'Iron',u:'FeO, weight %',lo:'2',hi:'22',ramp:'inferno',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
- {k:'tio2',n:'Titanium',u:'TiO2, weight %',lo:'0',hi:'8',ramp:'viridis',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
- {k:'th',n:'Thorium',u:'Th, parts per million',lo:'0',hi:'10',ramp:'magma',src:'Lunar Prospector Gamma Ray Spectrometer, 2° bins'},
- {k:'sun',pole:1,n:'Pole: sunlight',u:'share of the year in sunlight',lo:'0%',hi:'90%',ramp:'sun',src:'LRO LOLA average visibility (AVGVISIB), 60 m'},
- {k:'shadow',pole:1,n:'Pole: never lit',cat:[['#2878ff','Permanent shadow'],['#080a14','Sunlit some of the year']],src:'LRO LOLA permanent shadow map (LPSR), 60 m'},
- {k:'cold',pole:1,n:'Pole: hottest it gets',u:'maximum surface temperature, K',lo:'25 K',hi:'330 K',ramp:'inferno',src:'LRO Diviner Polar Resource Product'},
- {k:'ice',pole:1,n:'Pole: ice depth',u:'depth where water ice can survive',lo:'at surface',hi:'1 m',ramp:'ice',none:'Ice not stable within the top 2 m',src:'LRO Diviner Polar Resource Product'},
- {k:'earth',pole:1,n:'Pole: Earth in view',u:'share of the time Earth is above the horizon (direct radio)',lo:'never',hi:'always',ramp:'viridis',src:'Umbra calculation from LRO LOLA heights (LDEM 80 m) over the libration cycle'},
- {k:'flat',pole:1,n:'Pole: flat ground',u:'share of each km under 8° slope',lo:'0%',hi:'100%',ramp:'cividis',src:'LRO LOLA slope (LDSM 40 m)'},
- {k:'pstack',pole:1,stack:1,n:'Overlap: where it lines up'}],
+ {k:'feo',t:'feo',n:'Iron',u:'FeO, weight % (iron for oxygen and metal)',lo:'low',hi:'high (mare basalt)',ramp:'rainbow',src:'Clementine UVVIS iron map, NASA Moon Trek. Click values: Lunar Prospector GRS, 2° bins'},
+ {k:'tio2',t:'tio2',n:'Titanium',u:'TiO2, weight % (ilmenite, the easiest oxygen ore)',lo:'low',hi:'high',ramp:'rainbow',src:'Clementine UVVIS titanium map, NASA Moon Trek. Click values: Lunar Prospector GRS, 2° bins'},
+ {k:'th',t:'th',n:'Thorium',u:'Th, parts per million (KREEP, heat-producing rock)',lo:'low',hi:'high',ramp:'lpblue',src:'Lunar Prospector Gamma Ray Spectrometer thorium, NASA Moon Trek'},
+ {k:'h',t:'h',n:'Hydrogen',u:'hydrogen in the top meter (a water and solar-wind signal)',lo:'low',hi:'high (polar cold traps)',ramp:'lpblue',src:'Lunar Prospector Neutron Spectrometer hydrogen, NASA Moon Trek'},
+ {k:'slope',t:'slope',n:'Slope',u:'ground slope (landing and driving)',lo:'flat',hi:'steep',ramp:'rainbow',src:'LRO LOLA color slope, NASA Moon Trek'},
+ {k:'sun',pole:1,bg:'relief',n:'Pole: sunlight',u:'share of the year in sunlight',lo:'0%',hi:'90%',ramp:'sun',src:'LRO LOLA average visibility (AVGVISIB), 60 m'},
+ {k:'shadow',pole:1,bg:'h',n:'Pole: never lit',cat:[['#2878ff','Permanent shadow'],['#080a14','Sunlit some of the year']],src:'LRO LOLA permanent shadow map (LPSR), 60 m'},
+ {k:'cold',pole:1,bg:'h',n:'Pole: hottest it gets',u:'maximum surface temperature, K',lo:'25 K',hi:'330 K',ramp:'inferno',src:'LRO Diviner Polar Resource Product'},
+ {k:'ice',pole:1,bg:'h',n:'Pole: ice depth',u:'depth where water ice can survive',lo:'at surface',hi:'1 m',ramp:'ice',none:'Ice not stable within the top 2 m',src:'LRO Diviner Polar Resource Product'},
+ {k:'earth',pole:1,bg:'relief',n:'Pole: Earth in view',u:'share of the time Earth is above the horizon (direct radio)',lo:'never',hi:'always',ramp:'viridis',src:'Umbra calculation from LRO LOLA heights (LDEM 80 m) over the libration cycle'},
+ {k:'flat',pole:1,bg:'slope',n:'Pole: flat ground',u:'share of each km under 8° slope',lo:'0%',hi:'100%',ramp:'cividis',src:'LRO LOLA slope (LDSM 40 m)'},
+ {k:'pstack',pole:1,bg:'relief',stack:1,n:'Overlap: where it lines up'}],
 mars:[
- {k:'pressure',n:'Air pressure',u:'Pa (Earth at sea level: 101,325)',lo:'100',hi:'1,300',ramp:'magma',src:'MGS MOLA MEGDR heights, P = 610 Pa × e^(-h / 11.1 km)'},
- {k:'ground',n:'Ground type',cat:[['#f4e3b5','Deep dust (TI under 100)'],['#d9a45b','Dusty (100 to 150)'],['#b8613a','Sand and crust (150 to 400)'],['#6d3b5e','Rocky (400 to 1,000)'],['#1d2a5c','Bedrock (over 1,000)']],src:'MGS TES night thermal inertia (TI), to 60° latitude'},
- {k:'dust',n:'Bright dust',u:'surface albedo',lo:'0.08',hi:'0.32',ramp:'cividis',src:'MGS TES albedo'},
- {k:'water',n:'Water',u:'water-equivalent hydrogen, weight %',lo:'1.5',hi:'8',ramp:'blues',src:'Mars Odyssey Gamma Ray Spectrometer, 5° bins'},
+ {k:'pressure',bg:'relief',n:'Air pressure',u:'Pa (Earth at sea level: 101,325)',lo:'100',hi:'1,300',ramp:'magma',src:'MGS MOLA MEGDR heights, P = 610 Pa × e^(-h / 11.1 km)'},
+ {k:'ground',t:'ti',n:'Ground type',u:'thermal inertia: loose dust is low, rock and bedrock are high',lo:'deep dust',hi:'rocky',ramp:'tes',src:'MGS TES thermal inertia, NASA Mars Trek'},
+ {k:'dust',t:'alb',n:'Bright dust',u:'surface albedo: bright is dust-covered, dark is sand and rock',lo:'dark',hi:'bright dust',ramp:'gray',src:'MGS TES albedo mosaic, NASA Mars Trek'},
+ {k:'water',bg:'relief',n:'Water',u:'water-equivalent hydrogen, weight %',lo:'1.5',hi:'8',ramp:'blues',src:'Mars Odyssey Gamma Ray Spectrometer, 5° bins'},
  {k:'base',n:'Umbra base zone',cat:[['#ffb547','Water over 5%, below datum, firm ground, within 50° of the equator']],src:'Odyssey GRS, MOLA and TES, the same rule as the Umbra pipeline'},
- {k:'stack',stack:1,n:'Overlap: where it lines up'}]};
+ {k:'stack',bg:'relief',stack:1,n:'Overlap: where it lines up'}]};
 const BASE_SRC={moon:{color:['Color','LRO Wide Angle Camera mosaic, NASA Moon Trek'],relief:['Elevation','LRO LOLA color shaded relief, NASA Moon Trek']},mars:{color:['Color','Viking MDIM 2.1 color mosaic, NASA Mars Trek'],relief:['Elevation','MGS MOLA color shaded relief, NASA Mars Trek']}};
 const R_MOON=1737400;
 let TEX=null,texP=null;
@@ -539,10 +545,10 @@ function loadTex(){if(texP)return texP;return texP=new Promise(res=>{if(window.U
 const imgOf=u=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u});
 const sciCache={},capImg={};
 function sciTex(body,k){const key=body+k;if(sciCache[key])return sciCache[key];const L=SCI[body].find(x=>x.k===k);
- return sciCache[key]=Promise.all([trek(body,'color',3).then(imgOf),L.stack?Promise.resolve(stkCanvas(body)):imgOf(L.pole?TEX.pole.layers[k]:TEX[body].layers[k])]).then(([b,o])=>{
+ return sciCache[key]=Promise.all([trek(body,L.bg||'color',3).then(imgOf),L.stack?Promise.resolve(stkCanvas(body)):imgOf(L.pole?TEX.pole.layers[k]:TEX[body].layers[k])]).then(([b,o])=>{
   const W=b.width,H=b.height,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(b,0,0);
-  x.fillStyle=L.pole?'rgba(4,6,13,.25)':'rgba(4,6,13,.5)';x.fillRect(0,0,W,H);
-  if(!L.pole){x.globalAlpha=.85;if(L.stack)x.imageSmoothingEnabled=false;x.drawImage(o,0,0,W,H);x.globalAlpha=1;x.imageSmoothingEnabled=true}else{capImg[k]=o;
+  x.fillStyle=L.bg?'rgba(4,6,13,.15)':L.pole?'rgba(4,6,13,.25)':'rgba(4,6,13,.5)';x.fillRect(0,0,W,H);
+  if(!L.pole){x.globalAlpha=L.bg&&!L.stack?.7:.85;if(L.stack)x.imageSmoothingEnabled=false;x.drawImage(o,0,0,W,H);x.globalAlpha=1;x.imageSmoothingEnabled=true}else{capImg[k]=o;
    const P=o.width,t=document.createElement('canvas');t.width=t.height=P;const tx=t.getContext('2d');tx.drawImage(o,0,0);const src=tx.getImageData(0,0,P,P).data;
    const y0=Math.floor(175/180*H),dst=x.getImageData(0,y0,W,H-y0),d=dst.data,m=5058*60/P;
    for(let y=y0;y<H;y++){const la=(90-(y+.5)/H*180)*Math.PI/180,r=2*R_MOON*Math.tan((Math.PI/2+la)/2)/m;
@@ -601,7 +607,7 @@ function stkCanvas(body){const R=stkRun(body),M=stkMasks(body),c=document.create
 function stkColor(k,act){return k===act?STKTOP:STKC[Math.min(3,Math.floor((k-1)/Math.max(1,act-1)*4))]}
 function stkToggle(f){const b=bigBody;stkOn[b][f]=stkOn[b][f]?0:1;delete stkR[b];for(const L of SCI[b])if(L.stack){delete sciCache[b+L.k];delete capImg[L.k]}setPins();bigSkin()}
 function bigSkin(){if(!big)return;const b=bigBody,k=ovLayer,L=SCI[b].find(x=>x.k===k);
- (L?(TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
+ (L?(L.t?trek(b,L.t,3):TEX?sciTex(b,k):Promise.reject()):trek(b,k,3)).then(u=>{if(big&&bigBody===b&&ovLayer===k)big.globeImageUrl(u)}).catch(()=>{});
  big.bumpImageUrl(ovRelief&&TEX?TEX[b].bump:null);drawLyr();legend();poleView()}
 // buttons
 const lyrEl=document.getElementById('ov-lyr'),optEl=document.getElementById('ov-opt'),legEl=document.getElementById('ov-leg');
@@ -612,7 +618,7 @@ function setLayer(k){const was=SCI[bigBody].find(x=>x.k===ovLayer);ovLayer=k;con
 function drawLyr(){const b=bigBody;lyrEl.innerHTML='';lyrEl.append(lab('Imagery'));
  for(const k of ['color','relief'])lyrEl.append(btn(BASE_SRC[b][k][0],ovLayer===k,()=>setLayer(k)));
  lyrEl.append(document.createElement('br'),lab('NASA science'));
- for(const L of SCI[b])lyrEl.append(btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX,TEX?L.u||L.n:'Loading the science layers'));
+ for(const L of SCI[b])lyrEl.append(btn(L.n,ovLayer===L.k,()=>setLayer(L.k),!TEX&&!L.t,TEX||L.t?L.u||L.n:'Loading the science layers'));
  optEl.innerHTML='';
  optEl.append(btn('3D relief',ovRelief,()=>{ovRelief=!ovRelief;bigSkin()},!TEX,(b==='moon'?'LRO LOLA':'MGS MOLA')+' heights as a bump map'));
  optEl.append(btn('Landing sites',ovShow.land,()=>{ovShow.land=!ovShow.land;setPins();drawLyr()}));
@@ -631,7 +637,8 @@ function legend(){const b=bigBody,L=SCI[b].find(x=>x.k===ovLayer);
   const box=legEl.querySelector('.stf');for(const f of F)box.append(btn(f.n,stkOn[b][f.k],()=>stkToggle(f.k),false,f.d));legEl.hidden=false;return}
  if(L.cat)h+=L.cat.map(c=>'<div class="cat"><i style="background:'+c[0]+'"></i>'+c[1]+'</div>').join('');
  else h+='<div class="u">'+L.u+'</div><div class="bar" style="background:'+grad(L.ramp)+'"></div><div class="ends"><span>'+L.lo+'</span><span>'+L.hi+'</span></div>'+(L.none?'<div class="cat"><i style="background:#080a14"></i>'+L.none+'</div>':'');
- h+='<div class="src">Source: '+L.src+(L.pole?'. Shown in the close-up above; the globe cap is coarser.':'')+'</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false}
+ const BGN={relief:'shaded elevation',h:'Lunar Prospector hydrogen',slope:'LOLA slope'};
+ h+='<div class="src">Source: '+L.src+(L.pole?'. Shown in the close-up above; the globe cap is coarser':'')+(L.bg&&!L.t?'. Wrapped over the NASA Trek '+BGN[L.bg]+' globe':'')+(L.t?'. Full-globe NASA imagery':'')+'.</div>'+hcLeg();legEl.innerHTML=h;legEl.hidden=false}
 // south pole close-up (polar stereographic, 85S to the pole, Earth-facing side up)
 const LF=[[-89.264,246.88,"Henson",44,215,2.9,0],[-89.379,153.92,"Shackleton",39,187,1.7,1],[-89.378,227.06,"Henson",40,187,0.8,0],[-89.508,217.15,"Shackleton",39,185,0.2,1],[-89.551,184.55,"Shackleton",26,184,2.6,1],[-87.898,236.52,"Henson",35,145,2.2,0],[-88.01,259.81,"Lacus Tenebrarum",43,145,3.4,0],[-87.976,248.8,"Henson",27,142,1.1,0],[-87.824,230.61,"Henson",32,137,2,0],[-88.465,292.27,"de Gerlache",50,127,1.1,1],[-89.036,109.92,"Shackleton",32,124,1.4,1],[-87.196,294.07,"Lacus Tenebrarum",25,121,0.8,0]];
 const CRATERS=[["Shackleton",-89.67,129.8],["de Gerlache",-88.5,-87.1],["Haworth",-87.45,-5],["Shoemaker",-88.1,44.9],["Faustini",-87.2,84.3],["Sverdrup",-88.3,-152],["Cabeus",-85.3,-42.1],["Nobile",-85.2,53.5]];
@@ -814,7 +821,7 @@ const HC=[
  {n:'Gamma background',s:'dark',d:'Part of the radiation environment and the noise floor for every future detector.'}],
  e:{t:'Earth maps K, Th and U the same way from aircraft. KREEP-like rock on Earth: carbonatites rich in rare earths and phosphate.',p:[[-28.86,122.55,'Mount Weld'],[35.48,-115.53,'Mountain Pass']]}},
 {n:'Clementine',p:'a missile-defense sensor test',y:'US defense and NASA, 1994',c:[
- {n:'Colour ratios: iron and titanium',s:'map',L:'feo',d:'The method still used today. Shown here with Lunar Prospector iron.'},
+ {n:'Colour ratios: iron and titanium',s:'map',L:'feo',d:'The method still used today. Shown here with the Clementine iron map.'},
  {n:'Soil maturity',s:'dark',d:'How long soil has been exposed.'},
  {n:'Near-infrared minerals',s:'site',P:[FT.ari],d:'Pyroxene and olivine.'},
  {n:'Laser altimeter',s:'map',L:'relief',d:'First global shape of the Moon and the depth of the south-pole basin.'},
